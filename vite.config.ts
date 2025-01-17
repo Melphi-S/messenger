@@ -7,4 +7,7 @@ export default defineConfig({
     outDir: resolve(__dirname, "dist"),
   },
   plugins: [handlebars()],
+  preview: {
+    port: 3000,
+  },
 });
