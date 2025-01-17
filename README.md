@@ -1,5 +1,17 @@
 # Messenger
 
+## Текущий прогресс
+
+Сверстаны основные компоненты и страницы
+
+Для перехода между страницами работает простой роутинг
+
+Для перехода на 500 страницу можно нажать 'Create new chat' на странице чатов или 'Save' на страницах смены инфо или пароля
+
+## Ссылки
+- [Макет в фигма](https://www.figma.com/design/jF5fFFzgGOxQeB4CmKWTiE/Chat_external_link)
+- [Netlify](https://melphis-messenger.netlify.app/)
+
 ## Технологии
 
 - [TypeScript](https://www.typescriptlang.org/)
@@ -40,7 +52,3 @@ npm run start
 ```sh
 npm run dev
 ```
-
-## Ссылки
-[Макет в фигма](https://www.figma.com/design/jF5fFFzgGOxQeB4CmKWTiE/Chat_external_link)
-

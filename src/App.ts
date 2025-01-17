@@ -1,59 +1,18 @@
 import { Pages } from "./types/types.ts";
-import Handlebars, { TemplateDelegate } from "handlebars/runtime";
-import "./components/Button/Button.scss";
-import "./components/Input/Input.scss";
-import "./components/SearchInput/SearchInput.scss";
-import "./components/BackButton/BackButton.scss";
-import "./components/ProfileFieldsContainer/ProfileFieldsContainer.scss";
-import "./components/ProfilePageLayout/ProfilePageLayout.scss";
-import "./components/Avatar/Avatar.scss";
-import "./components/Popup/Popup.scss";
-import "./components/AvatarEditPopup/AvatarEditPopup.scss";
-import "./components/ErrorPageTemplate/ErrorPageTemplate.scss";
-
-import Login from "./pages/Login/Login.hbs";
-import Signup from "./pages/Signup/Signup.hbs";
-import Chats from "./pages/Chats/Chats.hbs";
-import Profile from "./pages/Profile/Profile.hbs";
-import ProfileChange from "./pages/ProfileChange/ProfileChange.hbs";
-import PasswordChange from "./pages/PasswordChange/PasswordChange.hbs";
-import NotFound from "./pages/NotFound/NotFound.hbs";
-import Error from "./pages/Error/Error.hbs";
-import "./pages/Chats/Chats.scss";
-import "./pages/Profile/Profile.scss";
-
-import Button from "./components/Button/Button.hbs";
-import Input from "./components/Input/Input.hbs";
-import SearchInput from "./components/SearchInput/SearchInput.hbs";
-import BackButton from "./components/BackButton/BackButton.hbs";
-import ProfileFieldsContainer from "./components/ProfileFieldsContainer/ProfileFieldsContainer.hbs";
-import ProfilePageLayout from "./components/ProfilePageLayout/ProfilePageLayout.hbs";
-import Avatar from "./components/Avatar/Avatar.hbs";
-import Popup from "./components/Popup/Popup.hbs";
-import AvatarEditPopup from "./components/AvatarEditPopup/AvatarEditPopup.hbs";
-import ErrorPageTemplate from "./components/ErrorPageTemplate/ErrorPageTemplate.hbs";
-
-Handlebars.registerPartial("Button", Button);
-Handlebars.registerPartial("Input", Input);
-Handlebars.registerPartial("SearchInput", SearchInput);
-Handlebars.registerPartial("BackButton", BackButton);
-Handlebars.registerPartial("ProfileFieldsContainer", ProfileFieldsContainer);
-Handlebars.registerPartial("ProfilePageLayout", ProfilePageLayout);
-Handlebars.registerPartial("Avatar", Avatar);
-Handlebars.registerPartial("Popup", Popup);
-Handlebars.registerPartial("AvatarEditPopup", AvatarEditPopup);
-Handlebars.registerPartial("ErrorPageTemplate", ErrorPageTemplate);
+import { TemplateDelegate } from "handlebars/runtime";
+import * as components from "./components";
+import * as pages from "./pages";
 
 const pagesList: Record<Pages, TemplateDelegate> = {
-  [Pages.ROOT]: Login,
-  [Pages.LOGIN]: Login,
-  [Pages.SIGNUP]: Signup,
-  [Pages.CHATS]: Chats,
-  [Pages.PROFILE]: Profile,
-  [Pages.PROFILE_CHANGE]: ProfileChange,
-  [Pages.PASSWORD_CHANGE]: PasswordChange,
-  [Pages.NOT_FOUND]: NotFound,
-  [Pages.ERROR]: Error,
+  [Pages.ROOT]: pages.Login,
+  [Pages.LOGIN]: pages.Login,
+  [Pages.SIGNUP]: pages.Signup,
+  [Pages.CHATS]: pages.Chats,
+  [Pages.PROFILE]: pages.Profile,
+  [Pages.PROFILE_CHANGE]: pages.ProfileChange,
+  [Pages.PASSWORD_CHANGE]: pages.PasswordChange,
+  [Pages.NOT_FOUND]: pages.NotFound,
+  [Pages.ERROR]: pages.Error,
 };
 
 class App {
@@ -65,7 +24,7 @@ class App {
 
   constructor() {
     this.state = {
-      currentPage: Login,
+      currentPage: pages.Login,
       openedPopup: null,
     };
     this.element = document.getElementById("app");
@@ -109,7 +68,7 @@ class App {
     avatarEditButton &&
       avatarEditButton.addEventListener("click", () => {
         const page = document.querySelector(".page");
-        const popup = AvatarEditPopup({});
+        const popup = components.AvatarEditPopup({});
         page && page.insertAdjacentHTML("beforeend", popup);
 
         const overlay = document.querySelector(".popup__overlay");
