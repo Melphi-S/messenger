@@ -1,0 +1,20 @@
+<main class="page">
+    <form class="auth-form">
+        <div>
+            <h1 class="form-header">Sign up</h1>
+            <div class="inputs-wrapper">
+                {{> Input placeholder='Enter email' name='email' type='text' label='Email'}}
+                {{> Input placeholder='Enter login' name='login' type='text' label='Login'}}
+                {{> Input placeholder='Enter first name' name='first_name' type='text' label='First name'}}
+                {{> Input placeholder='Enter second name' name='second_name' type='text' label='Second name'}}
+                {{> Input placeholder='Enter phone' name='phone' type='text' label='Phone'}}
+                {{> Input placeholder='Enter password' name='password' type='password' label='Password'}}
+                {{> Input placeholder='Enter password again' name='repeat_password' type='password' label='Repeat password'}}
+            </div>
+        </div>
+        <div class="auth-button-container">
+            {{> Button text='Sign up' type='button' navigate='/chats' view='primary'}}
+            {{> Button text='Sign in' type='button' navigate='/login' view='secondary'}}
+        </div>
+    </form>
+</main>

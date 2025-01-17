@@ -1,0 +1,44 @@
+@use "../../styles/variables" as vars;
+@use "../../styles/mixins" as mixins;
+
+.chats-sidebar {
+  @include mixins.sidebar;
+  max-width: 310px;
+  padding: 20px 10px 0;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 500;
+    color: vars.$text-color-pale;
+  }
+}
+
+.chats-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  line-height: 1rem;
+  font-weight: 500;
+  color: vars.$text-color-pale;
+}

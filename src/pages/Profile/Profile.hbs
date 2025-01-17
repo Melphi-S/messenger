@@ -1,0 +1,8 @@
+{{#> ProfilePageLayout back='/chats'}}
+    {{> ProfileFieldsContainer disabled='true'}}
+    <div class="buttons-container">
+        {{> Button text='Change your data' type='button' navigate='/profile-change' view='secondary'}}
+        {{> Button text='Change your password' type='button' navigate='/password-change' view='secondary'}}
+        {{> Button text='Log out' type='button' navigate='/login' view='danger'}}
+    </div>
+{{/ProfilePageLayout}}

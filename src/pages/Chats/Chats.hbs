@@ -1,0 +1,15 @@
+<main class="page page_type_sidebar">
+    <div class="chats-sidebar">
+        <div class="chats-sidebar__header">
+            {{> Button text='Your profile >' type='button' navigate='/profile' view='ghost'}}
+            {{> SearchInput placeholder='Search chat' name='password'}}
+        </div>
+        <div class="chats-sidebar__list">
+            You don't have any chats yet
+            {{> Button text='Create new chat' type='button' view='primary' navigate='/error'}}
+        </div>
+    </div>
+    <div class="chats-main">
+        Select a chat to send a message
+    </div>
+</main>
