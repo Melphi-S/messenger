@@ -1,5 +1,5 @@
 <main class="page">
-    <form class="auth-form">
+    <form class="auth-form" data-navigate="/chats">
         <div>
             <h1 class="form-header">Sign in</h1>
             <div class="inputs-wrapper">
@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="auth-button-container">
-            {{> Button text='Sign in' type='button' navigate='/chats' view='primary'}}
+            {{> Button text='Sign in' type='submit' view='primary'}}
             {{> Button text='Create account' type='button' navigate='/signup' view='secondary'}}
         </div>
     </form>

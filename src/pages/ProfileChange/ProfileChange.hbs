@@ -1,6 +1,8 @@
 {{#> ProfilePageLayout back='/profile' }}
-    {{> ProfileFieldsContainer }}
-    <div class="buttons-container">
-        {{> Button text='Save' type='button' navigate='/error' view='primary'}}
-    </div>
+    <form class="profile-form" data-navigate="/error">
+        {{> ProfileFieldsContainer }}
+        <div class="buttons-container">
+            {{> Button text='Save' type='submit' view='primary'}}
+        </div>
+    </form>
 {{/ProfilePageLayout}}

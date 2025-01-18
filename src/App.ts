@@ -46,17 +46,20 @@ class App {
   }
 
   addListeners() {
-    const navigationButtons = document.querySelectorAll("[data-navigate]");
+    const navigationButtons = document.querySelectorAll(
+      "button[data-navigate]",
+    );
     const avatarEditButton = document.querySelector("#change-avatar");
+    const form = document.querySelector("form");
+
+    form &&
+      form.addEventListener("submit", (e) => {
+        this.navigate(e);
+      });
 
     navigationButtons.forEach((button) => {
       button.addEventListener("click", (e) => {
-        if (e.target && e.target instanceof HTMLElement) {
-          e.preventDefault();
-          const newPage = e.target.getAttribute("data-navigate") as Pages;
-          window.history.pushState({}, "", newPage);
-          this.render();
-        }
+        this.navigate(e);
       });
     });
 
@@ -80,6 +83,15 @@ class App {
         removePopup();
       }
     });
+  }
+
+  navigate(e: Event) {
+    if (e.target && e.target instanceof HTMLElement) {
+      e.preventDefault();
+      const newPage = e.target.getAttribute("data-navigate") as Pages;
+      window.history.pushState({}, "", newPage);
+      this.render();
+    }
   }
 
   handleUrlChange() {
