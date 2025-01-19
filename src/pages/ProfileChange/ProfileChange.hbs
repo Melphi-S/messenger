@@ -1,0 +1,8 @@
+{{#> ProfilePageLayout back='/profile' }}
+    <form class="profile-form" data-navigate="/error">
+        {{> ProfileFieldsContainer }}
+        <div class="buttons-container">
+            {{> Button text='Save' type='submit' view='primary'}}
+        </div>
+    </form>
+{{/ProfilePageLayout}}

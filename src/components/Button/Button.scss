@@ -1,0 +1,44 @@
+@use "../../styles/variables" as vars;
+
+.button {
+  border: none;
+  cursor: pointer;
+
+  &_type_primary {
+    width: 100%;
+    padding: 12px 70px;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    line-height: 0.8125rem;
+    background-color: vars.$primary-color;
+    border-radius: 8px;
+    color: vars.$text-color-revert;
+  }
+
+  &_type_secondary {
+    font-size: 0.6875rem;
+    line-height: 0.6875rem;
+    background: none;
+    color: vars.$primary-color;
+  }
+
+  &_type_danger {
+    font-size: 0.6875rem;
+    line-height: 0.6875rem;
+    background: none;
+    color: vars.$text-color-danger;
+  }
+
+  &_type_ghost {
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    background: none;
+    color: vars.$text-color-pale;
+  }
+}
+
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}

@@ -1,0 +1,57 @@
+@use "../../styles/mixins" as mixins;
+@use "../../styles/variables" as vars;
+
+.avatar-wrapper {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+
+  &_type_edit {
+    cursor: pointer;
+  }
+
+  &_size_s {
+    width: 34px;
+    height: 34px;
+  }
+
+  &_size_s {
+    width: 47px;
+    height: 47px;
+  }
+
+  &_size_s {
+    width: 130px;
+    height: 130px;
+  }
+
+  &__button {
+    background: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+
+  &_overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+    font-size: 0.8125rem;
+    line-height: 0.8125rem;
+    color: vars.$text-color-revert;
+    @include mixins.flex-center;
+    transition: opacity 0.3s;
+  }
+
+  &:hover &_overlay {
+    opacity: 1;
+  }
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

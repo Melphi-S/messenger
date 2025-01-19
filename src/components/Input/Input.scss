@@ -1,0 +1,38 @@
+@use "../../styles/variables" as vars;
+
+.input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid vars.$primary-color;
+  padding: 5px;
+  margin: 7px 0;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    background: none;
+    color: vars.$text-color-pale;
+    border-bottom: 1px solid vars.$border-color;
+  }
+}
+
+.label {
+  width: 100%;
+}
+
+.label-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 0.75rem;
+  padding-left: 5px;
+}
+
+.error-text {
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 0.75rem;
+  padding-left: 5px;
+  color: vars.$text-color-error;
+}

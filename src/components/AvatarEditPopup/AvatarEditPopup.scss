@@ -1,0 +1,11 @@
+.avatar-edit-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+  align-items: center;
+
+  &__text {
+    font-size: 0.9365rem;
+    line-height: 1.25rem;
+  }
+}

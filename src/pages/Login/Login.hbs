@@ -1,0 +1,15 @@
+<main class="page">
+    <form class="auth-form" data-navigate="/chats">
+        <div>
+            <h1 class="form-header">Sign in</h1>
+            <div class="inputs-wrapper">
+                {{> Input placeholder='Enter login' name='login' type='text' label='Login'}}
+                {{> Input placeholder='Enter password' name='password' type='password' label='Password'}}
+            </div>
+        </div>
+        <div class="auth-button-container">
+            {{> Button text='Sign in' type='submit' view='primary'}}
+            {{> Button text='Create account' type='button' navigate='/signup' view='secondary'}}
+        </div>
+    </form>
+</main>
