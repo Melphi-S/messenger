@@ -5,6 +5,7 @@
   position: relative;
   border-radius: 50%;
   overflow: hidden;
+  pointer-events: none;
 
   &_type_edit {
     cursor: pointer;
@@ -15,12 +16,12 @@
     height: 34px;
   }
 
-  &_size_s {
+  &_size_m {
     width: 47px;
     height: 47px;
   }
 
-  &_size_s {
+  &_size_l {
     width: 130px;
     height: 130px;
   }
