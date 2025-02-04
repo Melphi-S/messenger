@@ -1,11 +1,11 @@
 export class EventBus {
-  listeners: Record<string, ((...args: any) => void)[]>;
+  listeners: Record<string, ((...args: unknown[]) => void)[]>;
 
   constructor() {
     this.listeners = {};
   }
 
-  on(event: string, callback: (...args: any) => void) {
+  on(event: string, callback: (...args: unknown[]) => void) {
     if (!this.listeners[event]) {
       this.listeners[event] = [];
     }
@@ -23,7 +23,7 @@ export class EventBus {
     );
   }
 
-  emit(event: string, ...args: any) {
+  emit(event: string, ...args: unknown[]) {
     if (!this.listeners[event]) {
       throw new Error(`No event: ${event}`);
     }

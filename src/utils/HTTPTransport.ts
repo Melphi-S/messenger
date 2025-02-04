@@ -16,7 +16,7 @@ type Options = {
 function queryStringify(data: Record<string, unknown>) {
   const queries: string[] = [];
 
-  for (let key in data) {
+  for (const key in data) {
     queries.push(`${key}=${data[key]}`);
   }
 
@@ -77,7 +77,7 @@ export class HTTPTransport {
           : url,
       );
 
-      for (let header in headers) {
+      for (const header in headers) {
         xhr.setRequestHeader(header, headers[header]);
       }
 

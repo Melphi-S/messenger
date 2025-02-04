@@ -102,7 +102,7 @@ export class ProfileChangePage extends ProfilePageLayout {
 
               let hasError = false;
 
-              for (let [name, rule] of inputsToValidate) {
+              for (const [name, rule] of inputsToValidate) {
                 if (validateInput(this, name, rule)) {
                   hasError = true;
                 }

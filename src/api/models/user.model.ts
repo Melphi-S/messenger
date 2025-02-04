@@ -8,5 +8,3 @@ export interface User {
   avatar: string;
   login?: string;
 }
-
-export interface UserPublic extends Pick<User, "id" | "displayName"> {}
