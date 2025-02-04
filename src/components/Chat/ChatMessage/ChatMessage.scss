@@ -5,14 +5,15 @@
   max-width: 45%;
   min-width: 100px;
   padding: 11px;
+
   &_type_his {
     background-color: vars.$background-side-color;
-    border-radius: 0 12px 12px 12px;
+    border-radius: 0 12px 12px;
   }
 
   &_type_mine {
     background-color: vars.$background-active;
-    border-radius: 12px 12px 0 12px;
+    border-radius: 12px 12px 0;
     justify-self: end;
   }
 

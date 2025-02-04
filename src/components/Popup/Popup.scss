@@ -4,6 +4,7 @@
 .popup {
   position: fixed;
   inset: 0;
+
   @include mixins.flex-center;
 
   &_hidden {

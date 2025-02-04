@@ -3,6 +3,7 @@
 
 .chats-sidebar {
   @include mixins.sidebar;
+
   width: 310px;
   padding: 20px 0 0;
   display: flex;

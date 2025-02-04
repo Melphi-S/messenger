@@ -52,15 +52,15 @@ export class ChatPreview extends Block {
     super.render();
     // language=hbs
     return `
-      <div class="previewMessage {{#if isActive}}previewMessage_active{{/if}}" id="{{{id}}}">
+      <div class="preview-message {{#if isActive}}preview-message_active{{/if}}" id="{{{id}}}">
         {{{ avatar }}}
-        <div class="previewMessage__mainContainer">
-          <p class="previewMessage__title">{{{title}}}</p>
-          <p class="previewMessage__message"> <span class="previewMessage__authorSpan">{{#if curUserMessage}}Вы: {{/if}}</span>{{lastMessage}}</p>
+        <div class="preview-message__mainContainer">
+          <p class="preview-message__title">{{{title}}}</p>
+          <p class="preview-message__message"> <span class="preview-message__authorSpan">{{#if curUserMessage}}Вы: {{/if}}</span>{{lastMessage}}</p>
         </div>
-        <div class="previewMessage__rightContainer">
-          <span class="previewMessage__date">{{{date}}}</span>
-          {{#if unreadMessages}} <div class="previewMessage__unreadCount">{{{unreadMessages}}}</div> {{/if}}
+        <div class="preview-message__rightContainer">
+          <span class="preview-message__date">{{{date}}}</span>
+          {{#if unreadMessages}} <div class="preview-message__unreadCount">{{{unreadMessages}}}</div> {{/if}}
         </div>
       <div>
     `;
