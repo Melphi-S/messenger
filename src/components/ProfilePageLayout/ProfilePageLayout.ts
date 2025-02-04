@@ -46,23 +46,23 @@ export class ProfilePageLayout extends Block {
     super.render();
     // language=hbs
     return `
-            <main class="page page_type_sidebar">
-                <div class="profile-sidebar">
-                    {{{ backButton }}}
-                </div>
-                <div class="profile-main">
-                    {{{ avatar }}}
-                  <div class="profile-wrapper">
-                    <div class="fields-container">
-                      {{{ inputs }}}
-                    </div>
-                    <div class="buttons-container">
-                      {{{buttons}}}
-                    </div>
-                  </div>
-                </div>
-              {{{ popup }}}
-            </main>
+      <main class="page page_type_sidebar">
+        <div class="profile-sidebar">
+            {{{ backButton }}}
+        </div>
+        <div class="profile-main">
+          {{{ avatar }}}
+          <div class="profile-wrapper">
+            <div class="fields-container">
+              {{{ inputs }}}
+            </div>
+            <div class="buttons-container">
+              {{{buttons}}}
+            </div>
+          </div>
+        </div>
+        {{{ popup }}}
+      </main>
     `;
   }
 }

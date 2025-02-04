@@ -35,13 +35,13 @@ export class AvatarEdit extends Block {
 
     // language=hbs
     return `
-        <div class="avatar-edit-popup">
-            <p class="avatar-edit-popup__text">
-               Upload new image
-           </p>
-           {{{selectButton}}}
-           {{{submitButton}}}
-        </div>
+      <div class="avatar-edit-popup">
+        <p class="avatar-edit-popup__text">
+           Upload new image
+        </p>
+        {{{selectButton}}}
+        {{{submitButton}}}
+      </div>
     `;
   }
 }

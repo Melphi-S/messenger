@@ -32,12 +32,12 @@ export class Popup extends Block {
 
     // language=hbs
     return `
-            <div class="popup {{#if hidden}}popup_hidden{{/if}}">
-              {{{ overlay }}}
-                <div class="popup__content">
-                    {{{ content }}}
-                </div>
-            </div>
+      <div class="popup {{#if hidden}}popup_hidden{{/if}}">
+        {{{ overlay }}}
+          <div class="popup__content">
+              {{{ content }}}
+          </div>
+      </div>
     `;
   }
 }

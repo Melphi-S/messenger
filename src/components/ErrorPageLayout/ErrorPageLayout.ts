@@ -27,15 +27,15 @@ export class ErrorPageLayout extends Block {
     super.render();
     // language=hbs
     return `
-        <main class="page">
-            <div class="error-page">
-                <div class="error-page__content">
-                    <span class="error-page__code">{{code}}</span>
-                    <span class="error-page__text">{{title}}</span>
-                </div>
-                {{{ button }}}
-            </div>
-        </main>
+      <main class="page">
+        <div class="error-page">
+          <div class="error-page__content">
+              <span class="error-page__code">{{code}}</span>
+              <span class="error-page__text">{{title}}</span>
+          </div>
+          {{{ button }}}
+        </div>
+      </main>
     `;
   }
 }

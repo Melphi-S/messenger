@@ -70,25 +70,24 @@ export class ChatsPage extends Block {
 
     // language=hbs
     return `
-        <main class="page page_type_sidebar">
-            <div class="chats-sidebar">
-                <div class="chats-sidebar__header">
-                  {{{ profileButton }}}
-                  {{{ searchInput}}}
-                </div>
-                <div class="chats-sidebar__list">
-                    {{{ chatPreviews }}}
-                </div>
-            </div>
-          {{#if activeChat}}
-            {{{activeChat}}}
-          {{else}}
-            <p class="chats-main_select-message">
-              Select a chat
-            </p>
-          {{/if}}
-
-        </main>
+      <main class="page page_type_sidebar">
+        <div class="chats-sidebar">
+          <div class="chats-sidebar__header">
+            {{{ profileButton }}}
+            {{{ searchInput}}}
+          </div>
+          <div class="chats-sidebar__list">
+              {{{ chatPreviews }}}
+          </div>
+        </div>
+        {{#if activeChat}}
+          {{{activeChat}}}
+        {{else}}
+          <p class="chats-main_select-message">
+            Select a chat
+          </p>
+        {{/if}}
+      </main>
     `;
   }
 }

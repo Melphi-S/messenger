@@ -27,7 +27,7 @@ export class MessageInput extends Input {
     super.render();
     // language=hbs
     return `
-       <input class='message-input' placeholder='{{placeholder}}' name='{{name}}' type='text'/>
+      <input class='message-input' placeholder='{{placeholder}}' name='{{name}}' type='text'/>
     `;
   }
 }

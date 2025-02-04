@@ -19,7 +19,7 @@ export class Overlay extends Block {
 
     // language=hbs
     return `
-       <div class="overlay"></div>
+      <div class="overlay"></div>
     `;
   }
 }
