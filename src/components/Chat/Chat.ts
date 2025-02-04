@@ -107,15 +107,18 @@ export class Chat extends Block {
   protected _render() {
     super._render();
 
-    const container = this.element?.querySelector(".chat__main");
+    const container = <HTMLElement>this.element?.querySelector(".chat__main");
     if (!container) return;
 
     const images = container.querySelectorAll("img");
     let loadedCount = 0;
 
+    container.style.opacity = "0";
+
     if (images.length === 0) {
       setTimeout(() => {
         container.scrollTop = container.scrollHeight;
+        container.style.opacity = "1";
       });
       return;
     }
@@ -125,20 +128,22 @@ export class Chat extends Block {
         if (img.complete) {
           loadedCount++;
           if (loadedCount === images.length) {
-            console.log("!!!");
             container.scrollTop = container.scrollHeight;
+            container.style.opacity = "1";
           }
         } else {
           img.onload = () => {
             loadedCount++;
             if (loadedCount === images.length) {
               container.scrollTop = container.scrollHeight;
+              container.style.opacity = "1";
             }
           };
           img.onerror = () => {
             loadedCount++; // Игнорируем ошибки загрузки
             if (loadedCount === images.length) {
               container.scrollTop = container.scrollHeight;
+              container.style.opacity = "1";
             }
           };
         }
