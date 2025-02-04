@@ -6,6 +6,8 @@ import { MessageInput } from "../MessageInput/MessageInput.ts";
 import { ArrowButton } from "../ArrowButton/ArrowButton.ts";
 import { Avatar } from "../Avatar/Avatar.ts";
 import { currentUser, MOCK_USERS } from "../../api/mockAPI.ts";
+import { FileAttach } from "./FileAttach/FileAttach.ts";
+import { UserManagement } from "./UserManagement/UserManagement.ts";
 
 interface Props {
   chat: ChatModel;
@@ -73,6 +75,8 @@ export class Chat extends Block {
             user.id === chat.participants.find((id) => id !== currentUser.id),
         )?.displayName ||
         "",
+      fileAttach: new FileAttach(),
+      userManagement: new UserManagement(),
     });
   }
 
@@ -86,12 +90,13 @@ export class Chat extends Block {
             {{{image}}}
             <span class="chat__participant-name">{{{name}}}</span>
           </div>
+          {{{ userManagement }}}
         </div>
         <div class="chat__main scrollbar">
             {{{messages}}}
         </div>
         <div class="chat__footer">
-          <div></div>
+          {{{fileAttach}}}
           {{{messageInput}}}
           {{{newMessageButton}}}
         </div>

@@ -1,0 +1,49 @@
+@use "../../styles/variables" as vars;
+
+.hint {
+  box-shadow: 0 0 6px 0 #00000024;
+  border-radius: 6px;
+  padding: 15px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: vars.$background-color;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 1;
+
+  &_position_top {
+    left: 0;
+    top: -25px;
+    transform: translateY(-100%);
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -25px;
+      height: 25px;
+      width: 100%;
+      background: transparent;
+    }
+  }
+
+  &_position_bottom {
+    right: 0;
+    bottom: -25px;
+    transform: translateY(100%);
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -25px;
+      height: 25px;
+      width: 100%;
+      background: transparent;
+    }
+  }
+}

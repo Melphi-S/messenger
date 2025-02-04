@@ -1,0 +1,44 @@
+@use "../../styles/variables" as vars;
+
+.hint-button {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+
+  &__icon {
+    width: 22px;
+    height: 22px;
+
+    &_type_media {
+      background-image: url("../../assets/icons/media.svg");
+    }
+
+    &_type_file {
+      background-image: url("../../assets/icons/file.svg");
+    }
+
+    &_type_location{
+      background-image: url("../../assets/icons/location.svg");
+    }
+
+    &_type_add {
+      background-image: url("../../assets/icons/cross.svg");
+    }
+
+    &_type_delete {
+      background-image: url("../../assets/icons/x.svg");
+    }
+  }
+
+  &__text {
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    text-wrap: nowrap;
+  }
+
+  &:hover &__text {
+    border-bottom: 1px solid vars.$primary-color;
+  }
+}
