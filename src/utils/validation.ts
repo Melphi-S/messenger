@@ -11,7 +11,7 @@ type ValidationRule = { rule: RegExp; errorMessage: string };
 
 const validationRules: Record<ValidationRuleKey, ValidationRule> = {
   name: {
-    rule: /^[A-ZА-Я][a-zа-я-]*$/,
+    rule: /^[A-ZА-Я][a-zа-яёй]*$/,
     errorMessage:
       "The value must start with a capital letter and not contain spaces, numbers, or symbols (except for a hyphen).",
   },
@@ -61,20 +61,23 @@ export const validateInput = (
   rule: ValidationRuleKey | null,
   validationCb?: (...args: unknown[]) => string,
 ) => {
-  const input = getByName(form.getElement(), name);
-  const inputObj = form
+  const inputElement = getByName(form.getElement(), name);
+  const inputBlock = form
     .getLists()
-    .inputs.find((input) => input.props.name === name);
+    .inputs.find((input) => input.getProps().name === name);
 
   let validationError: string = "";
 
-  if (input && input instanceof HTMLInputElement) {
+  if (inputElement && inputElement instanceof HTMLInputElement && inputBlock) {
     if (!validationCb && rule) {
-      validationError = validate(input.value, rule);
+      validationError = validate(inputElement.value, rule);
     } else if (validationCb) {
       validationError = validationCb();
     }
-    inputObj.changeProps({ error: validationError, value: input.value });
+    inputBlock.changeProps({
+      error: validationError,
+      value: inputElement.value,
+    });
   }
 
   return validationError;

@@ -9,6 +9,7 @@ export interface InputProps {
   value: string;
   disabled?: boolean;
   placeholder?: string;
+  oneLine?: boolean;
 
   events?: {
     blur?: (event: Event) => void;
@@ -46,8 +47,10 @@ export class Input extends Block {
     // language=hbs
     return `
         <label class="label">
-             <span class="label-text">{{label}}</span>
-                <input class='input {{#if error}}input_error{{/if}}' placeholder='{{placeholder}}' name='{{name}}' type='{{type}}' autocomplete {{#if disabled}}disabled{{/if}} value={{value}}>
+          <div class="{{#if oneLine}}oneLine {{#if error}}oneLine_error{{/if}} {{#if disabled}}oneLine_disabled{{/if}}{{/if}}">
+            <span class="label-text {{#if oneLine}}label-text_oneLine{{/if}}">{{label}}</span>
+            <input class='input {{#if error}}{{#unless oneLine}}input_error{{/unless}}{{/if}} {{#if oneLine}}input_oneLine{{/if}}' placeholder='{{placeholder}}' name='{{name}}' type='{{type}}' autocomplete {{#if disabled}}disabled{{/if}} value={{value}}>
+          </div>
              <span class="error-text">{{error}}</span>
           </label>
     `;

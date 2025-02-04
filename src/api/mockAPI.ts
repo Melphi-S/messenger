@@ -344,6 +344,7 @@ export const MOCK_USERS: User[] = [
     displayName: "Ванёк",
     phone: "89991012233",
     avatar: "/mockAvatars/user.jpg",
+    login: "ivanivanov",
   },
   {
     id: 2,

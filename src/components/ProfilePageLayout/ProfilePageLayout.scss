@@ -16,3 +16,43 @@
   height: 100%;
   padding-top: 60px;
 }
+
+.fields-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 510px;
+  gap: 10px;
+
+  &__side-wrapper {
+    height: 100%;
+    display: grid;
+    grid-auto-rows: auto;
+    gap: 10px;
+    align-items: start;
+  }
+
+  &__field-name {
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 600;
+    padding-top: 15px;
+  }
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  max-width: 510px;
+}
+
+.profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+  width: 100%;
+}

@@ -3,7 +3,7 @@ import { CSSDisplayProperty } from "../types/types.ts";
 import Handlebars from "handlebars";
 
 interface BlockProps {
-  [key: string | symbol]: unknown;
+  [key: string]: unknown;
 }
 
 export abstract class Block {
@@ -15,15 +15,15 @@ export abstract class Block {
   };
 
   protected element: HTMLElement | null = null;
-  private readonly props: Record<string | symbol, unknown>;
+  private readonly props: Record<string, unknown>;
   protected tagName: keyof HTMLElementTagNameMap;
   protected children: Record<string, Block>;
-  protected lists: Record<string, any[]>;
+  protected lists: Record<string, Block[]>;
   protected eventBus: () => EventBus;
   protected id: number = Math.floor(100000 + Math.random() * 900000);
   private shouldUpdate: boolean = false;
 
-  constructor(
+  protected constructor(
     tagName: keyof HTMLElementTagNameMap,
     propsAndChildren: BlockProps = {},
   ) {
@@ -35,7 +35,7 @@ export abstract class Block {
 
     this.props = this.makePropsProxy(props);
     this.children = this.makePropsProxy(children);
-    this.lists = this.makePropsProxy({ ...lists });
+    this.lists = this.makePropsProxy(lists);
 
     this.eventBus = () => eventBus;
 
@@ -54,42 +54,20 @@ export abstract class Block {
   }
 
   protected addEvents(): void {
-    const { events = {} } = this.props;
+    const { events } = this.props;
+
+    if (!events) {
+      return;
+    }
 
     Object.keys(events).forEach((eventName) => {
       if (this.element) {
-        this.element.addEventListener(eventName, events[eventName]);
+        this.element.addEventListener(
+          eventName,
+          events[eventName as keyof typeof events],
+        );
       }
     });
-  }
-
-  private removeEvents(): void {
-    const { events = {} } = this.props;
-
-    Object.keys(events).forEach((eventName) => {
-      if (this.element) {
-        this.element.removeEventListener(eventName, events[eventName]);
-      }
-    });
-  }
-
-  protected addAttributes(): void {
-    // const { attrs = {} } = this.props;
-    //
-    // console.log(attrs);
-    //
-    // if (this)
-    //   Object.entries(attrs).forEach(([key, value]) => {
-    //     if (this.element) {
-    //       if (typeof value === "boolean") {
-    //         if (value) {
-    //           this.element.setAttribute(key, "");
-    //         }
-    //       } else {
-    //         this.element.setAttribute(key, String(value));
-    //       }
-    //     }
-    //   });
   }
 
   private createResources() {
@@ -115,11 +93,8 @@ export abstract class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
-  private privateComponentDidUpdate(
-    oldProps: BlockProps,
-    newProps: BlockProps,
-  ) {
-    const response = this.componentDidUpdate(oldProps, newProps);
+  private privateComponentDidUpdate() {
+    const response = this.componentDidUpdate();
     if (!response) {
       return;
     }
@@ -154,12 +129,13 @@ export abstract class Block {
 
     Object.entries(this.lists).forEach(([, child]) => {
       const listCont = this.createDocumentElement("template");
+
+      if (!Array.isArray(child)) {
+        return;
+      }
+
       child.forEach((item) => {
-        if (item instanceof Block) {
-          listCont.content.append(item.getContent());
-        } else {
-          listCont.content.append(`${item}`);
-        }
+        listCont.content.append(item.getContent());
       });
       const stub = fragment.content.querySelector(`[data-id="__l_${tmpId}"]`);
       if (stub) {
@@ -173,7 +149,6 @@ export abstract class Block {
     }
     this.element = newElement;
     this.addEvents();
-    this.addAttributes();
   }
 
   protected render() {}
@@ -197,11 +172,11 @@ export abstract class Block {
   private getChildrenAndProps(propsAndChildren: BlockProps): {
     children: Record<string, Block>;
     props: BlockProps;
-    lists: Record<string, any[]>;
+    lists: Record<string, Block[]>;
   } {
     const children: Record<string, Block> = {};
     const props: BlockProps = {};
-    const lists: Record<string, any[]> = {};
+    const lists: Record<string, Block[]> = {};
 
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (value instanceof Block) {
@@ -238,15 +213,15 @@ export abstract class Block {
     }
   }
 
-  private makePropsProxy(props: BlockProps) {
+  private makePropsProxy<T extends Record<string, unknown>>(props: T): T {
     return new Proxy(props, {
       get(target, prop) {
-        const value = target[prop];
+        const value = target[prop as keyof T];
         return typeof value === "function" ? value.bind(target) : value;
       },
       set: (target, prop, value) => {
-        if (target[prop] !== value) {
-          target[prop] = value;
+        if (target[prop as keyof T] !== value) {
+          target[prop as keyof T] = value;
           this.shouldUpdate = true;
         }
 
@@ -256,7 +231,6 @@ export abstract class Block {
   }
 
   private createDocumentElement(tagName: string) {
-    // Можно сделать метод, который через фрагменты в цикле создаёт сразу несколько блоков
     return document.createElement(tagName) as HTMLTemplateElement;
   }
 

@@ -102,7 +102,6 @@ export class Chat extends Block {
   protected _render() {
     super._render();
 
-    console.log("LOGIN");
     const container = this.element?.querySelector(".chat__main");
     if (!container) return;
 

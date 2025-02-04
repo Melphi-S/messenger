@@ -5,6 +5,9 @@ interface Props {
   size: "s" | "m" | "l";
   edit: boolean;
   imageSrc: string;
+  events?: {
+    click: () => void;
+  };
 }
 
 export class Avatar extends Block {
@@ -21,7 +24,7 @@ export class Avatar extends Block {
             <div class="avatar-wrapper avatar-wrapper_size_{{size}} {{#if edit}}avatar-wrapper_type_edit{{/if}}">
                 {{#if edit}}
                     <button class="avatar-wrapper__button">
-                        <img class="avatar" src={{src}} alt='avatar.'/>
+                        <img class="avatar" src={{imageSrc}} alt='avatar.'/>
                     </button>
                     <div class="avatar-wrapper_overlay" id="change-avatar">Поменять аватар</div>
                 {{else}}

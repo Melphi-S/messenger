@@ -22,7 +22,7 @@ export class ChatsPage extends Block {
         events: {
           click: (e) => {
             e.preventDefault();
-            app.navigate("/signup");
+            app.navigate("/profile");
           },
         },
       }),
@@ -68,7 +68,6 @@ export class ChatsPage extends Block {
   protected render() {
     super.render();
 
-    console.log("CHAT");
     // language=hbs
     return `
         <main class="page page_type_sidebar">

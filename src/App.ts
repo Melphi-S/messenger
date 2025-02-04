@@ -6,6 +6,11 @@ import { ChatsPage } from "./pages/Chats/Chats.ts";
 import { MOCK_CHATS } from "./api/mockAPI.ts";
 import { getFromLS, LSKeys } from "./utils/LS.ts";
 import { Chat } from "./components/Chat/Chat.ts";
+import { ProfilePage } from "./pages/Profile/Profile.ts";
+import { ProfileChangePage } from "./pages/ProfileChange/ProfileChange.ts";
+import { PasswordChangePage } from "./pages/PasswordChange/PasswordChange.ts";
+import { NotFoundPage } from "./pages/NotFound/NotFoundPage.ts";
+import { ErrorPage } from "./pages/Error/ErrorPage.ts";
 
 const pagesList: Record<Pages, () => Block> = {
   [Pages.ROOT]: () => new LoginPage(),
@@ -22,11 +27,11 @@ const pagesList: Record<Pages, () => Block> = {
           })
         : null,
     }),
-  // [Pages.PROFILE]: pages.Profile,
-  // [Pages.PROFILE_CHANGE]: pages.ProfileChange,
-  // [Pages.PASSWORD_CHANGE]: pages.PasswordChange,
-  // [Pages.NOT_FOUND]: pages.NotFound,
-  // [Pages.ERROR]: pages.Error,
+  [Pages.PROFILE]: () => new ProfilePage(),
+  [Pages.PROFILE_CHANGE]: () => new ProfileChangePage(),
+  [Pages.PASSWORD_CHANGE]: () => new PasswordChangePage(),
+  [Pages.NOT_FOUND]: () => new NotFoundPage(),
+  [Pages.ERROR]: () => new ErrorPage(),
 };
 
 class App {
@@ -51,49 +56,11 @@ class App {
         this.state.currentPage = pagesList[pathname as Pages]();
         this.element.innerHTML = "";
         this.element.append(this.state.currentPage.getContent());
+      } else {
+        this.navigate("/not-found");
       }
     }
   }
-
-  // addListeners() {
-  //   const navigationButtons = document.querySelectorAll(
-  //     "button[data-navigate]",
-  //   );
-  //   const avatarEditButton = document.querySelector("#change-avatar");
-  //   const form = document.querySelector("form");
-  //
-  //   form &&
-  //     form.addEventListener("submit", (e) => {
-  //       this.navigate(e);
-  //     });
-  //
-  //   navigationButtons.forEach((button) => {
-  //     button.addEventListener("click", (e) => {
-  //       this.navigate(e);
-  //     });
-  //   });
-  //
-  //   const removePopup = () => {
-  //     const popup = document.querySelector(".popup");
-  //     popup && popup.remove();
-  //   };
-  //
-  //   avatarEditButton &&
-  //     avatarEditButton.addEventListener("click", () => {
-  //       const page = document.querySelector(".page");
-  //       const popup = components.AvatarEditPopup({});
-  //       page && page.insertAdjacentHTML("beforeend", popup);
-  //
-  //       const overlay = document.querySelector(".popup__overlay");
-  //       overlay && overlay.addEventListener("click", removePopup);
-  //     });
-  //
-  //   document.addEventListener("keyup", (e) => {
-  //     if (e.key === "Escape") {
-  //       removePopup();
-  //     }
-  //   });
-  // }
 
   navigate(to: string) {
     window.history.pushState({}, "", to);
