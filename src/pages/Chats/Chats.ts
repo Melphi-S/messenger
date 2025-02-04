@@ -55,10 +55,21 @@ export class ChatsPage extends Block {
                     activeChat: new Chat({ chat: activeChat }),
                   });
 
+                  const previews = this.getLists().chatPreviews;
+
+                  previews
+                    .find((preview) => preview.getProps().isActive)
+                    ?.changeProps({ isActive: false });
+
+                  previews
+                    .find((preview) => preview.getProps().id === chat.id)
+                    ?.changeProps({ isActive: true });
+
                   saveToLS(LSKeys.LAST_CHAT, String(activeChat.id));
                 }
               },
             },
+            isActive: chat.id == activeChat?.getProps().id,
           }),
       ),
       activeChat,

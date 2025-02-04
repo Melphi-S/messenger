@@ -87,18 +87,18 @@ export class Chat extends Block {
       <div class="chat">
         <div class="chat__header">
           <div class="chat__participant-wrapper">
-            {{{image}}}
+            {{{ image }}}
             <span class="chat__participant-name">{{{name}}}</span>
           </div>
           {{{ userManagement }}}
         </div>
         <div class="chat__main scrollbar">
-            {{{messages}}}
+            {{{ messages }}}
         </div>
         <div class="chat__footer">
-          {{{fileAttach}}}
-          {{{messageInput}}}
-          {{{newMessageButton}}}
+          {{{ fileAttach }}}
+          {{{ messageInput }}}
+          {{{ newMessageButton }}}
         </div>
       <div>
     `;

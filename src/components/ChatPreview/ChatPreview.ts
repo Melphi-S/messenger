@@ -14,7 +14,7 @@ interface Props {
 }
 
 export class ChatPreview extends Block {
-  constructor({ chat, events }: Props) {
+  constructor({ chat, events, isActive }: Props) {
     super("div", {
       events,
       title:
@@ -45,6 +45,7 @@ export class ChatPreview extends Block {
         (message) => !message.seenBy.includes(currentUser.id),
       ).length,
       id: chat.id,
+      isActive: isActive,
     });
   }
 
