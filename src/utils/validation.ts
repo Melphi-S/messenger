@@ -11,7 +11,7 @@ type ValidationRule = { rule: RegExp; errorMessage: string };
 
 const validationRules: Record<ValidationRuleKey, ValidationRule> = {
   name: {
-    rule: /^[A-ZА-Я][a-zа-яёй]*$/,
+    rule: /^[A-ZА-Я][a-zа-яёйË]*$/,
     errorMessage:
       "The value must start with a capital letter and not contain spaces, numbers, or symbols (except for a hyphen).",
   },

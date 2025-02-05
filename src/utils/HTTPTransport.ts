@@ -13,60 +13,37 @@ type Options = {
   timeout?: number;
 };
 
+type HTTPMethod = <R = unknown>(
+  url: string,
+  options?: Partial<Options>,
+) => Promise<R>;
+
 function queryStringify(data: Record<string, unknown>) {
   const queries: string[] = [];
 
   for (const key in data) {
-    queries.push(`${key}=${data[key]}`);
+    const encodedKey = encodeURIComponent(key);
+    const encodedValue = encodeURIComponent(String(data[key]));
+    queries.push(`${encodedKey}=${encodedValue}`);
   }
 
-  return `?${queries.join("&")}`;
+  return queries.length ? `?${queries.join("&")}` : "";
 }
 
 export class HTTPTransport {
-  get = (url: string, options?: Options) => {
-    return this.request(
-      url,
-      { ...options, method: Methods.GET },
-      options?.timeout || 0,
-    );
-  };
+  public get = this.createMethod(Methods.GET);
+  public patch = this.createMethod(Methods.PATCH);
+  public put = this.createMethod(Methods.PUT);
+  public post = this.createMethod(Methods.POST);
+  public delete = this.createMethod(Methods.DELETE);
 
-  post = (url: string, options?: Options) => {
-    return this.request(
-      url,
-      { ...options, method: Methods.POST },
-      options?.timeout || 0,
-    );
-  };
+  private createMethod(method: Methods): HTTPMethod {
+    return (url, options = {}) => this.request(url, { ...options, method });
+  }
 
-  put = (url: string, options?: Options) => {
-    return this.request(
-      url,
-      { ...options, method: Methods.PUT },
-      options?.timeout || 0,
-    );
-  };
-
-  patch = (url: string, options?: Options) => {
-    return this.request(
-      url,
-      { ...options, method: Methods.PATCH },
-      options?.timeout || 0,
-    );
-  };
-
-  delete = (url: string, options?: Options) => {
-    return this.request(
-      url,
-      { ...options, method: Methods.DELETE },
-      options?.timeout || 0,
-    );
-  };
-
-  request = (url: string, options: Options, timeout = 5000) => {
-    return new Promise((resolve, reject) => {
-      const { data, headers, method = Methods.GET } = options;
+  private request = <R>(url: string, options: Options): Promise<R> => {
+    return new Promise<R>((resolve, reject) => {
+      const { data, headers, method = Methods.GET, timeout = 0 } = options;
 
       const xhr = new XMLHttpRequest();
 
@@ -81,16 +58,14 @@ export class HTTPTransport {
         xhr.setRequestHeader(header, headers[header]);
       }
 
-      const cancel = setTimeout(() => xhr.abort(), timeout);
-
       xhr.onload = () => {
-        clearTimeout(cancel);
-        resolve(xhr);
+        resolve(xhr.response);
       };
 
       xhr.onabort = reject;
       xhr.onerror = reject;
       xhr.ontimeout = reject;
+      xhr.timeout = timeout;
 
       if (method === Methods.GET) {
         xhr.send();
