@@ -22,7 +22,7 @@ export class ArrowButton extends Block {
     super.render();
     // language=hbs
     return `
-      <button class="arrow-button arrow-button_direction_{{direction}} {{#if disabled}}arrow-button_disabled{{/if}}" type="button"/>
+      <button class="arrow-button arrow-button_direction_{{ direction }} {{#if disabled}}arrow-button_disabled{{/if}}" type="button"/>
     `;
   }
 }

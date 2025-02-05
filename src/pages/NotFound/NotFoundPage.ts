@@ -1,4 +1,4 @@
-import { ErrorPageLayout } from "../../components/ErrorPageLayout/ErrorPageLayout.ts";
+import { ErrorPageLayout } from "../../components/ErrorPageLayout";
 
 export class NotFoundPage extends ErrorPageLayout {
   constructor() {

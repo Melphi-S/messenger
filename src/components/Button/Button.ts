@@ -25,7 +25,7 @@ export class Button extends Block {
     // language=hbs
     return `
       <button class="button button_type_{{view}} {{#if disabled}}button_disabled{{/if}}" type="{{type}}" {{#if disabled}}disabled{{/if}}">
-        {{text}}
+        {{ text }}
       </button>
     `;
   }

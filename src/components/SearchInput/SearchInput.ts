@@ -27,7 +27,7 @@ export class SearchInput extends Input {
     super.render();
     // language=hbs
     return `
-      <input class='search-input' placeholder='{{placeholder}}' name='{{name}}' type='text'/>
+      <input class='search-input' placeholder='{{ placeholder }}' name='{{ name }}' type='text'/>
     `;
   }
 }

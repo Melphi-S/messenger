@@ -1,7 +1,7 @@
 import { Block } from "../../core/Block.ts";
 import "./AuthLayout.scss";
-import { Input } from "../Input/Input.ts";
-import { Button } from "../Button/Button.ts";
+import { Input } from "../Input";
+import { Button } from "../Button";
 
 interface Props {
   title: string;
@@ -23,9 +23,9 @@ export class AuthLayout extends Block {
       <main class="page">
         <form class="auth-form" data-navigate="/chats">
           <div>
-            <h1 class="form-header">{{{title}}}</h1>
+            <h1 class="form-header">{{{ title }}}</h1>
             <div class="inputs-wrapper">
-              {{{inputs}}}
+              {{{ inputs }}}
             </div>
           </div>
             <div class="auth-button-container">

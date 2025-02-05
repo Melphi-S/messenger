@@ -1,12 +1,12 @@
 import { Block } from "../../core/Block.ts";
-import { ArrowButton } from "../ArrowButton/ArrowButton.ts";
-import { Avatar } from "../Avatar/Avatar.ts";
+import { ArrowButton } from "../ArrowButton";
+import { Avatar } from "../Avatar";
 import { currentUser } from "../../api/mockAPI.ts";
 import "./ProfilePageLayout.scss";
-import { Popup } from "../Popup/Popup.ts";
-import { AvatarEdit } from "../AvatarEditPopup/AvatarEdit.ts";
-import { Input } from "../Input/Input.ts";
-import { Button } from "../Button/Button.ts";
+import { Popup } from "../Popup";
+import { AvatarEdit } from "../AvatarEditPopup";
+import { Input } from "../Input";
+import { Button } from "../Button";
 
 interface Props {
   inputs: Input[];
@@ -57,7 +57,7 @@ export class ProfilePageLayout extends Block {
               {{{ inputs }}}
             </div>
             <div class="buttons-container">
-              {{{buttons}}}
+              {{{ buttons }}}
             </div>
           </div>
         </div>

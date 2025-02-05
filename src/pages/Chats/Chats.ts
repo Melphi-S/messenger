@@ -1,11 +1,11 @@
 import { Block } from "../../core/Block.ts";
 import "./Chats.scss";
-import { Button } from "../../components/Button/Button.ts";
+import { Button } from "../../components/Button";
 import app from "../../App.ts";
-import { SearchInput } from "../../components/SearchInput/SearchInput.ts";
-import { ChatPreview } from "../../components/ChatPreview/ChatPreview.ts";
+import { SearchInput } from "../../components/SearchInput";
+import { ChatPreview } from "../../components/ChatPreview";
 import { MOCK_CHATS } from "../../api/mockAPI.ts";
-import { Chat } from "../../components/Chat/Chat.ts";
+import { Chat } from "../../components/Chat";
 import { LSKeys, saveToLS } from "../../utils/LS.ts";
 
 interface Props {
@@ -92,7 +92,7 @@ export class ChatsPage extends Block {
           </div>
         </div>
         {{#if activeChat}}
-          {{{activeChat}}}
+          {{{ activeChat }}}
         {{else}}
           <p class="chats-main_select-message">
             Select a chat

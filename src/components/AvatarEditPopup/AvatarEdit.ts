@@ -1,5 +1,5 @@
 import { Block } from "../../core/Block.ts";
-import { Button } from "../Button/Button.ts";
+import { Button } from "../Button";
 import "./AvatarEdit.scss";
 
 export class AvatarEdit extends Block {
@@ -39,8 +39,8 @@ export class AvatarEdit extends Block {
         <p class="avatar-edit-popup__text">
            Upload new image
         </p>
-        {{{selectButton}}}
-        {{{submitButton}}}
+        {{{ selectButton }}}
+        {{{ submitButton }}}
       </div>
     `;
   }

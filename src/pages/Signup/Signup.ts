@@ -1,11 +1,11 @@
-import { AuthLayout } from "../../components/AuthLayout/AuthLayout.ts";
-import { Input } from "../../components/Input/Input.ts";
+import { AuthLayout } from "../../components/AuthLayout";
+import { Input } from "../../components/Input";
 import {
   validateInput,
   validatePasswordMatch,
   ValidationRuleKey,
 } from "../../utils/validation.ts";
-import { Button } from "../../components/Button/Button.ts";
+import { Button } from "../../components/Button";
 import app from "../../App.ts";
 import { getFormData } from "../../utils/getFormData.ts";
 

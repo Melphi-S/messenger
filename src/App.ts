@@ -1,16 +1,16 @@
 import { Pages } from "./types/types.ts";
-import { LoginPage } from "./pages/Login/Login.ts";
+import { LoginPage } from "./pages/Login";
 import { Block } from "./core/Block.ts";
-import { SignupPage } from "./pages/Signup/Signup.ts";
-import { ChatsPage } from "./pages/Chats/Chats.ts";
+import { SignupPage } from "./pages/Signup";
+import { ChatsPage } from "./pages/Chats";
 import { MOCK_CHATS } from "./api/mockAPI.ts";
 import { getFromLS, LSKeys } from "./utils/LS.ts";
-import { Chat } from "./components/Chat/Chat.ts";
-import { ProfilePage } from "./pages/Profile/Profile.ts";
-import { ProfileChangePage } from "./pages/ProfileChange/ProfileChange.ts";
-import { PasswordChangePage } from "./pages/PasswordChange/PasswordChange.ts";
-import { NotFoundPage } from "./pages/NotFound/NotFoundPage.ts";
-import { ErrorPage } from "./pages/Error/ErrorPage.ts";
+import { Chat } from "./components/Chat";
+import { ProfilePage } from "./pages/Profile";
+import { ProfileChangePage } from "./pages/ProfileChange";
+import { PasswordChangePage } from "./pages/PasswordChange";
+import { NotFoundPage } from "./pages/NotFound";
+import { ErrorPage } from "./pages/Error";
 
 const pagesList: Record<Pages, () => Block> = {
   [Pages.ROOT]: () => new LoginPage(),

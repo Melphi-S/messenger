@@ -1,6 +1,6 @@
 import { Block } from "../../core/Block.ts";
 import "./ChatPreview.scss";
-import { Avatar } from "../Avatar/Avatar.ts";
+import { Avatar } from "../Avatar";
 import { Chat } from "../../api/models/chat.model.ts";
 import { currentUser, MOCK_USERS } from "../../api/mockAPI.ts";
 import { dateToChatView } from "../../utils/parseDate.ts";
@@ -56,12 +56,12 @@ export class ChatPreview extends Block {
       <div class="preview-message {{#if isActive}}preview-message_active{{/if}}" id="{{{id}}}">
         {{{ avatar }}}
         <div class="preview-message__mainContainer">
-          <p class="preview-message__title">{{{title}}}</p>
-          <p class="preview-message__message"> <span class="preview-message__authorSpan">{{#if curUserMessage}}Вы: {{/if}}</span>{{lastMessage}}</p>
+          <p class="preview-message__title">{{{ title }}}</p>
+          <p class="preview-message__message"> <span class="preview-message__authorSpan">{{#if curUserMessage}}Вы: {{/if}}</span>{{{ lastMessage }}}</p>
         </div>
         <div class="preview-message__rightContainer">
-          <span class="preview-message__date">{{{date}}}</span>
-          {{#if unreadMessages}} <div class="preview-message__unreadCount">{{{unreadMessages}}}</div> {{/if}}
+          <span class="preview-message__date">{{{ date }}}</span>
+          {{#if unreadMessages}} <div class="preview-message__unreadCount">{{{ unreadMessages }}}</div> {{/if}}
         </div>
       <div>
     `;

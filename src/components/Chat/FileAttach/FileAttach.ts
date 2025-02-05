@@ -1,7 +1,7 @@
 import { Block } from "../../../core/Block.ts";
 import "./FileAttach.scss";
-import { Hint } from "../../Hint/Hint.ts";
-import { HintButton } from "../../HintButton/HintButton.ts";
+import { Hint } from "../../Hint";
+import { HintButton } from "../../HintButton";
 import app from "../../../App.ts";
 
 export class FileAttach extends Block {

@@ -1,6 +1,6 @@
 import { Block } from "../../core/Block.ts";
 import "./Popup.scss";
-import { Overlay } from "../Overlay/Overlay.ts";
+import { Overlay } from "../Overlay";
 
 interface Props {
   content: Block;

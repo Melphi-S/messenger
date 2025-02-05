@@ -1,6 +1,6 @@
 import { Block } from "../../core/Block.ts";
 import "./ErrorPageLayout.scss";
-import { Button } from "../Button/Button.ts";
+import { Button } from "../Button";
 import app from "../../App.ts";
 
 interface Props {
@@ -30,8 +30,8 @@ export class ErrorPageLayout extends Block {
       <main class="page">
         <div class="error-page">
           <div class="error-page__content">
-              <span class="error-page__code">{{code}}</span>
-              <span class="error-page__text">{{title}}</span>
+              <span class="error-page__code">{{{ code }}}</span>
+              <span class="error-page__text">{{{ title }}}</span>
           </div>
           {{{ button }}}
         </div>

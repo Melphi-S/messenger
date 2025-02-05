@@ -1,6 +1,6 @@
-import { Input } from "../../components/Input/Input.ts";
-import { Button } from "../../components/Button/Button.ts";
-import { AuthLayout } from "../../components/AuthLayout/AuthLayout.ts";
+import { Input } from "../../components/Input";
+import { Button } from "../../components/Button";
+import { AuthLayout } from "../../components/AuthLayout";
 import { validateInput, ValidationRuleKey } from "../../utils/validation.ts";
 import app from "../../App.ts";
 import { getFormData } from "../../utils/getFormData.ts";

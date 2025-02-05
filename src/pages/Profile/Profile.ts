@@ -1,7 +1,7 @@
-import { ProfilePageLayout } from "../../components/ProfilePageLayout/ProfilePageLayout.ts";
-import { Button } from "../../components/Button/Button.ts";
+import { ProfilePageLayout } from "../../components/ProfilePageLayout";
+import { Button } from "../../components/Button";
 import app from "../../App.ts";
-import { Input } from "../../components/Input/Input.ts";
+import { Input } from "../../components/Input";
 import { currentUser } from "../../api/mockAPI.ts";
 
 export class ProfilePage extends ProfilePageLayout {

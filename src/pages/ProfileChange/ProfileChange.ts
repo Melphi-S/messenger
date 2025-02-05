@@ -1,6 +1,6 @@
-import { ProfilePageLayout } from "../../components/ProfilePageLayout/ProfilePageLayout.ts";
-import { Button } from "../../components/Button/Button.ts";
-import { Input } from "../../components/Input/Input.ts";
+import { ProfilePageLayout } from "../../components/ProfilePageLayout";
+import { Button } from "../../components/Button";
+import { Input } from "../../components/Input";
 import { currentUser } from "../../api/mockAPI.ts";
 import { validateInput, ValidationRuleKey } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";

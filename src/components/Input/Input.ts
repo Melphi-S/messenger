@@ -48,10 +48,10 @@ export class Input extends Block {
     return `
       <label class="label">
         <div class="{{#if oneLine}}one-line{{#if error}}one-line_error{{/if}} {{#if disabled}}one-line_disabled{{/if}}{{/if}}">
-          <span class="label-text {{#if oneLine}}label-text_oneLine{{/if}}">{{label}}</span>
-          <input class='input {{#if error}}{{#unless oneLine}}input_error{{/unless}}{{/if}} {{#if oneLine}}input_oneLine{{/if}}' placeholder='{{placeholder}}' name='{{name}}' type='{{type}}' autocomplete {{#if disabled}}disabled{{/if}} value={{value}}>
+          <span class="label-text {{#if oneLine}}label-text_oneLine{{/if}}">{{ label }}</span>
+          <input class='input {{#if error}}{{#unless oneLine}}input_error{{/unless}}{{/if}} {{#if oneLine}}input_oneLine{{/if}}' placeholder='{{ placeholder }}' name='{{ name }}' type='{{ type }}' autocomplete {{#if disabled}}disabled{{/if}} value={{ value }}>
         </div>
-           <span class="error-text">{{error}}</span>
+           <span class="error-text">{{ error }}</span>
         </label>
     `;
   }
