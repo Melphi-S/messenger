@@ -12,7 +12,7 @@ export abstract class Block {
     FLOW_CDM: "flow:component-did-mount",
     FLOW_CDU: "flow:component-did-update",
     FLOW_RENDER: "flow:render",
-  };
+  } as const;
 
   protected element: HTMLElement | null = null;
   private readonly props: Record<string, unknown>;
