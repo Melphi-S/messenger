@@ -1,0 +1,15 @@
+.file-attach {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+
+  &:hover svg * {
+    fill: #3369F3
+  }
+
+  &:hover .hint {
+    visibility: visible;
+    pointer-events: auto;
+  }
+}

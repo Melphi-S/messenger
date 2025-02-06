@@ -1,0 +1,48 @@
+@use "../../styles/variables" as vars;
+
+.chat {
+  width: 100%;
+  height: 100svh;
+  padding: 10px 20px;
+  display: grid;
+  grid-auto-rows: auto 1fr auto;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+  }
+
+  &__main {
+    padding: 20px 0;
+    border-top: 1px solid vars.$border-color;
+    border-bottom: 1px solid vars.$border-color;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-content: start;
+    justify-items: left;
+    overflow-y: scroll;
+  }
+
+  &__footer {
+    display: grid;
+    gap: 10px;
+    align-items: center;
+    grid-template-columns: auto 1fr auto;
+    padding-top: 10px;
+  }
+
+  &__participant-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+
+  &__participant-name {
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+  }
+}

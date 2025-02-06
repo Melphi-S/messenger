@@ -2,23 +2,25 @@
 @use "variables" as vars;
 
 @font-face {
-  font-family: "Inter";
+  font-family: Inter;
   src:  url("src/assets/fonts/Inter.ttf") format("truetype-variations");
   font-weight: normal;
 }
-
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 }
 
 .page {
   width: 100svw;
-  height: 100svh;
+  min-height: 100svh;
   color: vars.$text-color-main;
+
   @include mixins.flex-center;
 
   &_type_sidebar {
@@ -27,43 +29,16 @@
 }
 }
 
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 50px 30px 30px;
-  box-shadow: 0 0 6px 0 #00000024;
-  min-height: 450px;
-  min-width: 340px;
+::-webkit-scrollbar {
+  height: 2px;
+  width: 2px;
 }
 
-.auth-button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  margin-top: 47px;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.form-header {
-  font-size: 1.25rem;
-  line-height: 1em;
-  font-weight: 500;
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.profile-form {
-  width: 100%;
-  max-width: 510px;
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-}
-
-.inputs-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 5px;
 }

@@ -1,0 +1,25 @@
+@use "../../../styles/variables" as vars;
+
+.user-management {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  position: relative;
+
+  &:hover {
+    background-color: vars.$secondary-color;
+  }
+
+  &:hover svg * {
+    fill: #3369F3
+  }
+
+  &:hover .hint {
+    visibility: visible;
+    pointer-events: auto;
+  }
+}

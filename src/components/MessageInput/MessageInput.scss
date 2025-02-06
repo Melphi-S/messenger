@@ -1,0 +1,13 @@
+@use "../../styles/variables" as vars;
+
+.message-input {
+  width: 100%;
+  height: 32px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  line-height: 0.75rem;
+  font-weight: 500;
+  background-color: vars.$secondary-color;
+  border: none;
+  padding: 10px 20px;
+}

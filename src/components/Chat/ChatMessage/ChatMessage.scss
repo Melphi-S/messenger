@@ -1,0 +1,81 @@
+@use "../../../styles/variables" as vars;
+
+.chat-message {
+  max-width: 45%;
+  min-width: 100px;
+  padding: 11px;
+
+  &_type_his {
+    background-color: vars.$background-side-color;
+    border-radius: 0 12px 12px;
+  }
+
+  &_type_mine {
+    background-color: vars.$background-active;
+    border-radius: 12px 12px 0;
+    justify-self: end;
+  }
+
+  &__text {
+    white-space: pre-line;
+    font-size: 0.75rem;
+    line-height: 0.9375rem;
+    font-weight: 500;
+  }
+
+  &__date-wrapper {
+    float: right;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 30px;
+
+    &_type_image {
+      position: absolute;
+      bottom: 11px;
+      right: 11px;
+      background-color: vars.$text-color-pale;
+    }
+  }
+
+  &__read-icon {
+    width: 9px;
+    height: 5px;
+    background-image: url("../../../assets/icons/read.svg");
+  }
+
+  &__date {
+    font-size: 0.5625rem;
+    line-height: 0.5625rem;
+    font-weight: 500;
+
+    &_type_his {
+      color: vars.$text-color-pale;
+    }
+
+    &_type_mine {
+      color: vars.$primary-color;
+    }
+
+    &_color_revert{
+      color: vars.$text-color-revert;
+    }
+  }
+}
+
+.chat-image {
+  max-width: 45%;
+  border-radius: 12px;
+  position: relative;
+
+  &_type_mine {
+    justify-self: end;
+  }
+
+  &__image {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+}
