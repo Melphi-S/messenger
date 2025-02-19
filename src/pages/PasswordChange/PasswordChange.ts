@@ -7,7 +7,6 @@ import {
   ValidationRuleKey,
 } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
-import app from "../../App.ts";
 
 export class PasswordChangePage extends ProfilePageLayout {
   constructor() {
@@ -86,8 +85,6 @@ export class PasswordChangePage extends ProfilePageLayout {
 
                 //TODO Change to real API request
                 console.log(body);
-
-                app.navigate("/profile");
               }
             },
           },

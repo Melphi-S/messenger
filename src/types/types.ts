@@ -34,3 +34,7 @@ export type CSSDisplayProperty =
   | "inherit"
   | "initial"
   | "unset";
+
+export type Indexed<T = any> = {
+  [key in string]: T;
+};

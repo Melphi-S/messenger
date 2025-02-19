@@ -12,13 +12,14 @@ interface Props {
 
 export class Avatar extends Block {
   constructor(props: Props) {
-    super("div", {
+    super({
       ...props,
     });
   }
 
   protected render() {
     super.render();
+
     // language=hbs
     return `
       <div class="avatar-wrapper avatar-wrapper_size_{{ size }} {{#if edit}}avatar-wrapper_type_edit{{/if}}">

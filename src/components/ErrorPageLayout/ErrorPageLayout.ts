@@ -1,7 +1,6 @@
 import { Block } from "../../core/Block.ts";
 import "./ErrorPageLayout.scss";
 import { Button } from "../Button";
-import app from "../../App.ts";
 
 interface Props {
   code: string;
@@ -10,14 +9,14 @@ interface Props {
 
 export class ErrorPageLayout extends Block {
   constructor(props: Props) {
-    super("button", {
+    super({
       ...props,
       button: new Button({
         text: "Back to chats",
         type: "button",
         view: "secondary",
         events: {
-          click: () => app.navigate("/chats"),
+          click: () => {},
         },
       }),
     });

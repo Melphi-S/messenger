@@ -15,7 +15,7 @@ interface Props {
 
 export class Chat extends Block {
   constructor({ chat }: Props) {
-    super("div", {
+    super({
       id: chat.id,
       messages: chat.messages.map((message) => {
         return new ChatMessage({ message });

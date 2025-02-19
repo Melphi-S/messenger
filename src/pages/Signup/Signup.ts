@@ -6,8 +6,10 @@ import {
   ValidationRuleKey,
 } from "../../utils/validation.ts";
 import { Button } from "../../components/Button";
-import app from "../../App.ts";
 import { getFormData } from "../../utils/getFormData.ts";
+import { router } from "../../main.ts";
+import { authController } from "../../controllers/AuthController.ts";
+import { SignUpDTO } from "../../api/ authAPI";
 
 export class SignupPage extends AuthLayout {
   constructor() {
@@ -128,12 +130,11 @@ export class SignupPage extends AuthLayout {
               }
 
               if (!hasError) {
-                const body = getFormData(this, ["repeat_password"]);
+                const body = getFormData(this, [
+                  "repeat_password",
+                ]) as SignUpDTO;
 
-                //TODO Change to real API request
-                console.log(body);
-
-                app.navigate("/chats");
+                authController.signup(body);
               }
             },
           },
@@ -145,7 +146,7 @@ export class SignupPage extends AuthLayout {
           events: {
             click: (e) => {
               e.preventDefault();
-              app.navigate("/login");
+              router.go("/login");
             },
           },
         }),

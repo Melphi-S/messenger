@@ -9,7 +9,7 @@ interface Props {
 
 export class Popup extends Block {
   constructor(props: Props) {
-    super("div", {
+    super({
       ...props,
       overlay: new Overlay({
         events: {

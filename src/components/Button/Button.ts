@@ -15,7 +15,7 @@ interface Props {
 
 export class Button extends Block {
   constructor(props: Props) {
-    super("button", {
+    super({
       ...props,
     });
   }

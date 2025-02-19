@@ -13,7 +13,7 @@ interface Props {
 
 export class ArrowButton extends Block {
   constructor(props: Props) {
-    super("button", {
+    super({
       ...props,
     });
   }

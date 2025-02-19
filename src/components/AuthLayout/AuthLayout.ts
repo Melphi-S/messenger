@@ -1,17 +1,18 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./AuthLayout.scss";
 import { Input } from "../Input";
 import { Button } from "../Button";
+import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 
-interface Props {
+interface Props extends BlockProps {
   title: string;
   inputs: Input[];
   buttons: Button[];
 }
 
-export class AuthLayout extends Block {
+class AuthLayout extends Block {
   constructor(props: Props) {
-    super("main", {
+    super({
       ...props,
     });
   }
@@ -36,3 +37,5 @@ export class AuthLayout extends Block {
     `;
   }
 }
+
+export default withAuthCheck(AuthLayout, "public");

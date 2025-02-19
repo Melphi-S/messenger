@@ -2,8 +2,9 @@ import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
 import { AuthLayout } from "../../components/AuthLayout";
 import { validateInput, ValidationRuleKey } from "../../utils/validation.ts";
-import app from "../../App.ts";
 import { getFormData } from "../../utils/getFormData.ts";
+import { router } from "../../main.ts";
+import { authController } from "../../controllers/AuthController.ts";
 
 export class LoginPage extends AuthLayout {
   constructor() {
@@ -39,7 +40,7 @@ export class LoginPage extends AuthLayout {
           type: "submit",
           text: "Sign in",
           events: {
-            click: (e) => {
+            click: async (e) => {
               e.preventDefault();
 
               const inputsToValidate: [string, ValidationRuleKey][] = [
@@ -59,9 +60,8 @@ export class LoginPage extends AuthLayout {
                 const body = getFormData(this);
 
                 //TODO Change to real API request
-                console.log(body);
-
-                app.navigate("/chats");
+                await authController.signin(body);
+                authController.getCurrentUser();
               }
             },
           },
@@ -73,7 +73,7 @@ export class LoginPage extends AuthLayout {
           events: {
             click: (e) => {
               e.preventDefault();
-              app.navigate("/signup");
+              router.go("/signup");
             },
           },
         }),

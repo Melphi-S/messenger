@@ -2,11 +2,10 @@ import { Block } from "../../../core/Block.ts";
 import "./FileAttach.scss";
 import { Hint } from "../../Hint";
 import { HintButton } from "../../HintButton";
-import app from "../../../App.ts";
 
 export class FileAttach extends Block {
   constructor() {
-    super("div", {
+    super({
       hint: new Hint({
         position: "top",
         content: [
@@ -14,21 +13,21 @@ export class FileAttach extends Block {
             type: "media",
             text: "Photo/Video",
             events: {
-              click: () => app.navigate("/error"),
+              click: () => {},
             },
           }),
           new HintButton({
             type: "file",
             text: "File",
             events: {
-              click: () => app.navigate("/error"),
+              click: () => {},
             },
           }),
           new HintButton({
             type: "location",
             text: "Location",
             events: {
-              click: () => app.navigate("/error"),
+              click: () => {},
             },
           }),
         ],

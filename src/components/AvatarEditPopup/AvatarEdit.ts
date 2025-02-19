@@ -4,7 +4,7 @@ import "./AvatarEdit.scss";
 
 export class AvatarEdit extends Block {
   constructor() {
-    super("div", {
+    super({
       selectButton: new Button({
         text: "Select file",
         view: "secondary",

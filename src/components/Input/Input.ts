@@ -20,7 +20,7 @@ export interface InputProps {
 
 export class Input extends Block {
   constructor(props: InputProps) {
-    super("label", {
+    super({
       ...props,
     });
   }

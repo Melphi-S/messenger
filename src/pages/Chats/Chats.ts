@@ -1,20 +1,23 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./Chats.scss";
 import { Button } from "../../components/Button";
-import app from "../../App.ts";
 import { SearchInput } from "../../components/SearchInput";
 import { ChatPreview } from "../../components/ChatPreview";
 import { MOCK_CHATS } from "../../api/mockAPI.ts";
 import { Chat } from "../../components/Chat";
 import { LSKeys, saveToLS } from "../../utils/LS.ts";
+import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
+import { User } from "../../api/models/user.model.ts";
+import { router } from "../../main.ts";
 
-interface Props {
-  activeChat: Chat | null;
+interface ChatProps extends BlockProps {
+  currentUser: User;
 }
 
-export class ChatsPage extends Block {
-  constructor({ activeChat }: Props) {
-    super("main", {
+class ChatsPage extends Block {
+  constructor(props: ChatProps) {
+    super({
+      ...props,
       profileButton: new Button({
         view: "ghost",
         type: "button",
@@ -22,7 +25,7 @@ export class ChatsPage extends Block {
         events: {
           click: (e) => {
             e.preventDefault();
-            app.navigate("/profile");
+            router.go("/profile");
           },
         },
       }),
@@ -69,10 +72,8 @@ export class ChatsPage extends Block {
                 }
               },
             },
-            isActive: chat.id == activeChat?.getProps().id,
           }),
       ),
-      activeChat,
     });
   }
 
@@ -102,3 +103,5 @@ export class ChatsPage extends Block {
     `;
   }
 }
+
+export default withAuthCheck(ChatsPage, "private");

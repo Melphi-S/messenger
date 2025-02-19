@@ -1,21 +1,23 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import { ArrowButton } from "../ArrowButton";
 import { Avatar } from "../Avatar";
-import { currentUser } from "../../api/mockAPI.ts";
 import "./ProfilePageLayout.scss";
 import { Popup } from "../Popup";
 import { AvatarEdit } from "../AvatarEditPopup";
 import { Input } from "../Input";
 import { Button } from "../Button";
+import { User } from "../../api/models/user.model.ts";
+import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 
-interface Props {
+interface Props extends BlockProps {
   inputs: Input[];
   buttons: Button[];
+  currentUser: User;
 }
 
 export class ProfilePageLayout extends Block {
-  constructor({ inputs, buttons }: Props) {
-    super("main", {
+  constructor({ inputs, buttons, currentUser }: Props) {
+    super({
       backButton: new ArrowButton({
         direction: "left",
         type: "button",
@@ -26,7 +28,9 @@ export class ProfilePageLayout extends Block {
       avatar: new Avatar({
         size: "l",
         edit: true,
-        imageSrc: currentUser.avatar,
+        imageSrc:
+          "https://ya-praktikum.tech/api/v2/resources" + currentUser?.avatar ||
+          "",
         events: {
           click: () => {
             this.getChildren().popup.changeProps({ hidden: false });
@@ -39,11 +43,13 @@ export class ProfilePageLayout extends Block {
       }),
       inputs: inputs,
       buttons: buttons,
+      currentUser,
     });
   }
 
   protected render() {
     super.render();
+
     // language=hbs
     return `
       <main class="page page_type_sidebar">
@@ -66,3 +72,5 @@ export class ProfilePageLayout extends Block {
     `;
   }
 }
+
+export default ProfilePageLayout;

@@ -1,12 +1,11 @@
 import { EventBus } from "./EventBus.ts";
-import { CSSDisplayProperty } from "../types/types.ts";
 import Handlebars from "handlebars";
 
-interface BlockProps {
+export interface BlockProps {
   [key: string]: unknown;
 }
 
-export abstract class Block {
+export class Block {
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",
@@ -16,20 +15,15 @@ export abstract class Block {
 
   protected element: HTMLElement | null = null;
   private readonly props: Record<string, unknown>;
-  protected tagName: keyof HTMLElementTagNameMap;
   protected children: Record<string, Block>;
   protected lists: Record<string, Block[]>;
   protected eventBus: () => EventBus;
   protected id: number = Math.floor(100000 + Math.random() * 900000);
   private shouldUpdate: boolean = false;
 
-  protected constructor(
-    tagName: keyof HTMLElementTagNameMap,
-    propsAndChildren: BlockProps = {},
-  ) {
+  constructor(propsAndChildren: BlockProps = {}) {
     const eventBus = new EventBus();
 
-    this.tagName = tagName;
     const { props, children, lists } =
       this.getChildrenAndProps(propsAndChildren);
 
@@ -71,7 +65,7 @@ export abstract class Block {
   }
 
   private createResources() {
-    this.element = this.createDocumentElement(this.tagName);
+    this.element = this.createDocumentElement("div");
   }
 
   init() {
@@ -80,16 +74,14 @@ export abstract class Block {
   }
 
   private _componentDidMount() {
-    if (this.componentDidMount()) {
-      this.dispatchComponentDidMount();
-    }
+    this.componentDidMount();
   }
 
   componentDidMount() {
     return true;
   }
 
-  private dispatchComponentDidMount() {
+  public dispatchComponentDidMount() {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
@@ -213,6 +205,16 @@ export abstract class Block {
     }
   }
 
+  public changeLists(newLists: Record<string, Block[]>) {
+    const oldLists = { ...this.lists };
+
+    Object.entries(newLists).forEach(([key, value]) => {
+      if (JSON.stringify(this.lists[key]) !== JSON.stringify(value)) {
+        this.lists[key] = value;
+      }
+    });
+  }
+
   private makePropsProxy<T extends Record<string, unknown>>(props: T): T {
     return new Proxy(props, {
       get(target, prop) {
@@ -240,18 +242,5 @@ export abstract class Block {
 
   public getLists() {
     return this.lists;
-  }
-
-  public show(display: CSSDisplayProperty = "block") {
-    if (this.element) {
-      this.element.style.display = display;
-    }
-  }
-
-  public hide() {
-    if (this.element) {
-      console.log(this.element);
-      this.element.style.display = "none";
-    }
   }
 }

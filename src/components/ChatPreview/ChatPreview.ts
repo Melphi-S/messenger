@@ -15,7 +15,7 @@ interface Props {
 
 export class ChatPreview extends Block {
   constructor({ chat, events, isActive }: Props) {
-    super("div", {
+    super({
       events,
       title:
         chat.name ||

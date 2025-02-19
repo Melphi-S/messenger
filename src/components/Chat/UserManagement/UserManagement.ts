@@ -2,11 +2,10 @@ import { Block } from "../../../core/Block.ts";
 import "./UserManagement.scss";
 import { Hint } from "../../Hint";
 import { HintButton } from "../../HintButton";
-import app from "../../../App.ts";
 
 export class UserManagement extends Block {
   constructor() {
-    super("div", {
+    super({
       hint: new Hint({
         position: "bottom",
         content: [
@@ -14,14 +13,14 @@ export class UserManagement extends Block {
             type: "add",
             text: "Add user",
             events: {
-              click: () => app.navigate("/error"),
+              click: () => {},
             },
           }),
           new HintButton({
             type: "delete",
             text: "Delete user",
             events: {
-              click: () => app.navigate("/error"),
+              click: () => {},
             },
           }),
         ],

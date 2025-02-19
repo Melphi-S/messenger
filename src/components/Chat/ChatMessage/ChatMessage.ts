@@ -10,7 +10,7 @@ interface Props {
 
 export class ChatMessage extends Block {
   constructor({ message }: Props) {
-    super("div", {
+    super({
       text: message.type === "text",
       body: message.body,
       author: message.authorId === currentUser.id ? "mine" : "his",

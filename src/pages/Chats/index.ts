@@ -1,1 +1,3 @@
-export { ChatsPage } from "./Chats.ts";
+import ChatsPage from "./Chats.ts";
+
+export default ChatsPage;

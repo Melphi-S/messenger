@@ -11,7 +11,7 @@ interface Props {
 
 export class HintButton extends Block {
   constructor({ type, text, ...props }: Props) {
-    super("div", {
+    super({
       ...props,
       type: type,
       text: text,

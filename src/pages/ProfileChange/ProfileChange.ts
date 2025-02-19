@@ -4,7 +4,6 @@ import { Input } from "../../components/Input";
 import { currentUser } from "../../api/mockAPI.ts";
 import { validateInput, ValidationRuleKey } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
-import app from "../../App.ts";
 
 export class ProfileChangePage extends ProfilePageLayout {
   constructor() {
@@ -113,8 +112,6 @@ export class ProfileChangePage extends ProfilePageLayout {
 
                 //TODO Change to real API request
                 console.log(body);
-
-                app.navigate("/profile");
               }
             },
           },
