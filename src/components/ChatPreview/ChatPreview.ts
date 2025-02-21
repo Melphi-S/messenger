@@ -24,17 +24,17 @@ export class ChatPreview extends Block {
             user.id === chat.participants.find((id) => id !== currentUser.id),
         )?.displayName ||
         "New chat",
-      avatar: new Avatar({
-        size: "s",
-        edit: false,
-        imageSrc:
-          chat.image ||
-          MOCK_USERS.find(
-            (user) =>
-              user.id === chat.participants.find((id) => id !== currentUser.id),
-          )?.avatar ||
-          "",
-      }),
+      // avatar: new Avatar({
+      //   size: "s",
+      //   edit: false,
+      //   imageSrc:
+      //     chat.image ||
+      //     MOCK_USERS.find(
+      //       (user) =>
+      //         user.id === chat.participants.find((id) => id !== currentUser.id),
+      //     )?.avatar ||
+      //     "",
+      // }),
       lastMessage:
         chat.messages.at(-1)?.type === "text"
           ? chat.messages.at(-1)?.body

@@ -7,7 +7,7 @@ import { MOCK_CHATS } from "../../api/mockAPI.ts";
 import { Chat } from "../../components/Chat";
 import { LSKeys, saveToLS } from "../../utils/LS.ts";
 import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
-import { User } from "../../api/models/user.model.ts";
+import { User } from "../../api/userAPI/user.model.ts";
 import { router } from "../../main.ts";
 
 interface ChatProps extends BlockProps {

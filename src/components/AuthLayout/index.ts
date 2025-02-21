@@ -1,3 +1,1 @@
-import AuthLayout from "./AuthLayout.ts";
-
-export { AuthLayout };
+export { AuthLayout } from "./AuthLayout.ts";

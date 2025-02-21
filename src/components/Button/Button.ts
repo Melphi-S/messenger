@@ -1,8 +1,8 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import { ButtonTypes } from "./Button.types.ts";
 import "./Button.scss";
 
-interface Props {
+interface Props extends BlockProps {
   view: ButtonTypes;
   type: HTMLButtonElement["type"];
   disabled?: boolean;

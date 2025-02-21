@@ -1,8 +1,8 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./Popup.scss";
 import { Overlay } from "../Overlay";
 
-interface Props {
+interface Props extends BlockProps {
   content: Block;
   hidden: boolean;
 }

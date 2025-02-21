@@ -96,7 +96,10 @@ export class HTTPTransport {
       if (method === Methods.GET) {
         xhr.send();
       } else {
-        xhr.send(JSON.stringify(data));
+        console.log(data instanceof FormData);
+        data instanceof FormData
+          ? xhr.send(data)
+          : xhr.send(JSON.stringify(data));
       }
     });
   };

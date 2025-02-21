@@ -1,5 +1,7 @@
 import { EventBus } from "./EventBus.ts";
 import Handlebars from "handlebars";
+import cloneDeep from "../utils/cloneDeep.ts";
+import isEqual from "../utils/isEqual.ts";
 
 export interface BlockProps {
   [key: string]: unknown;
@@ -18,7 +20,7 @@ export class Block {
   protected children: Record<string, Block>;
   protected lists: Record<string, Block[]>;
   protected eventBus: () => EventBus;
-  protected id: number = Math.floor(100000 + Math.random() * 900000);
+  public id: number = Math.floor(100000 + Math.random() * 900000);
   private shouldUpdate: boolean = false;
 
   constructor(propsAndChildren: BlockProps = {}) {
@@ -27,7 +29,7 @@ export class Block {
     const { props, children, lists } =
       this.getChildrenAndProps(propsAndChildren);
 
-    this.props = this.makePropsProxy(props);
+    this.props = this.makePropsProxy({ ...props, id: this.id });
     this.children = this.makePropsProxy(children);
     this.lists = this.makePropsProxy(lists);
 
@@ -47,19 +49,16 @@ export class Block {
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
 
-  protected addEvents(): void {
+  public addEvents(): void {
     const { events } = this.props;
 
-    if (!events) {
+    if (!events || !this.element) {
       return;
     }
 
-    Object.keys(events).forEach((eventName) => {
+    Object.entries(events).forEach(([eventName, handler]) => {
       if (this.element) {
-        this.element.addEventListener(
-          eventName,
-          events[eventName as keyof typeof events],
-        );
+        this.element.addEventListener(eventName, handler);
       }
     });
   }
@@ -75,6 +74,9 @@ export class Block {
 
   private _componentDidMount() {
     this.componentDidMount();
+    Object.values(this.children).forEach((child) => {
+      child.dispatchComponentDidMount();
+    });
   }
 
   componentDidMount() {
@@ -109,12 +111,13 @@ export class Block {
     });
 
     const fragment = this.createDocumentElement("template");
-    fragment.innerHTML = Handlebars.compile(this.render())(propsAndStubs);
+    const template = Handlebars.compile(this.render());
+    fragment.innerHTML = template(propsAndStubs);
 
     Object.values(this.children).forEach((child) => {
       const stub = fragment.content.querySelector(`[data-id="${child.id}"]`);
       if (stub) {
-        child.changeProps(this.props);
+        // child.changeProps(this.props);
         stub.replaceWith(child.getContent());
       }
     });
@@ -184,14 +187,14 @@ export class Block {
   }
 
   public changeProps(newProps: BlockProps) {
-    this.shouldUpdate = false;
-    const oldProps = { ...this.props };
+    const oldProps = cloneDeep(this.props);
+
+    if (isEqual(oldProps, newProps)) {
+      return;
+    }
 
     Object.assign(this.props, newProps);
-
-    if (this.shouldUpdate) {
-      this.eventBus().emit(Block.EVENTS.FLOW_CDU, oldProps, this.props);
-    }
+    this.eventBus().emit(Block.EVENTS.FLOW_CDU, oldProps, this.props);
   }
 
   public changeChildren(newChildren: Record<string, Block>) {
@@ -206,8 +209,6 @@ export class Block {
   }
 
   public changeLists(newLists: Record<string, Block[]>) {
-    const oldLists = { ...this.lists };
-
     Object.entries(newLists).forEach(([key, value]) => {
       if (JSON.stringify(this.lists[key]) !== JSON.stringify(value)) {
         this.lists[key] = value;
@@ -222,10 +223,8 @@ export class Block {
         return typeof value === "function" ? value.bind(target) : value;
       },
       set: (target, prop, value) => {
-        if (target[prop as keyof T] !== value) {
-          target[prop as keyof T] = value;
-          this.shouldUpdate = true;
-        }
+        target[prop as keyof T] = value;
+        this.shouldUpdate = true;
 
         return true;
       },

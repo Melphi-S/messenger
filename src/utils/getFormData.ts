@@ -1,12 +1,17 @@
 import { Block } from "../core/Block.ts";
 
 export const getFormData = (form: Block, excludeFields: string[] = []) => {
-  const inputs = form.getLists().inputs;
-  return inputs.reduce((acc: Record<string, string>, input) => {
-    const props = input.getProps() as { name: string; value: string };
+  const formElement = form.getElement();
 
-    if (!excludeFields.includes(props.name)) {
-      acc[props.name] = props.value;
+  if (!formElement) {
+    return;
+  }
+
+  const inputs = [...formElement.querySelectorAll("input")];
+
+  return inputs.reduce((acc: Record<string, string>, input) => {
+    if (!excludeFields.includes(input.name)) {
+      acc[input.name] = input.value;
     }
     return acc;
   }, {});

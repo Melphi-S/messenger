@@ -1,23 +1,30 @@
 import { Block, BlockProps } from "../../core/Block.ts";
-import { ArrowButton } from "../ArrowButton";
-import { Avatar } from "../Avatar";
 import "./ProfilePageLayout.scss";
-import { Popup } from "../Popup";
+import { User } from "../../api/userAPI/user.model.ts";
 import { AvatarEdit } from "../AvatarEditPopup";
-import { Input } from "../Input";
-import { Button } from "../Button";
-import { User } from "../../api/models/user.model.ts";
-import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
+import { Popup } from "../Popup";
+import { ArrowButton } from "../ArrowButton";
+import Handlebars from "handlebars";
 
 interface Props extends BlockProps {
-  inputs: Input[];
-  buttons: Button[];
+  inputs: string;
   currentUser: User;
 }
 
 export class ProfilePageLayout extends Block {
-  constructor({ inputs, buttons, currentUser }: Props) {
+  constructor({ currentUser, ...props }: Props) {
     super({
+      ...props,
+      currentUser,
+      avatarEvents: {
+        click: () => {
+          this.getChildren().popup.changeProps({ hidden: false });
+        },
+      },
+      popup: new Popup({
+        content: new AvatarEdit(),
+        hidden: true,
+      }),
       backButton: new ArrowButton({
         direction: "left",
         type: "button",
@@ -25,30 +32,19 @@ export class ProfilePageLayout extends Block {
           click: () => history.back(),
         },
       }),
-      avatar: new Avatar({
-        size: "l",
-        edit: true,
-        imageSrc:
-          "https://ya-praktikum.tech/api/v2/resources" + currentUser?.avatar ||
-          "",
-        events: {
-          click: () => {
-            this.getChildren().popup.changeProps({ hidden: false });
-          },
-        },
-      }),
-      popup: new Popup({
-        content: new AvatarEdit(),
-        hidden: true,
-      }),
-      inputs: inputs,
-      buttons: buttons,
-      currentUser,
     });
   }
 
   protected render() {
     super.render();
+
+    console.log("RENDER PROFILE");
+
+    const inputs = Handlebars.compile(this.getProps().inputs)(this.getProps());
+
+    const buttons = Handlebars.compile(this.getProps().buttons)(
+      this.getProps(),
+    );
 
     // language=hbs
     return `
@@ -57,13 +53,13 @@ export class ProfilePageLayout extends Block {
             {{{ backButton }}}
         </div>
         <div class="profile-main">
-          {{{ avatar }}}
+          {{{ component "Avatar" size='l' edit='true' imageSrc=currentUser.avatar events=avatarEvents}}}
           <div class="profile-wrapper">
             <div class="fields-container">
-              {{{ inputs }}}
+              ${inputs}
             </div>
             <div class="buttons-container">
-              {{{ buttons }}}
+              ${buttons}
             </div>
           </div>
         </div>
@@ -72,5 +68,3 @@ export class ProfilePageLayout extends Block {
     `;
   }
 }
-
-export default ProfilePageLayout;

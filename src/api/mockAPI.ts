@@ -1,5 +1,5 @@
 import { Chat } from "./models/chat.model.ts";
-import { User } from "./models/user.model.ts";
+import { User } from "./userAPI/user.model.ts";
 
 export const MOCK_CHATS: Chat[] = [
   {

@@ -1,95 +1,65 @@
 import { ProfilePageLayout } from "../../components/ProfilePageLayout";
-import { Button } from "../../components/Button";
-import { Input } from "../../components/Input";
 import {
   validateInput,
   validatePasswordMatch,
-  ValidationRuleKey,
 } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
+import { BlockProps } from "../../core/Block.ts";
+import { ChangePasswordDTO, User } from "../../api/userAPI/user.model.ts";
+import { userController } from "../../controllers/UserController.ts";
+import { router } from "../../main.ts";
+import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 
-export class PasswordChangePage extends ProfilePageLayout {
-  constructor() {
+interface Props extends BlockProps {
+  currentUser: User;
+}
+
+class PasswordChangePage extends ProfilePageLayout {
+  constructor({ currentUser }: Props) {
     super({
-      inputs: [
-        new Input({
-          label: "Current password",
-          type: "password",
-          name: "current_password",
-          value: "",
-          disabled: false,
-          placeholder: "Enter current password",
-          oneLine: true,
-          events: {
-            blur: () => validateInput(this, "current_password", "password"),
-          },
-        }),
-        new Input({
-          label: "New password",
-          type: "password",
-          name: "password",
-          value: "",
-          disabled: false,
-          placeholder: "Enter new password",
-          oneLine: true,
-          events: {
-            blur: () => validateInput(this, "password", "password"),
-          },
-        }),
-        new Input({
-          label: "Repeat new password",
-          type: "password",
-          name: "repeat_password",
-          value: "",
-          disabled: false,
-          placeholder: "Repeat new password",
-          oneLine: true,
-          events: {
-            blur: () =>
-              validateInput(this, "repeat_password", null, () =>
-                validatePasswordMatch(this.getElement()),
-              ),
-          },
-        }),
-      ],
-      buttons: [
-        new Button({
-          text: "Save",
-          type: "submit",
-          view: "primary",
-          events: {
-            click: (e) => {
-              e.preventDefault();
-              const inputsToValidate: [string, ValidationRuleKey][] = [
-                ["current_password", "password"],
-                ["password", "password"],
-                ["repeat_password", "password"],
-              ];
+      currentUser,
+      // language=hbs
+      inputs: `
+          {{{ component "Input" label="Current password" type="password" name="oldPassword" value="" placeholder="Enter current password" disabled=false oneLine=true events=handleCurrentPasswordEvents}}}
+          {{{ component "Input" label="New password" type="password" name="newPassword" value="" placeholder="Enter new password" disabled=false oneLine=true events=handleNewPasswordEvents}}}
+          {{{ component "Input" label="Repeat new password" type="password" name="repeat_password" value="" placeholder="Repeat new password" disabled=false oneLine=true events=handleRepeatNewPasswordEvents}}}
+      `,
+      // language=hbs
+      buttons: `
+          {{{ component "Button" text="Save" type="submit" view="primary" events=handleButtonEvents }}}
+      `,
+      handleCurrentPasswordEvents: {
+        blur: () => validateInput(this, "oldPassword", "password"),
+      },
+      handleNewPasswordEvents: {
+        blur: () => validateInput(this, "newPassword", "password"),
+      },
+      handleRepeatNewPasswordEvents: {
+        blur: () =>
+          validateInput(this, "repeat_password", null, () =>
+            validatePasswordMatch(
+              this.getElement(),
+              "newPassword",
+              "repeat_password",
+            ),
+          ),
+      },
+      handleButtonEvents: {
+        click: async () => {
+          const body = getFormData(this, ["repeat_password", "avatar"]);
 
-              let hasError = false;
-
-              for (const [name, rule] of inputsToValidate) {
-                const error =
-                  name !== "repeat_password"
-                    ? validateInput(this, name, rule)
-                    : validateInput(this, "repeat_password", null, () =>
-                        validatePasswordMatch(this.getElement()),
-                      );
-                if (error) {
-                  hasError = true;
-                }
-              }
-
-              if (!hasError) {
-                const body = getFormData(this, ["repeat_password"]);
-
-                //TODO Change to real API request
-                console.log(body);
-              }
-            },
-          },
-        }),
-      ],
+          if (body) {
+            const res = await userController.changePassword(
+              body as ChangePasswordDTO,
+            );
+            if (res) {
+              router.go("/profile");
+            }
+          }
+        },
+      },
     });
   }
 }
+
+export default withAuthCheck(PasswordChangePage, "private");

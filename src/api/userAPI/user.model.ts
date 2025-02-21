@@ -30,3 +30,17 @@ export const mapResponseToUser = (response: UserResponse): User => ({
   avatar: response.avatar,
   login: response.login,
 });
+
+export interface ChangeProfileDTO extends Record<string, string> {
+  first_name: string;
+  second_name: string;
+  display_name: "string";
+  login: string;
+  email: string;
+  phone: string;
+}
+
+export interface ChangePasswordDTO extends Record<string, string> {
+  oldPassword: string;
+  newPassword: string;
+}

@@ -1,7 +1,7 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./Input.scss";
 
-export interface InputProps {
+export interface InputProps extends BlockProps {
   label?: string;
   error?: string;
   name: string;
@@ -25,7 +25,7 @@ export class Input extends Block {
     });
   }
 
-  protected addEvents() {
+  public addEvents() {
     const { events } = this.getProps();
 
     const input = this.element?.querySelector<HTMLInputElement>("input");
@@ -46,8 +46,8 @@ export class Input extends Block {
     super.render();
     // language=hbs
     return `
-      <label class="label">
-        <div class="{{#if oneLine}}one-line{{#if error}}one-line_error{{/if}} {{#if disabled}}one-line_disabled{{/if}}{{/if}}">
+      <label class="label" for="{{ name }}">
+        <div class="{{#if oneLine}}one-line {{#if error}}one-line_error{{/if}}{{/if}} {{#if disabled}}one-line_disabled{{/if}}">
           <span class="label-text {{#if oneLine}}label-text_oneLine{{/if}}">{{ label }}</span>
           <input class='input {{#if error}}{{#unless oneLine}}input_error{{/unless}}{{/if}} {{#if oneLine}}input_oneLine{{/if}}' placeholder='{{ placeholder }}' name='{{ name }}' type='{{ type }}' autocomplete {{#if disabled}}disabled{{/if}} value={{ value }}>
         </div>

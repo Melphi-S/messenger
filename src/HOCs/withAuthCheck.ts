@@ -1,7 +1,7 @@
 import { Block } from "../core/Block.ts";
 import { authController } from "../controllers/AuthController.ts";
 import { router } from "../main.ts";
-import { connectWithStore } from "../store/Store.ts";
+import { connectWithStore, store } from "../store/Store.ts";
 
 export const withAuthCheck = (
   Component: typeof Block,
@@ -9,18 +9,21 @@ export const withAuthCheck = (
 ) => {
   class WithAuth extends Component {
     componentDidMount() {
-      authController
-        .getCurrentUser()
-        .then(() => {
-          if (view === "public") {
-            router.go("/chats");
-          }
-        })
-        .catch(() => {
-          if (view === "private") {
-            router.go("/login");
-          }
-        });
+      if (!store.get().currentUser) {
+        authController
+          .getCurrentUser()
+          .then(() => {
+            if (view === "public") {
+              router.go("/chats");
+            }
+          })
+          .catch(() => {
+            console.log(Component);
+            if (view === "private") {
+              router.go("/login");
+            }
+          });
+      }
 
       super.componentDidMount();
       return true;
