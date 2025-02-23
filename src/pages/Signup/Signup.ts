@@ -9,7 +9,7 @@ import { Button } from "../../components/Button";
 import { getFormData } from "../../utils/getFormData.ts";
 import { router } from "../../main.ts";
 import { authController } from "../../controllers/AuthController.ts";
-import { SignUpDTO } from "../../api/ authAPI";
+import { SignUpDTO } from "../../api/authAPI";
 import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 
 class SignupPage extends AuthLayout {

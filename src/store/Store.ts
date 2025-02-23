@@ -11,6 +11,7 @@ export enum StoreEvents {
 
 const defaultState: AppStore = {
   currentUser: null,
+  currentChatMessages: [],
 };
 
 class Store extends EventBus {
@@ -28,7 +29,11 @@ class Store extends EventBus {
     this.emit(StoreEvents.UPDATED, oldState);
   }
 
-  public destroy() {
+  public clear(path: string, value: unknown) {
+    this.state[path] = value;
+  }
+
+  public clearStore() {
     this.state = defaultState;
   }
 }

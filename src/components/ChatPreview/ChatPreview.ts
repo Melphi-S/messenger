@@ -1,63 +1,53 @@
 import { Block } from "../../core/Block.ts";
 import "./ChatPreview.scss";
-import { Avatar } from "../Avatar";
-import { Chat } from "../../api/models/chat.model.ts";
-import { currentUser, MOCK_USERS } from "../../api/mockAPI.ts";
+import { IChat } from "../../api/chatAPI";
+import { User } from "../../api/userAPI/user.model.ts";
 import { dateToChatView } from "../../utils/parseDate.ts";
 
 interface Props {
-  chat: Chat;
+  chat: IChat;
   events: {
     click: (event: Event) => void;
   };
   isActive?: boolean;
+  currentUser?: User | null;
 }
 
 export class ChatPreview extends Block {
-  constructor({ chat, events, isActive }: Props) {
+  constructor({ chat, events, isActive, currentUser }: Props) {
     super({
       events,
-      title:
-        chat.name ||
-        MOCK_USERS.find(
-          (user) =>
-            user.id === chat.participants.find((id) => id !== currentUser.id),
-        )?.displayName ||
-        "New chat",
-      // avatar: new Avatar({
-      //   size: "s",
-      //   edit: false,
-      //   imageSrc:
-      //     chat.image ||
-      //     MOCK_USERS.find(
-      //       (user) =>
-      //         user.id === chat.participants.find((id) => id !== currentUser.id),
-      //     )?.avatar ||
-      //     "",
-      // }),
-      lastMessage:
-        chat.messages.at(-1)?.type === "text"
-          ? chat.messages.at(-1)?.body
-          : "Image",
-      curUserMessage: chat.messages.at(-1)?.authorId === currentUser.id,
-      date: dateToChatView(chat.messages.at(-1)?.date) || "...",
-      unreadMessages: chat.messages.filter(
-        (message) => !message.seenBy.includes(currentUser.id),
-      ).length,
+      currentUser,
       id: chat.id,
+      title: chat.title,
       isActive: isActive,
+      curUserMessage: chat.lastMessage?.user.login === currentUser?.login,
+      lastMessage: chat.lastMessage?.content,
+      lastMessageAuthor:
+        chat.lastMessage?.user.login === currentUser?.login
+          ? "You"
+          : chat.lastMessage?.user.displayName ||
+            chat.lastMessage?.user.firstName ||
+            "",
+      date: chat.lastMessage?.time
+        ? dateToChatView(chat.lastMessage?.time)
+        : "",
+      unreadMessages: chat.unreadCount,
     });
   }
 
   protected render() {
     super.render();
+
     // language=hbs
     return `
       <div class="preview-message {{#if isActive}}preview-message_active{{/if}}" id="{{{id}}}">
-        {{{ avatar }}}
+        {{{ component "Avatar" size='s' edit=false imageSrc=chat.avatar events=avatarEvents }}}
         <div class="preview-message__mainContainer">
           <p class="preview-message__title">{{{ title }}}</p>
-          <p class="preview-message__message"> <span class="preview-message__authorSpan">{{#if curUserMessage}}Вы: {{/if}}</span>{{{ lastMessage }}}</p>
+        {{#if lastMessage }}
+          <p class="preview-message__message"> <span class="preview-message__authorSpan"> {{{ lastMessageAuthor }}}: </span>{{{ lastMessage }}}</p>
+        {{/if}}
         </div>
         <div class="preview-message__rightContainer">
           <span class="preview-message__date">{{{ date }}}</span>

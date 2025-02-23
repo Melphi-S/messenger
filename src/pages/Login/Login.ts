@@ -3,7 +3,7 @@ import { validateInput } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
 import { router } from "../../main.ts";
 import { authController } from "../../controllers/AuthController.ts";
-import { SignUpDTO } from "../../api/ authAPI";
+import { SignUpDTO } from "../../api/authAPI";
 import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 
 class LoginPage extends AuthLayout {

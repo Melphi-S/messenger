@@ -43,7 +43,7 @@ class ProfilePage extends ProfilePageLayout {
         click: async () => {
           const logout = await authController.logout();
           if (logout) {
-            store.destroy();
+            store.clearStore();
             router.go("/login");
           }
         },

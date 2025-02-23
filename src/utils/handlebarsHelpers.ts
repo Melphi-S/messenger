@@ -4,11 +4,13 @@ import { Block, BlockProps } from "../core/Block.ts";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { v4 as uuidv4 } from "uuid";
+import { MessageList } from "../components/Chat/MessageList/MessageList.ts";
 
 const componentsMap: Record<string, typeof Block> = {
   Avatar,
   Input,
   Button,
+  MessageList,
 };
 
 Handlebars.registerHelper("component", function (name: string, options) {
@@ -16,6 +18,8 @@ Handlebars.registerHelper("component", function (name: string, options) {
   if (!ComponentClass) {
     throw new Error(`No component ${name}`);
   }
+
+  console.log(componentsMap);
 
   const props: BlockProps = { ...options.hash };
 

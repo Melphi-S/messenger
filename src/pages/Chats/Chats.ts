@@ -3,21 +3,20 @@ import "./Chats.scss";
 import { Button } from "../../components/Button";
 import { SearchInput } from "../../components/SearchInput";
 import { ChatPreview } from "../../components/ChatPreview";
-import { MOCK_CHATS } from "../../api/mockAPI.ts";
-import { Chat } from "../../components/Chat";
-import { LSKeys, saveToLS } from "../../utils/LS.ts";
 import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 import { User } from "../../api/userAPI/user.model.ts";
 import { router } from "../../main.ts";
-
-interface ChatProps extends BlockProps {
-  currentUser: User;
-}
+import { IChat } from "../../api/chatAPI";
+import { store } from "../../store/Store.ts";
+import { chatController } from "../../controllers/ChatController.ts";
+import { Chat } from "../../components/Chat";
+import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
 
 class ChatsPage extends Block {
-  constructor(props: ChatProps) {
+  chatWS: ChatWS | null;
+
+  constructor() {
     super({
-      ...props,
       profileButton: new Button({
         view: "ghost",
         type: "button",
@@ -42,39 +41,56 @@ class ChatsPage extends Block {
           },
         },
       }),
-      chatPreviews: MOCK_CHATS.map(
-        (chat) =>
-          new ChatPreview({
-            chat,
-            events: {
-              click: (e) => {
-                const activeChat = MOCK_CHATS.find(
-                  (chat) =>
-                    String(chat.id) === (e.currentTarget as HTMLDivElement)?.id,
-                );
-
-                if (activeChat) {
-                  this.changeChildren({
-                    activeChat: new Chat({ chat: activeChat }),
-                  });
-
-                  const previews = this.getLists().chatPreviews;
-
-                  previews
-                    .find((preview) => preview.getProps().isActive)
-                    ?.changeProps({ isActive: false });
-
-                  previews
-                    .find((preview) => preview.getProps().id === chat.id)
-                    ?.changeProps({ isActive: true });
-
-                  saveToLS(LSKeys.LAST_CHAT, String(activeChat.id));
-                }
-              },
-            },
-          }),
-      ),
+      chatPreviews: [],
+      activeChat: null,
     });
+
+    this.chatWS = null;
+  }
+
+  componentDidMount() {
+    if (!store.get().chatsList) {
+      chatController.getChatsList().then((chatList) => {
+        if (chatList) {
+          this.createChatsList(chatList);
+        }
+
+        const currentUser = store.get().currentUser;
+        if (currentUser) {
+          this.chatWS = new ChatWS(currentUser.id);
+        }
+      });
+    }
+
+    super.componentDidMount();
+    return true;
+  }
+
+  private createChatsList(chatsList: IChat[]) {
+    const chatPreviews = chatsList.map(
+      (chat) =>
+        new ChatPreview({
+          chat: chat,
+          isActive: false,
+          events: {
+            click: async () => {
+              if (this.chatWS) {
+                console.log("disconnect");
+                await this.chatWS.disconnect();
+              }
+              await this.chatWS?.connect(chat.id);
+
+              this.changeChildren({
+                activeChat: new Chat({
+                  chatWS: this.chatWS,
+                }),
+              });
+            },
+          },
+          currentUser: this.getProps().currentUser as User,
+        }),
+    );
+    this.changeLists({ chatPreviews });
   }
 
   protected render() {

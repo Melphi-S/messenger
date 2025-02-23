@@ -1,7 +1,7 @@
-import { authAPIInstance, SignUpDTO } from "../api/ authAPI";
+import { authAPIInstance, SignUpDTO } from "../api/authAPI";
 import { store } from "../store/Store.ts";
 import { mapResponseToUser } from "../api/userAPI/user.model.ts";
-import { SignInDTO } from "../api/ authAPI/auth.model.ts";
+import { SignInDTO } from "../api/authAPI/auth.model.ts";
 
 class AuthController {
   async signup(data: SignUpDTO) {

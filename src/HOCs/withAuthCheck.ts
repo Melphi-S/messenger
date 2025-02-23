@@ -9,6 +9,7 @@ export const withAuthCheck = (
 ) => {
   class WithAuth extends Component {
     componentDidMount() {
+      console.log("AUTH");
       if (!store.get().currentUser) {
         authController
           .getCurrentUser()

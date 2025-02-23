@@ -1,25 +1,24 @@
 import { Block } from "../../core/Block.ts";
 import "./Chat.scss";
-import { Chat as ChatModel } from "../../api/models/chat.model.ts";
-import { ChatMessage } from "./ChatMessage/ChatMessage.ts";
 import { MessageInput } from "../MessageInput";
 import { ArrowButton } from "../ArrowButton";
 import { Avatar } from "../Avatar";
-import { currentUser, MOCK_USERS } from "../../api/mockAPI.ts";
 import { FileAttach } from "./FileAttach/FileAttach.ts";
 import { UserManagement } from "./UserManagement/UserManagement.ts";
+import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
+import { connectWithStore } from "../../store/Store.ts";
+import { User } from "../../api/userAPI/user.model.ts";
 
 interface Props {
-  chat: ChatModel;
+  chatWS: ChatWS;
+  currentUser: User;
 }
 
-export class Chat extends Block {
-  constructor({ chat }: Props) {
+class Chat extends Block {
+  constructor({ chatWS, currentUser }: Props) {
     super({
-      id: chat.id,
-      messages: chat.messages.map((message) => {
-        return new ChatMessage({ message });
-      }),
+      currentUser,
+      chatWS,
       messageInput: new MessageInput({
         name: "message",
         placeholder: "Your message",
@@ -49,6 +48,7 @@ export class Chat extends Block {
 
             //TODO Change to real API request
             console.log(messageInput.value);
+            chatWS.sendMessage(messageInput.value);
 
             messageInput.value = "";
             super
@@ -59,22 +59,10 @@ export class Chat extends Block {
       }),
       image: new Avatar({
         size: "m",
-        imageSrc:
-          chat.image ||
-          MOCK_USERS.find(
-            (user) =>
-              user.id === chat.participants.find((id) => id !== currentUser.id),
-          )?.avatar ||
-          "",
+        imageSrc: "",
         edit: false,
       }),
-      name:
-        chat.name ||
-        MOCK_USERS.find(
-          (user) =>
-            user.id === chat.participants.find((id) => id !== currentUser.id),
-        )?.displayName ||
-        "",
+      name: "",
       fileAttach: new FileAttach(),
       userManagement: new UserManagement(),
     });
@@ -82,6 +70,7 @@ export class Chat extends Block {
 
   protected render() {
     super.render();
+
     // language=hbs
     return `
       <div class="chat">
@@ -92,9 +81,11 @@ export class Chat extends Block {
           </div>
           {{{ userManagement }}}
         </div>
-        <div class="chat__main scrollbar">
-            {{{ messages }}}
-        </div>
+          {{#if currentChatMessages}}
+            {{{ component "MessageList" currentUserId=currentUser.id currentChatMessages=currentChatMessages chatWS=chatWS}}}
+            {{else}}
+            <div></div>
+          {{/if}}
         <div class="chat__footer">
           {{{ fileAttach }}}
           {{{ messageInput }}}
@@ -103,51 +94,9 @@ export class Chat extends Block {
       <div>
     `;
   }
-
-  protected _render() {
-    super._render();
-
-    const container = <HTMLElement>this.element?.querySelector(".chat__main");
-    if (!container) return;
-
-    const images = container.querySelectorAll("img");
-    let loadedCount = 0;
-
-    container.style.opacity = "0";
-
-    if (images.length === 0) {
-      setTimeout(() => {
-        container.scrollTop = container.scrollHeight;
-        container.style.opacity = "1";
-      });
-      return;
-    }
-
-    setTimeout(() => {
-      images.forEach((img) => {
-        if (img.complete) {
-          loadedCount++;
-          if (loadedCount === images.length) {
-            container.scrollTop = container.scrollHeight;
-            container.style.opacity = "1";
-          }
-        } else {
-          img.onload = () => {
-            loadedCount++;
-            if (loadedCount === images.length) {
-              container.scrollTop = container.scrollHeight;
-              container.style.opacity = "1";
-            }
-          };
-          img.onerror = () => {
-            loadedCount++; // Игнорируем ошибки загрузки
-            if (loadedCount === images.length) {
-              container.scrollTop = container.scrollHeight;
-              container.style.opacity = "1";
-            }
-          };
-        }
-      });
-    });
-  }
 }
+
+export default connectWithStore(Chat, (store) => ({
+  currenUser: store.currentUser,
+  currentChatMessages: store.currentChatMessages,
+}));

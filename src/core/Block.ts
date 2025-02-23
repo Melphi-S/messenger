@@ -92,6 +92,8 @@ export class Block {
     if (!response) {
       return;
     }
+
+    console.log("UPDATE");
     this._render();
   }
 
@@ -187,6 +189,7 @@ export class Block {
   }
 
   public changeProps(newProps: BlockProps) {
+    console.log("newProps", newProps);
     const oldProps = cloneDeep(this.props);
 
     if (isEqual(oldProps, newProps)) {
@@ -208,12 +211,19 @@ export class Block {
     }
   }
 
-  public changeLists(newLists: Record<string, Block[]>) {
+  public changeLists(
+    newLists: Record<string, Block[]>,
+    shouldUpdate: boolean = true,
+  ) {
     Object.entries(newLists).forEach(([key, value]) => {
-      if (JSON.stringify(this.lists[key]) !== JSON.stringify(value)) {
+      if (!isEqual(this.lists[key], value)) {
         this.lists[key] = value;
       }
     });
+
+    if (shouldUpdate) {
+      this.privateComponentDidUpdate();
+    }
   }
 
   private makePropsProxy<T extends Record<string, unknown>>(props: T): T {

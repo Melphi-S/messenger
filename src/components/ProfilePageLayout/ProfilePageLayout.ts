@@ -53,7 +53,7 @@ export class ProfilePageLayout extends Block {
             {{{ backButton }}}
         </div>
         <div class="profile-main">
-          {{{ component "Avatar" size='l' edit='true' imageSrc=currentUser.avatar events=avatarEvents}}}
+          {{{ component "Avatar" size='l' edit=true imageSrc=currentUser.avatar events=avatarEvents}}}
           <div class="profile-wrapper">
             <div class="fields-container">
               ${inputs}

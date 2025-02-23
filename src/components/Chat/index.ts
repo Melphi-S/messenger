@@ -1,1 +1,3 @@
-export { Chat } from "./Chat.ts";
+import Chat from "./Chat.ts";
+
+export { Chat };

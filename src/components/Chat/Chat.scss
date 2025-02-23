@@ -15,15 +15,7 @@
   }
 
   &__main {
-    padding: 20px 0;
-    border-top: 1px solid vars.$border-color;
-    border-bottom: 1px solid vars.$border-color;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    align-content: start;
-    justify-items: left;
-    overflow-y: scroll;
+    overflow-y: hidden;
   }
 
   &__footer {
