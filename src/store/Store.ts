@@ -12,6 +12,7 @@ export enum StoreEvents {
 const defaultState: AppStore = {
   currentUser: null,
   currentChatMessages: [],
+  chatList: null,
 };
 
 class Store extends EventBus {

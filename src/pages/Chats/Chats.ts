@@ -48,10 +48,11 @@ class ChatsPage extends Block {
   }
 
   componentDidMount() {
-    if (!store.get().chatsList) {
+    if (!store.get().chatList) {
       chatController.getChatsList().then((chatList) => {
         if (chatList) {
           this.createChatsList(chatList);
+          store.set("chatList", chatList);
         }
 
         const currentUser = store.get().currentUser;

@@ -3,6 +3,7 @@ import "./ChatPreview.scss";
 import { IChat } from "../../api/chatAPI";
 import { User } from "../../api/userAPI/user.model.ts";
 import { dateToChatView } from "../../utils/parseDate.ts";
+import { connectWithStore, store } from "../../store/Store.ts";
 
 export interface ChatPreviewProps extends BlockProps {
   chat: IChat;
@@ -13,7 +14,7 @@ export interface ChatPreviewProps extends BlockProps {
   currentUser?: User | null;
 }
 
-export class ChatPreview extends Block {
+class ChatPreview extends Block {
   constructor({ chat, events, isActive, currentUser }: ChatPreviewProps) {
     super({
       events,
@@ -34,16 +35,26 @@ export class ChatPreview extends Block {
         ? dateToChatView(chat.lastMessage?.time)
         : "",
       unreadMessages: chat.unreadCount,
+      avatar: chat.avatar,
     });
   }
 
   protected render() {
     super.render();
 
+    console.log(store.get().chatList);
+    console.log("RENDER PREVIEW");
+
+    const chat = store
+      .get()
+      .chatList?.find((c) => c.id === this.getProps().chat.id);
+
+    const avatar = chat?.avatar || this.getProps().chat.avatar;
+
     // language=hbs
     return `
       <div class="preview-message {{#if isActive}}preview-message_active{{/if}}" id="{{{id}}}">
-        {{{ component "Avatar" size='s' edit=false imageSrc=chat.avatar events=avatarEvents }}}
+        {{{ component "Avatar" size='s' edit=false imageSrc='${avatar}' events=avatarEvents }}}
         <div class="preview-message__mainContainer">
           <p class="preview-message__title">{{{ title }}}</p>
         {{#if lastMessage }}
@@ -58,3 +69,7 @@ export class ChatPreview extends Block {
     `;
   }
 }
+
+export default connectWithStore(ChatPreview, (store) => ({
+  chatList: store.chatList,
+}));

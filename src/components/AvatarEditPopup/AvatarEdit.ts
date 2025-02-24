@@ -4,6 +4,8 @@ import "./AvatarEdit.scss";
 import { userController } from "../../controllers/UserController.ts";
 import { chatController } from "../../controllers/ChatController.ts";
 import chat from "../Chat/Chat.ts";
+import { store } from "../../store/Store.ts";
+import cloneDeep from "../../utils/cloneDeep.ts";
 
 interface Props {
   type: "profile" | "chat";
@@ -30,10 +32,22 @@ export class AvatarEdit extends Block {
               if (type === "profile") {
                 await userController.changeProfileAvatar(avatarInput.files[0]);
               } else if (chatId) {
-                await chatController.changeChatAvatar(
+                const newChatInfo = await chatController.changeChatAvatar(
                   chatId,
                   avatarInput.files[0],
                 );
+
+                const prevStoreChatList = store.get().chatList;
+
+                if (prevStoreChatList && newChatInfo) {
+                  const storeChat = prevStoreChatList.find(
+                    (chat) => chat.id === newChatInfo?.id,
+                  );
+                  if (storeChat) {
+                    storeChat.avatar = newChatInfo.avatar;
+                    store.set("chatList", cloneDeep(storeChat));
+                  }
+                }
               }
               document.querySelector(".popup")?.classList.add("popup_hidden");
             }
