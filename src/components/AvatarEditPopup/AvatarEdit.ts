@@ -2,21 +2,17 @@ import { Block } from "../../core/Block.ts";
 import { Button } from "../Button";
 import "./AvatarEdit.scss";
 import { userController } from "../../controllers/UserController.ts";
+import { chatController } from "../../controllers/ChatController.ts";
+import chat from "../Chat/Chat.ts";
+
+interface Props {
+  type: "profile" | "chat";
+  chatId?: number;
+}
 
 export class AvatarEdit extends Block {
-  constructor() {
+  constructor({ type, chatId }: Props) {
     super({
-      selectButton: new Button({
-        text: "Select file",
-        view: "secondary",
-        type: "button",
-        events: {
-          click: (e) => {
-            e.stopPropagation();
-            console.log("loaded");
-          },
-        },
-      }),
       submitButton: new Button({
         text: "Upload",
         view: "primary",
@@ -31,7 +27,14 @@ export class AvatarEdit extends Block {
               avatarInput.files &&
               avatarInput.files[0]
             ) {
-              await userController.changeProfileAvatar(avatarInput.files[0]);
+              if (type === "profile") {
+                await userController.changeProfileAvatar(avatarInput.files[0]);
+              } else if (chatId) {
+                await chatController.changeChatAvatar(
+                  chatId,
+                  avatarInput.files[0],
+                );
+              }
               document.querySelector(".popup")?.classList.add("popup_hidden");
             }
           },
@@ -49,7 +52,7 @@ export class AvatarEdit extends Block {
       ?.addEventListener("change", function (this: EventTarget | null) {
         if (this instanceof HTMLInputElement && this.files) {
           const fileName =
-            this.files.length > 0 ? this.files[0].name : "Файл не выбран";
+            this.files.length > 0 ? this.files[0].name : "No fie selected";
 
           const fileNameElement = thisElement?.querySelector("#fileName");
           if (fileNameElement) {

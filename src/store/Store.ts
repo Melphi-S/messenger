@@ -53,7 +53,13 @@ export const connectWithStore = (
         const newState = mapStateToProps(store.get());
         const oldState = mapStateToProps(state as AppStore);
 
+        console.log("CONNECT WITH STORE", Component);
+        console.log("newState", newState);
+        console.log("oldState", oldState);
+        console.log(isEqual(newState, oldState));
+
         if (!isEqual(oldState, newState)) {
+          console.log("CHANGEEE");
           this.changeProps({ ...newState });
         }
       });

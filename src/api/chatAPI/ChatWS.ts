@@ -8,7 +8,7 @@ export class ChatWS {
   private readonly userId: number;
   private chatTokens: Map<number, string>;
   private socket: WebSocket | null = null;
-  private pingTimer: NodeJS.Timeout;
+  private pingTimer: NodeJS.Timeout | null = null;
 
   constructor(userId: number) {
     this.userId = userId;
@@ -40,7 +40,7 @@ export class ChatWS {
           type: "ping",
         }),
       );
-    }, 60000);
+    }, 30000);
 
     this.socket.addEventListener("open", () => {
       this.getMessages();
@@ -54,7 +54,10 @@ export class ChatWS {
   public async disconnect() {
     this.socket?.close();
     this.socket = null;
-    clearInterval(this.pingTimer);
+    if (this.pingTimer) {
+      clearInterval(this.pingTimer);
+      this.pingTimer = null;
+    }
   }
 
   public getMessages(from: number = 0) {

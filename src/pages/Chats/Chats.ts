@@ -1,8 +1,8 @@
-import { Block, BlockProps } from "../../core/Block.ts";
+import { Block } from "../../core/Block.ts";
 import "./Chats.scss";
 import { Button } from "../../components/Button";
 import { SearchInput } from "../../components/SearchInput";
-import { ChatPreview } from "../../components/ChatPreview";
+import { ChatPreview, ChatPreviewProps } from "../../components/ChatPreview";
 import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 import { User } from "../../api/userAPI/user.model.ts";
 import { router } from "../../main.ts";
@@ -42,7 +42,6 @@ class ChatsPage extends Block {
         },
       }),
       chatPreviews: [],
-      activeChat: null,
     });
 
     this.chatWS = null;
@@ -62,8 +61,7 @@ class ChatsPage extends Block {
       });
     }
 
-    super.componentDidMount();
-    return true;
+    return super.componentDidMount();
   }
 
   private createChatsList(chatsList: IChat[]) {
@@ -75,14 +73,32 @@ class ChatsPage extends Block {
           events: {
             click: async () => {
               if (this.chatWS) {
-                console.log("disconnect");
                 await this.chatWS.disconnect();
               }
+
+              const prevActiveChat = this.getLists().chatPreviews.find(
+                (chat) => chat.getProps().isActive,
+              );
+
+              if (prevActiveChat) {
+                prevActiveChat.changeProps({ isActive: false });
+              }
+
+              const newActiveChat = this.getLists().chatPreviews.find(
+                (listChat) =>
+                  (listChat.getProps() as ChatPreviewProps).chat.id === chat.id,
+              );
+
+              if (newActiveChat) {
+                newActiveChat.changeProps({ isActive: true });
+              }
+
               await this.chatWS?.connect(chat.id);
 
               this.changeChildren({
                 activeChat: new Chat({
                   chatWS: this.chatWS,
+                  chat,
                 }),
               });
             },
@@ -90,11 +106,14 @@ class ChatsPage extends Block {
           currentUser: this.getProps().currentUser as User,
         }),
     );
+
     this.changeLists({ chatPreviews });
   }
 
   protected render() {
     super.render();
+
+    console.log("RENDER CHATS");
 
     // language=hbs
     return `

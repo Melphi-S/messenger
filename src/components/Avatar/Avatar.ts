@@ -27,7 +27,7 @@ export class Avatar extends Block {
           <button class="avatar-wrapper__button">
             <img class="avatar" src="{{#if imageSrc}}{{concat "https://ya-praktikum.tech/api/v2/resources/" imageSrc}}{{else}}/defaultAvatar.png{{/if}}" alt='avatar.'/>
           </button>
-          <div class="avatar-wrapper_overlay" id="change-avatar">Поменять аватар</div>
+          <div class="avatar-wrapper_overlay" id="change-avatar">Change</div>
         {{else}}
           <img class="avatar" src="{{#if imageSrc}}{{concat "https://ya-praktikum.tech/api/v2/resources/" imageSrc}}{{else}}/defaultAvatar.png{{/if}}" alt='avatar.'/>
         {{/if}}

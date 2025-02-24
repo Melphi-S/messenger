@@ -96,7 +96,6 @@ export class HTTPTransport {
       if (method === Methods.GET) {
         xhr.send();
       } else {
-        console.log(data instanceof FormData);
         data instanceof FormData
           ? xhr.send(data)
           : xhr.send(JSON.stringify(data));

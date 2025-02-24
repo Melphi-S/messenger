@@ -17,8 +17,6 @@ class ChatAPI {
   async getChatsList(): Promise<ChatResponse[]> {
     const response = await chatHTTPTransport.get("");
 
-    console.log(response);
-
     if (!response.ok) {
       const errorMessage = JSON.parse(response.response);
       throw new Error(errorMessage.reason);
@@ -29,6 +27,19 @@ class ChatAPI {
 
   async getChatToken(chatId: number): Promise<ChatTokenResponse> {
     const response = await chatHTTPTransport.post(`/token/${chatId}`);
+
+    if (!response.ok) {
+      const errorMessage = JSON.parse(response.response);
+      throw new Error(errorMessage.reason);
+    }
+
+    return JSON.parse(response.response);
+  }
+
+  async changeChatAvatar(data: FormData): Promise<ChatResponse> {
+    const response = await chatHTTPTransport.put("/avatar", {
+      data,
+    });
 
     if (!response.ok) {
       const errorMessage = JSON.parse(response.response);

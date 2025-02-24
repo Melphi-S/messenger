@@ -10,6 +10,19 @@ class ChatController {
       console.log(err);
     }
   }
+
+  async changeChatAvatar(chatId: number, file: File) {
+    try {
+      const data = new FormData();
+      data.append("avatar", file);
+      data.append("chatId", chatId);
+      const chatResponse = await chatAPIInstance.changeChatAvatar(data);
+
+      return mapResponseToIChat(chatResponse);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
 
 export const chatController = new ChatController();

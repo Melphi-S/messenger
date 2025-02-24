@@ -19,8 +19,6 @@ Handlebars.registerHelper("component", function (name: string, options) {
     throw new Error(`No component ${name}`);
   }
 
-  console.log(componentsMap);
-
   const props: BlockProps = { ...options.hash };
 
   const componentInstance = new ComponentClass(props);

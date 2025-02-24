@@ -22,7 +22,7 @@ export class ProfilePageLayout extends Block {
         },
       },
       popup: new Popup({
-        content: new AvatarEdit(),
+        content: new AvatarEdit({ type: "profile" }),
         hidden: true,
       }),
       backButton: new ArrowButton({
@@ -37,8 +37,6 @@ export class ProfilePageLayout extends Block {
 
   protected render() {
     super.render();
-
-    console.log("RENDER PROFILE");
 
     const inputs = Handlebars.compile(this.getProps().inputs)(this.getProps());
 

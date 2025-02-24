@@ -22,6 +22,7 @@ export class Block {
   protected eventBus: () => EventBus;
   public id: number = Math.floor(100000 + Math.random() * 900000);
   private shouldUpdate: boolean = false;
+  private isMounted: boolean = false;
 
   constructor(propsAndChildren: BlockProps = {}) {
     const eventBus = new EventBus();
@@ -74,9 +75,9 @@ export class Block {
 
   private _componentDidMount() {
     this.componentDidMount();
-    Object.values(this.children).forEach((child) => {
-      child.dispatchComponentDidMount();
-    });
+    // Object.values(this.children).forEach((child) => {
+    //   child.dispatchComponentDidMount();
+    // });
   }
 
   componentDidMount() {
@@ -93,7 +94,6 @@ export class Block {
       return;
     }
 
-    console.log("UPDATE");
     this._render();
   }
 
@@ -146,6 +146,10 @@ export class Block {
     }
     this.element = newElement;
     this.addEvents();
+    if (!this.isMounted) {
+      this.isMounted = true;
+      this.dispatchComponentDidMount();
+    }
   }
 
   protected render() {}
@@ -189,7 +193,6 @@ export class Block {
   }
 
   public changeProps(newProps: BlockProps) {
-    console.log("newProps", newProps);
     const oldProps = cloneDeep(this.props);
 
     if (isEqual(oldProps, newProps)) {

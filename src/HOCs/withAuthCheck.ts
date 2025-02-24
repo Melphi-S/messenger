@@ -9,7 +9,6 @@ export const withAuthCheck = (
 ) => {
   class WithAuth extends Component {
     componentDidMount() {
-      console.log("AUTH");
       if (!store.get().currentUser) {
         authController
           .getCurrentUser()
@@ -19,7 +18,6 @@ export const withAuthCheck = (
             }
           })
           .catch(() => {
-            console.log(Component);
             if (view === "private") {
               router.go("/login");
             }
@@ -34,6 +32,8 @@ export const withAuthCheck = (
       if (!this.getProps().currentUser && view === "private") {
         return `<div>LOADER</div>`;
       }
+
+      console.log(Component);
 
       return super.render();
     }

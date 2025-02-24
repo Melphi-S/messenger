@@ -22,7 +22,6 @@ export class Route {
     if (root) {
       root.innerHTML = "";
       root.append(block.getContent());
-      block.dispatchComponentDidMount();
     }
   }
 

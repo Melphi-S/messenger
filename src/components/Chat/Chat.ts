@@ -2,23 +2,27 @@ import { Block } from "../../core/Block.ts";
 import "./Chat.scss";
 import { MessageInput } from "../MessageInput";
 import { ArrowButton } from "../ArrowButton";
-import { Avatar } from "../Avatar";
 import { FileAttach } from "./FileAttach/FileAttach.ts";
 import { UserManagement } from "./UserManagement/UserManagement.ts";
 import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
 import { connectWithStore } from "../../store/Store.ts";
 import { User } from "../../api/userAPI/user.model.ts";
+import { Popup } from "../Popup";
+import { AvatarEdit } from "../AvatarEditPopup";
+import { IChat } from "../../api/chatAPI";
 
 interface Props {
   chatWS: ChatWS;
   currentUser: User;
+  chat: IChat;
 }
 
 class Chat extends Block {
-  constructor({ chatWS, currentUser }: Props) {
+  constructor({ chatWS, currentUser, chat }: Props) {
     super({
       currentUser,
       chatWS,
+      chat,
       messageInput: new MessageInput({
         name: "message",
         placeholder: "Your message",
@@ -46,8 +50,6 @@ class Chat extends Block {
             const messageInput =
               this.getChildren().messageInput.getElement() as HTMLInputElement;
 
-            //TODO Change to real API request
-            console.log(messageInput.value);
             chatWS.sendMessage(messageInput.value);
 
             messageInput.value = "";
@@ -57,14 +59,18 @@ class Chat extends Block {
           },
         },
       }),
-      image: new Avatar({
-        size: "m",
-        imageSrc: "",
-        edit: false,
-      }),
       name: "",
       fileAttach: new FileAttach(),
       userManagement: new UserManagement(),
+      avatarEvents: {
+        click: () => {
+          this.getChildren().popup.changeProps({ hidden: false });
+        },
+      },
+      popup: new Popup({
+        content: new AvatarEdit({ type: "chat", chatId: chat.id }),
+        hidden: true,
+      }),
     });
   }
 
@@ -76,7 +82,7 @@ class Chat extends Block {
       <div class="chat">
         <div class="chat__header">
           <div class="chat__participant-wrapper">
-            {{{ image }}}
+            {{{ component "Avatar" size='m' edit=true imageSrc=chat.avatar events=avatarEvents}}}
             <span class="chat__participant-name">{{{name}}}</span>
           </div>
           {{{ userManagement }}}
@@ -91,6 +97,7 @@ class Chat extends Block {
           {{{ messageInput }}}
           {{{ newMessageButton }}}
         </div>
+        {{{ popup }}}
       <div>
     `;
   }

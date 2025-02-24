@@ -1,10 +1,10 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./ChatPreview.scss";
 import { IChat } from "../../api/chatAPI";
 import { User } from "../../api/userAPI/user.model.ts";
 import { dateToChatView } from "../../utils/parseDate.ts";
 
-interface Props {
+export interface ChatPreviewProps extends BlockProps {
   chat: IChat;
   events: {
     click: (event: Event) => void;
@@ -14,10 +14,11 @@ interface Props {
 }
 
 export class ChatPreview extends Block {
-  constructor({ chat, events, isActive, currentUser }: Props) {
+  constructor({ chat, events, isActive, currentUser }: ChatPreviewProps) {
     super({
       events,
       currentUser,
+      chat,
       id: chat.id,
       title: chat.title,
       isActive: isActive,

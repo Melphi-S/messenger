@@ -46,8 +46,6 @@ class AuthAPI {
   async getCurrentUser(): Promise<UserResponse> {
     const response = await authHTTPTransport.get("/user");
 
-    console.log(response);
-
     if (!response.ok) {
       const errorMessage = JSON.parse(response.response);
       throw new Error(errorMessage.reason);
