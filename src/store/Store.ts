@@ -13,6 +13,7 @@ const defaultState: AppStore = {
   currentUser: null,
   currentChatMessages: [],
   chatList: null,
+  chatsUsers: [],
 };
 
 class Store extends EventBus {
@@ -54,13 +55,12 @@ export const connectWithStore = (
         const newState = mapStateToProps(store.get());
         const oldState = mapStateToProps(state as AppStore);
 
-        console.log("CONNECT WITH STORE", Component);
-        console.log("newState", newState);
-        console.log("oldState", oldState);
-        console.log(isEqual(newState, oldState));
+        console.log(Component);
+        console.log("Old state:", oldState);
+        console.log("New state:", newState);
+        console.log("Are states equal?", isEqual(oldState, newState));
 
         if (!isEqual(oldState, newState)) {
-          console.log("CHANGEEE");
           this.changeProps({ ...newState });
         }
       });

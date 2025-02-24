@@ -1,5 +1,6 @@
 import { HTTPTransport } from "../../core/HTTPTransport.ts";
 import { ChatResponse, ChatTokenResponse } from "./chat.model.ts";
+import { User, UserResponse } from "../userAPI/user.model.ts";
 
 const chatHTTPTransport = new HTTPTransport("/chats");
 
@@ -47,6 +48,45 @@ class ChatAPI {
     }
 
     return JSON.parse(response.response);
+  }
+
+  async getChatUsers(chatId: number): Promise<UserResponse[]> {
+    const response = await chatHTTPTransport.get(`/${chatId}/users`);
+
+    if (!response.ok) {
+      const errorMessage = JSON.parse(response.response);
+      throw new Error(errorMessage.reason);
+    }
+
+    return JSON.parse(response.response);
+  }
+
+  async addUser(chatId: number, userId: number) {
+    const response = await chatHTTPTransport.put(`/users`, {
+      data: { users: [userId], chatId },
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      const errorMessage = JSON.parse(response.response);
+      throw new Error(errorMessage.reason);
+    }
+
+    return "ok";
+  }
+
+  async deleteUser(chatId: number, userId: number) {
+    const response = await chatHTTPTransport.delete(`/users`, {
+      data: { users: [userId], chatId },
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      const errorMessage = JSON.parse(response.response);
+      throw new Error(errorMessage.reason);
+    }
+
+    return "ok";
   }
 }
 

@@ -1,26 +1,5 @@
 import { Indexed } from "../types/types.ts";
 
-function merge(left: Indexed, right: Indexed): Indexed {
-  for (let p in right) {
-    try {
-      if (
-        typeof right[p] === "object" &&
-        right[p] !== null &&
-        typeof left[p] === "object" &&
-        left[p] !== null
-      ) {
-        right[p] = merge(left[p] as Indexed, right[p] as Indexed);
-      } else {
-        left[p] = right[p];
-      }
-    } catch (e) {
-      right[p] = right[p];
-    }
-  }
-
-  return right;
-}
-
 export const set = (
   object: Indexed | unknown,
   path: string,
@@ -34,12 +13,20 @@ export const set = (
     throw new Error("path must be string");
   }
 
-  const result = path.split(".").reduceRight<Indexed>(
-    (acc, key) => ({
-      [key]: acc,
-    }),
-    value as any,
-  );
+  const keys = path.split(".");
+  let current = object as Indexed;
 
-  return merge(object as Indexed, result);
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i];
+
+    if (typeof current[key] !== "object" || current[key] === null) {
+      current[key] = {};
+    }
+
+    current = current[key] as Indexed;
+  }
+
+  current[keys[keys.length - 1]] = value;
+
+  return object;
 };

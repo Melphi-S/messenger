@@ -6,6 +6,7 @@ import { Button } from "../components/Button";
 import { v4 as uuidv4 } from "uuid";
 import { MessageList } from "../components/Chat/MessageList/MessageList.ts";
 import ChatHeader from "../components/Chat/ChatHeader/ChatHeader.ts";
+import UserList from "../components/Chat/UserManagement/UserList/UserList.ts";
 
 const componentsMap: Record<string, typeof Block> = {
   Avatar,
@@ -13,6 +14,7 @@ const componentsMap: Record<string, typeof Block> = {
   Button,
   MessageList,
   ChatHeader,
+  UserList,
 };
 
 Handlebars.registerHelper("component", function (name: string, options) {

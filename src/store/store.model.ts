@@ -6,4 +6,8 @@ export interface AppStore extends BlockProps {
   currentUser: User | null;
   currentChatMessages: Message[];
   chatList: IChat[] | null;
+  chatsUsers: {
+    chatId: number;
+    users: User[];
+  }[];
 }

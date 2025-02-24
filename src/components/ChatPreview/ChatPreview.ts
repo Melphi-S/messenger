@@ -43,7 +43,6 @@ class ChatPreview extends Block {
     super.render();
 
     console.log(store.get().chatList);
-    console.log("RENDER PREVIEW");
 
     const chat = store
       .get()

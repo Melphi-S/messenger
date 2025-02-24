@@ -3,13 +3,13 @@ import "./Chat.scss";
 import { MessageInput } from "../MessageInput";
 import { ArrowButton } from "../ArrowButton";
 import { FileAttach } from "./FileAttach/FileAttach.ts";
-import { UserManagement } from "./UserManagement/UserManagement.ts";
 import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
-import { connectWithStore } from "../../store/Store.ts";
+import { connectWithStore, store } from "../../store/Store.ts";
 import { User } from "../../api/userAPI/user.model.ts";
 import { Popup } from "../Popup";
 import { AvatarEdit } from "../AvatarEditPopup";
 import { IChat } from "../../api/chatAPI";
+import { chatController } from "../../controllers/ChatController.ts";
 
 interface Props extends BlockProps {
   chatWS: ChatWS;
@@ -61,7 +61,6 @@ class Chat extends Block {
       }),
       name: "",
       fileAttach: new FileAttach(),
-      userManagement: new UserManagement(),
       avatarEvents: {
         click: () => {
           this.getChildren().popup.changeProps({ hidden: false });
@@ -72,6 +71,24 @@ class Chat extends Block {
         hidden: true,
       }),
     });
+  }
+
+  componentDidMount() {
+    const currentChatId = (this.getProps() as Props).chat.id;
+    const chatsUsers = store.get().chatsUsers;
+
+    if (!chatsUsers.some((chat) => chat.chatId === currentChatId)) {
+      chatController.getChatUsers(currentChatId).then((usersList) => {
+        if (usersList) {
+          store.set("chatsUsers", [
+            ...chatsUsers,
+            { usersList: usersList, chatId: currentChatId },
+          ]);
+        }
+      });
+    }
+
+    return super.componentDidMount();
   }
 
   protected render() {

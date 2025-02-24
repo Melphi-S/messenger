@@ -1,7 +1,7 @@
 import { Block, BlockProps } from "../../../core/Block.ts";
 import { User } from "../../../api/userAPI/user.model.ts";
 import { IChat } from "../../../api/chatAPI";
-import { UserManagement } from "../UserManagement/UserManagement.ts";
+import UserManagement from "../UserManagement/UserManagement.ts";
 import { Popup } from "../../Popup";
 import { AvatarEdit } from "../../AvatarEditPopup";
 import { connectWithStore, store } from "../../../store/Store.ts";
@@ -18,7 +18,7 @@ class ChatHeader extends Block {
     super({
       currentUser,
       chat,
-      userManagement: new UserManagement(),
+      userManagement: new UserManagement({ chatId: chat.id }),
       name: chat.title,
       avatarEvents: {
         click: () => {
@@ -61,4 +61,5 @@ class ChatHeader extends Block {
 export default connectWithStore(ChatHeader, (store) => ({
   chatList: store.chatList,
   currentUser: store.currentUser,
+  chatsUsers: store.chatsUsers,
 }));

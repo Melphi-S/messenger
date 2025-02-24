@@ -3,7 +3,6 @@ import { Button } from "../Button";
 import "./AvatarEdit.scss";
 import { userController } from "../../controllers/UserController.ts";
 import { chatController } from "../../controllers/ChatController.ts";
-import chat from "../Chat/Chat.ts";
 import { store } from "../../store/Store.ts";
 import cloneDeep from "../../utils/cloneDeep.ts";
 
@@ -40,13 +39,14 @@ export class AvatarEdit extends Block {
                 const prevStoreChatList = store.get().chatList;
 
                 if (prevStoreChatList && newChatInfo) {
-                  const storeChat = prevStoreChatList.find(
-                    (chat) => chat.id === newChatInfo?.id,
-                  );
-                  if (storeChat) {
-                    storeChat.avatar = newChatInfo.avatar;
-                    store.set("chatList", cloneDeep(storeChat));
-                  }
+                  const updatedStoreChatList = prevStoreChatList.map((chat) => {
+                    if (chat.id === chatId) {
+                      return newChatInfo;
+                    }
+                    return chat;
+                  });
+
+                  store.set("chatList", updatedStoreChatList);
                 }
               }
               document.querySelector(".popup")?.classList.add("popup_hidden");

@@ -58,6 +58,22 @@ class UserAPI {
 
     return "ok";
   }
+
+  async getUserByLogin(login: string): Promise<UserResponse[]> {
+    const response = await userHTTPTransport.post("/search", {
+      data: {
+        login,
+      },
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      const errorMessage = JSON.parse(response.response);
+      throw new Error(errorMessage.reason);
+    }
+
+    return JSON.parse(response.response);
+  }
 }
 
 export const userAPIInstance = new UserAPI();

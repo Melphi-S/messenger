@@ -9,7 +9,7 @@ interface Props extends BlockProps {
 }
 
 export class MessageList extends Block {
-  constructor({ currentChatMessages, currentUserId, chatWS }: Props) {
+  constructor({ currentChatMessages, currentUserId }: Props) {
     super({
       messages: currentChatMessages.map((message) => {
         return new ChatMessage({ message, currentUserId });
@@ -51,7 +51,7 @@ export class MessageList extends Block {
             }
           };
           img.onerror = () => {
-            loadedCount++; // Игнорируем ошибки загрузки
+            loadedCount++;
             if (loadedCount === images.length) {
               container.scrollTop = container.scrollHeight;
               container.style.opacity = "1";

@@ -36,6 +36,20 @@ class UserController {
       console.log(err);
     }
   }
+
+  async getUserByLogin(login: string) {
+    try {
+      const userResponse = await userAPIInstance.getUserByLogin(login);
+
+      if (!userResponse.length) {
+        throw new Error("No user found");
+      }
+
+      return mapResponseToUser(userResponse[0]);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
 
 export const userController = new UserController();
