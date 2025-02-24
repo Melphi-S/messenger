@@ -1,4 +1,4 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./Chat.scss";
 import { MessageInput } from "../MessageInput";
 import { ArrowButton } from "../ArrowButton";
@@ -11,7 +11,7 @@ import { Popup } from "../Popup";
 import { AvatarEdit } from "../AvatarEditPopup";
 import { IChat } from "../../api/chatAPI";
 
-interface Props {
+interface Props extends BlockProps {
   chatWS: ChatWS;
   currentUser: User;
   chat: IChat;
@@ -80,13 +80,7 @@ class Chat extends Block {
     // language=hbs
     return `
       <div class="chat">
-        <div class="chat__header">
-          <div class="chat__participant-wrapper">
-            {{{ component "Avatar" size='m' edit=true imageSrc=chat.avatar events=avatarEvents}}}
-            <span class="chat__participant-name">{{{name}}}</span>
-          </div>
-          {{{ userManagement }}}
-        </div>
+        {{{ component "ChatHeader" chat=chat }}}
           {{#if currentChatMessages}}
             {{{ component "MessageList" currentUserId=currentUser.id currentChatMessages=currentChatMessages chatWS=chatWS}}}
             {{else}}

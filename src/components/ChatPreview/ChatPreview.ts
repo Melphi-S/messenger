@@ -47,9 +47,12 @@ class ChatPreview extends Block {
 
     const chat = store
       .get()
-      .chatList?.find((c) => c.id === this.getProps().chat.id);
+      .chatList?.find(
+        (c) => c.id === (this.getProps() as ChatPreviewProps).chat.id,
+      );
 
-    const avatar = chat?.avatar || this.getProps().chat.avatar;
+    const avatar =
+      chat?.avatar || (this.getProps() as ChatPreviewProps).chat.avatar || "";
 
     // language=hbs
     return `

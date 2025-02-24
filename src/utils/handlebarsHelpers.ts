@@ -5,12 +5,14 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { v4 as uuidv4 } from "uuid";
 import { MessageList } from "../components/Chat/MessageList/MessageList.ts";
+import ChatHeader from "../components/Chat/ChatHeader/ChatHeader.ts";
 
 const componentsMap: Record<string, typeof Block> = {
   Avatar,
   Input,
   Button,
   MessageList,
+  ChatHeader,
 };
 
 Handlebars.registerHelper("component", function (name: string, options) {
