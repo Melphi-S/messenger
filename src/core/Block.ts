@@ -22,7 +22,6 @@ export class Block {
   protected eventBus: () => EventBus;
   public id: number = Math.floor(100000 + Math.random() * 900000);
   private shouldUpdate: boolean = false;
-  private isMounted: boolean = false;
 
   constructor(propsAndChildren: BlockProps = {}) {
     const eventBus = new EventBus();

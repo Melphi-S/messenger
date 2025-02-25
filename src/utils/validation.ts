@@ -87,6 +87,7 @@ export const validateInput = (
       ? inputElement?.classList.add("input_error")
       : oneLineWrapper.classList.add("one-line_error");
     if (submitButton) {
+      (submitButton as HTMLButtonElement).disabled = true;
       submitButton.classList.add("button_disabled");
     }
     if (errorContainer) {
@@ -102,6 +103,7 @@ export const validateInput = (
     }
 
     if (submitButton && !hasErrorsInForm(formElement)) {
+      (submitButton as HTMLButtonElement).disabled = false;
       submitButton.classList.remove("button_disabled");
     }
   }

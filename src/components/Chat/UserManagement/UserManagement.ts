@@ -29,6 +29,8 @@ class UserManagement extends Block {
       .get()
       .chatsUsers.find((chat) => chat.chatId === chatId)?.users;
 
+    console.log(chatUsers);
+
     if (!chatUsers) {
       return `<div></div>`;
     }

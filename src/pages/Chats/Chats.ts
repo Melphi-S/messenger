@@ -11,6 +11,8 @@ import { store } from "../../store/Store.ts";
 import { chatController } from "../../controllers/ChatController.ts";
 import { Chat } from "../../components/Chat";
 import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
+import { Popup } from "../../components/Popup";
+import { AddChatPopup } from "../../components/AddChatPopup/AddChatPopup.ts";
 
 class ChatsPage extends Block {
   chatWS: ChatWS | null;
@@ -27,6 +29,21 @@ class ChatsPage extends Block {
             router.go("/profile");
           },
         },
+      }),
+      createChatButton: new Button({
+        view: "primary",
+        type: "button",
+        text: "Create new chat",
+        isDisabled: false,
+        events: {
+          click: () => {
+            this.getChildren().popup.changeProps({ hidden: false });
+          },
+        },
+      }),
+      popup: new Popup({
+        content: new AddChatPopup(),
+        hidden: true,
       }),
       searchInput: new SearchInput({
         name: "search",
@@ -52,7 +69,6 @@ class ChatsPage extends Block {
       chatController.getChatsList().then((chatList) => {
         if (chatList) {
           this.createChatsList(chatList);
-          store.set("chatList", chatList);
         }
 
         const currentUser = store.get().currentUser;
@@ -96,12 +112,16 @@ class ChatsPage extends Block {
 
               await this.chatWS?.connect(chat.id);
 
-              this.changeChildren({
-                activeChat: new Chat({
-                  chatWS: this.chatWS,
-                  chat,
-                }),
+              const newChat = new Chat({
+                chatWS: this.chatWS,
+                chat,
               });
+
+              this.changeChildren({
+                activeChat: newChat,
+              });
+
+              newChat.dispatchComponentDidMount();
             },
           },
           currentUser: this.getProps().currentUser as User,
@@ -114,14 +134,13 @@ class ChatsPage extends Block {
   protected render() {
     super.render();
 
-    console.log("RENDER CHATS");
-
     // language=hbs
     return `
       <main class="page page_type_sidebar">
         <div class="chats-sidebar">
           <div class="chats-sidebar__header">
             {{{ profileButton }}}
+            {{{ createChatButton }}}
             {{{ searchInput}}}
           </div>
           <div class="chats-sidebar__list">
@@ -135,6 +154,7 @@ class ChatsPage extends Block {
             Select a chat
           </p>
         {{/if}}
+        {{{ popup }}}
       </main>
     `;
   }

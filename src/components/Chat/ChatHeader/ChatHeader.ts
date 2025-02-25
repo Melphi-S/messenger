@@ -25,10 +25,6 @@ class ChatHeader extends Block {
           this.getChildren().popup.changeProps({ hidden: false });
         },
       },
-      popup: new Popup({
-        content: new AvatarEdit({ type: "chat", chatId: chat.id }),
-        hidden: true,
-      }),
     });
   }
 
@@ -52,7 +48,6 @@ class ChatHeader extends Block {
           <span class="chat-header__chat-name">{{{name}}}</span>
         </div>
         {{{ userManagement }}}
-        {{{ popup }}}
       </div>
     `;
   }

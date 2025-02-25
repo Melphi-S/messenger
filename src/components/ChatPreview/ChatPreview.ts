@@ -42,8 +42,6 @@ class ChatPreview extends Block {
   protected render() {
     super.render();
 
-    console.log(store.get().chatList);
-
     const chat = store
       .get()
       .chatList?.find(

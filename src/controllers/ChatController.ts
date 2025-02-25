@@ -3,13 +3,13 @@ import { mapResponseToIChat } from "../api/chatAPI";
 import { mapResponseToUser, User } from "../api/userAPI/user.model.ts";
 import { store } from "../store/Store.ts";
 
-import cloneDeep from "../utils/cloneDeep.ts";
-
 class ChatController {
   async getChatsList() {
     try {
       const chatsResponse = await chatAPIInstance.getChatsList();
-      return chatsResponse.map((chat) => mapResponseToIChat(chat));
+      const chats = chatsResponse.map((chat) => mapResponseToIChat(chat));
+      store.set("chatList", chats);
+      return chats;
     } catch (err) {
       console.log(err);
     }
@@ -32,6 +32,7 @@ class ChatController {
     try {
       const usersResponse = await chatAPIInstance.getChatUsers(chatId);
       const users = usersResponse.map((user) => mapResponseToUser(user));
+
       store.set("chatsUsers", [
         ...store.get().chatsUsers,
         {
@@ -85,6 +86,14 @@ class ChatController {
 
         store.set("chatsUsers", updatedChatsUsers);
       }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async createChat(title: string) {
+    try {
+      return await chatAPIInstance.createChat(title);
     } catch (err) {
       console.log(err);
     }

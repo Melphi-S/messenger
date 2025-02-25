@@ -88,6 +88,20 @@ class ChatAPI {
 
     return "ok";
   }
+
+  async createChat(title: string) {
+    const response = await chatHTTPTransport.post(``, {
+      data: { title },
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      const errorMessage = JSON.parse(response.response);
+      throw new Error(errorMessage.reason);
+    }
+
+    return "ok";
+  }
 }
 
 export const chatAPIInstance = new ChatAPI();
