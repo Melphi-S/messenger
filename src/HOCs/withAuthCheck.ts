@@ -10,11 +10,14 @@ export const withAuthCheck = (
   class WithAuth extends Component {
     componentDidMount() {
       if (!store.get().currentUser) {
+        const targetPath = router.getTargetPath();
         authController
           .getCurrentUser()
-          .then(() => {
-            if (view === "public") {
-              router.go("/chats");
+          .then((user) => {
+            if (view === "public" && user) {
+              router.go(targetPath || "/chats");
+            } else if (view === "private" && !user) {
+              router.go("/login");
             }
           })
           .catch(() => {
@@ -29,11 +32,9 @@ export const withAuthCheck = (
     }
 
     protected render() {
-      if (!this.getProps().currentUser && view === "private") {
+      if (!store.get().currentUser && view === "private") {
         return `<div>LOADER</div>`;
       }
-
-      console.log(Component);
 
       return super.render();
     }

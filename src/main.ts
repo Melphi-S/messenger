@@ -12,22 +12,36 @@ import { ErrorPage } from "./pages/Error";
 import { Router } from "./core/Router.ts";
 import "./utils/handlebarsHelpers.ts";
 
-const pagesList: Record<Pages, typeof Block> = {
-  [Pages.ROOT]: LoginPage,
-  [Pages.LOGIN]: LoginPage,
-  [Pages.SIGNUP]: SignupPage,
-  [Pages.CHATS]: ChatsPage,
-  [Pages.PROFILE]: ProfilePage,
-  [Pages.PROFILE_CHANGE]: ProfileChangePage,
-  [Pages.PASSWORD_CHANGE]: PasswordChangePage,
-  [Pages.NOT_FOUND]: NotFoundPage,
-  [Pages.ERROR]: ErrorPage,
+const pagesList: Record<Pages, { route: typeof Block; auth: boolean }> = {
+  [Pages.ROOT]: { route: LoginPage, auth: false },
+  [Pages.LOGIN]: { route: LoginPage, auth: false },
+  [Pages.SIGNUP]: { route: SignupPage, auth: false },
+  [Pages.CHATS]: { route: ChatsPage, auth: true },
+  [Pages.PROFILE]: { route: ProfilePage, auth: true },
+  [Pages.PROFILE_CHANGE]: { route: ProfileChangePage, auth: true },
+  [Pages.PASSWORD_CHANGE]: { route: PasswordChangePage, auth: true },
+  [Pages.NOT_FOUND]: { route: NotFoundPage, auth: true },
+  [Pages.ERROR]: { route: ErrorPage, auth: true },
 };
+
+// export let router: Router;
+//
+// export const createNewRouter = () => {
+//   router = new Router("app");
+//
+//   Object.entries(pagesList).forEach(([key, value]) => {
+//     router.use(key, value.route, value.auth);
+//   });
+//
+//   router.start();
+// };
+//
+// createNewRouter();
 
 export const router = new Router("app");
 
 Object.entries(pagesList).forEach(([key, value]) => {
-  router.use(key, value);
+  router.use(key, value.route, value.auth);
 });
 
 document.addEventListener("DOMContentLoaded", () => {

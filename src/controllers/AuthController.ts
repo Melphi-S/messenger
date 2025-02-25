@@ -2,6 +2,7 @@ import { authAPIInstance, SignUpDTO } from "../api/authAPI";
 import { store } from "../store/Store.ts";
 import { mapResponseToUser } from "../api/userAPI/user.model.ts";
 import { SignInDTO } from "../api/authAPI/auth.model.ts";
+import { router } from "../main.ts";
 
 class AuthController {
   async signup(data: SignUpDTO) {
@@ -24,6 +25,8 @@ class AuthController {
     try {
       const userResponse = await authAPIInstance.getCurrentUser();
       store.set("currentUser", mapResponseToUser(userResponse));
+      router.setAuth(true);
+      return true;
     } catch (err) {
       throw err;
     }

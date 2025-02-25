@@ -2,61 +2,71 @@ import { Route } from "./Route.ts";
 import { Block } from "./Block.ts";
 
 export class Router {
-  private static instance: Router;
-  private routes: Route[] = [];
+  private routes: { route: Route; auth: boolean }[] = [];
   private history: History = window.history;
   private readonly rootId: string = "";
+  private auth = false;
+  private targetPath: string = "";
 
   constructor(rootId: string) {
-    if (Router.instance) {
-      return Router.instance;
-    }
-
     this.routes = [];
     this.history = window.history;
     this.rootId = rootId;
-
-    Router.instance = this;
   }
 
-  use(pathname: string, block: typeof Block) {
+  public use(pathname: string, block: typeof Block, auth: boolean) {
     const route = new Route(pathname, block, { rootQuery: this.rootId });
-    this.routes.push(route);
+    this.routes.push({ route, auth });
     return this;
   }
 
-  start() {
+  public setAuth(auth: boolean) {
+    this.auth = auth;
+  }
+
+  public start() {
     window.onpopstate = ((event: PopStateEvent) => {
       const target = event.currentTarget as Window;
       target.location && this.onRoute(target.location.pathname);
     }).bind(this);
 
+    this.targetPath = window.location.pathname;
     this.onRoute(window.location.pathname);
   }
 
-  private onRoute(pathname: string) {
+  public getTargetPath() {
+    return this.targetPath;
+  }
+
+  private async onRoute(pathname: string) {
     const route = this.getRoute(pathname);
     if (!route) {
       return;
     }
 
-    route.render();
+    if (route.auth && !this.auth) {
+      this.go("/login");
+    } else if (!route.auth && this.auth) {
+      this.go("/chats");
+    } else {
+      route.route.render();
+    }
   }
 
-  go(pathname: string) {
+  public go(pathname: string) {
     this.history.pushState({}, "", pathname);
     this.onRoute(pathname);
   }
 
-  back() {
+  public back() {
     this.history.back();
   }
 
-  forward() {
+  public forward() {
     this.history.forward();
   }
 
-  getRoute(pathname: string) {
-    return this.routes.find((route) => route.match(pathname));
+  private getRoute(pathname: string) {
+    return this.routes.find((route) => route.route.match(pathname));
   }
 }

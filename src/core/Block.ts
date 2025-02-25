@@ -143,10 +143,6 @@ export class Block {
     }
     this.element = newElement;
     this.addEvents();
-    if (!this.isMounted) {
-      this.isMounted = true;
-      this.dispatchComponentDidMount();
-    }
   }
 
   protected render() {}

@@ -32,6 +32,11 @@ export class Route {
 
     if (this.props.rootQuery && typeof this.props.rootQuery === "string") {
       this.insertIntoDOM(this.props.rootQuery, this.block);
+      this.block.dispatchComponentDidMount();
     }
+  }
+
+  getPathname() {
+    return this.pathname;
   }
 }

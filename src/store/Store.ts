@@ -17,7 +17,7 @@ const defaultState: AppStore = {
 };
 
 class Store extends EventBus {
-  private state: AppStore = defaultState;
+  private state: AppStore = cloneDeep(defaultState);
 
   public get() {
     return this.state;
@@ -36,7 +36,8 @@ class Store extends EventBus {
   }
 
   public clearStore() {
-    this.state = defaultState;
+    this.state = cloneDeep(defaultState);
+    console.log(this.state);
   }
 }
 
@@ -54,11 +55,6 @@ export const connectWithStore = (
       store.on(StoreEvents.UPDATED, (state) => {
         const newState = mapStateToProps(store.get());
         const oldState = mapStateToProps(state as AppStore);
-
-        console.log(Component);
-        console.log("Old state:", oldState);
-        console.log("New state:", newState);
-        console.log("Are states equal?", isEqual(oldState, newState));
 
         if (!isEqual(oldState, newState)) {
           this.changeProps({ ...newState });
