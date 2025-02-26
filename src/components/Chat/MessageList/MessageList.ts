@@ -3,6 +3,7 @@ import { ChatMessage } from "../ChatMessage/ChatMessage.ts";
 import "./MessageList.scss";
 import { connectWithStore, store } from "../../../store/Store.ts";
 import { IChat } from "../../../api/chatAPI";
+import { websocket } from "../../../api/chatAPI/ChatWS.ts";
 
 interface Props {
   unreadMessages: number;
@@ -48,28 +49,6 @@ class MessageList extends Block {
     `;
   }
 
-  // private handleScroll() {
-  //   const messageContainer = this.getElement();
-  //
-  //   if (messageContainer && messageContainer.scrollTop === 0) {
-  //     const prevHeight = messageContainer.scrollHeight;
-  //     const prevScrollTop = messageContainer.scrollTop;
-  //
-  //     this.from += 20; // Увеличиваем смещение
-  //     this.chatWS.getMessages(this.from);
-  //
-  //     setTimeout(() => {
-  //       if (messageContainer) {
-  //         const newHeight = messageContainer.scrollHeight;
-  //         const scrollDifference = newHeight - prevHeight;
-  //
-  //         messageContainer.scrollTop = 1000;
-  //         console.log("TOP", messageContainer.scrollTop);
-  //       }
-  //     }, 0);
-  //   }
-  // }
-
   protected _render() {
     super._render();
 
@@ -103,11 +82,15 @@ class MessageList extends Block {
 
     container.style.opacity = "0";
 
+    const makeScroll = () => {
+      targetMessage.scrollIntoView({ block: "end" });
+      container.scrollBy(0, 25);
+      container.style.opacity = "1";
+    };
+
     if (images.length === 0) {
       setTimeout(() => {
-        // container.scrollTop = container.scrollHeight;
-        targetMessage.scrollIntoView({ block: "end" });
-        container.style.opacity = "1";
+        makeScroll();
       });
       return;
     }
@@ -117,22 +100,19 @@ class MessageList extends Block {
         if (img.complete) {
           loadedCount++;
           if (loadedCount === images.length) {
-            container.scrollTop = container.scrollHeight;
-            container.style.opacity = "1";
+            makeScroll();
           }
         } else {
           img.onload = () => {
             loadedCount++;
             if (loadedCount === images.length) {
-              container.scrollTop = container.scrollHeight;
-              container.style.opacity = "1";
+              makeScroll();
             }
           };
           img.onerror = () => {
-            loadedCount++; // Игнорируем ошибки загрузки
+            loadedCount++;
             if (loadedCount === images.length) {
-              container.scrollTop = container.scrollHeight;
-              container.style.opacity = "1";
+              makeScroll();
             }
           };
         }

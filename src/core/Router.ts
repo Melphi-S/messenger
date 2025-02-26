@@ -41,6 +41,7 @@ export class Router {
   private async onRoute(pathname: string) {
     const route = this.getRoute(pathname);
     if (!route) {
+      this.go("/not-found");
       return;
     }
 

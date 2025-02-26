@@ -5,6 +5,7 @@ import { AvatarEdit } from "../AvatarEditPopup";
 import { Popup } from "../Popup";
 import { ArrowButton } from "../ArrowButton";
 import Handlebars from "handlebars";
+import { router } from "../../main.ts";
 
 interface Props extends BlockProps {
   inputs: string;
@@ -29,7 +30,7 @@ export class ProfilePageLayout extends Block {
         direction: "left",
         type: "button",
         events: {
-          click: () => history.back(),
+          click: () => router.go("/chats"),
         },
       }),
     });

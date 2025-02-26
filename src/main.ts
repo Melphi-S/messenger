@@ -24,20 +24,6 @@ const pagesList: Record<Pages, { route: typeof Block; auth: boolean }> = {
   [Pages.ERROR]: { route: ErrorPage, auth: true },
 };
 
-// export let router: Router;
-//
-// export const createNewRouter = () => {
-//   router = new Router("app");
-//
-//   Object.entries(pagesList).forEach(([key, value]) => {
-//     router.use(key, value.route, value.auth);
-//   });
-//
-//   router.start();
-// };
-//
-// createNewRouter();
-
 export const router = new Router("app");
 
 Object.entries(pagesList).forEach(([key, value]) => {

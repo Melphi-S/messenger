@@ -1,6 +1,7 @@
 import { Block } from "../../core/Block.ts";
 import "./ErrorPageLayout.scss";
 import { Button } from "../Button";
+import { router } from "../../main.ts";
 
 interface Props {
   code: string;
@@ -16,7 +17,9 @@ export class ErrorPageLayout extends Block {
         type: "button",
         view: "secondary",
         events: {
-          click: () => {},
+          click: () => {
+            router.go("/chats");
+          },
         },
       }),
     });
