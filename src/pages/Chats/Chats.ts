@@ -9,6 +9,7 @@ import { Popup } from "../../components/Popup";
 import { AddChatPopup } from "../../components/AddChatPopup/AddChatPopup.ts";
 import ChatList from "../../components/ChatList/ChatList.ts";
 import ActiveChat from "../../components/ActiveChat/ActiveChat.ts";
+import { debounce } from "../../utils/debounce.ts";
 
 class ChatsPage extends Block {
   constructor() {
@@ -45,14 +46,14 @@ class ChatsPage extends Block {
         type: "text",
         value: "",
         events: {
-          input: async (e) => {
+          input: debounce(async (e) => {
             if (
               e.target !== undefined &&
               e.target instanceof HTMLInputElement
             ) {
               await chatController.getChatsList(e.target.value);
             }
-          },
+          }, 500),
         },
       }),
       chatList: new ChatList({}),

@@ -94,14 +94,7 @@ class Chat extends Block {
     });
 
     if (!chatsUsers.some((chat) => chat.chatId === currentChatId)) {
-      chatController.getChatUsers(currentChatId).then((usersList) => {
-        if (usersList) {
-          store.set("chatsUsers", [
-            ...chatsUsers,
-            { usersList: usersList, chatId: currentChatId },
-          ]);
-        }
-      });
+      chatController.getChatUsers(currentChatId);
     }
 
     return super.componentDidMount();
