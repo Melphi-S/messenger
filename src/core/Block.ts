@@ -1,12 +1,13 @@
 import { EventBus } from "./EventBus.ts";
-import { CSSDisplayProperty } from "../types/types.ts";
 import Handlebars from "handlebars";
+import cloneDeep from "../utils/cloneDeep.ts";
+import isEqual from "../utils/isEqual.ts";
 
-interface BlockProps {
+export interface BlockProps {
   [key: string]: unknown;
 }
 
-export abstract class Block {
+export class Block {
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",
@@ -16,24 +17,19 @@ export abstract class Block {
 
   protected element: HTMLElement | null = null;
   private readonly props: Record<string, unknown>;
-  protected tagName: keyof HTMLElementTagNameMap;
   protected children: Record<string, Block>;
   protected lists: Record<string, Block[]>;
   protected eventBus: () => EventBus;
-  protected id: number = Math.floor(100000 + Math.random() * 900000);
+  public id: number = Math.floor(100000 + Math.random() * 900000);
   private shouldUpdate: boolean = false;
 
-  protected constructor(
-    tagName: keyof HTMLElementTagNameMap,
-    propsAndChildren: BlockProps = {},
-  ) {
+  constructor(propsAndChildren: BlockProps = {}) {
     const eventBus = new EventBus();
 
-    this.tagName = tagName;
     const { props, children, lists } =
       this.getChildrenAndProps(propsAndChildren);
 
-    this.props = this.makePropsProxy(props);
+    this.props = this.makePropsProxy({ ...props, id: this.id });
     this.children = this.makePropsProxy(children);
     this.lists = this.makePropsProxy(lists);
 
@@ -53,25 +49,22 @@ export abstract class Block {
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
 
-  protected addEvents(): void {
+  public addEvents(): void {
     const { events } = this.props;
 
-    if (!events) {
+    if (!events || !this.element) {
       return;
     }
 
-    Object.keys(events).forEach((eventName) => {
+    Object.entries(events).forEach(([eventName, handler]) => {
       if (this.element) {
-        this.element.addEventListener(
-          eventName,
-          events[eventName as keyof typeof events],
-        );
+        this.element.addEventListener(eventName, handler);
       }
     });
   }
 
   private createResources() {
-    this.element = this.createDocumentElement(this.tagName);
+    this.element = this.createDocumentElement("div");
   }
 
   init() {
@@ -80,16 +73,17 @@ export abstract class Block {
   }
 
   private _componentDidMount() {
-    if (this.componentDidMount()) {
-      this.dispatchComponentDidMount();
-    }
+    this.componentDidMount();
+    Object.values(this.children).forEach((child) => {
+      child.dispatchComponentDidMount();
+    });
   }
 
   componentDidMount() {
     return true;
   }
 
-  private dispatchComponentDidMount() {
+  public dispatchComponentDidMount() {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
@@ -98,6 +92,7 @@ export abstract class Block {
     if (!response) {
       return;
     }
+
     this._render();
   }
 
@@ -117,12 +112,12 @@ export abstract class Block {
     });
 
     const fragment = this.createDocumentElement("template");
-    fragment.innerHTML = Handlebars.compile(this.render())(propsAndStubs);
+    const template = Handlebars.compile(this.render());
+    fragment.innerHTML = template(propsAndStubs);
 
     Object.values(this.children).forEach((child) => {
       const stub = fragment.content.querySelector(`[data-id="${child.id}"]`);
       if (stub) {
-        child.changeProps(this.props);
         stub.replaceWith(child.getContent());
       }
     });
@@ -192,24 +187,42 @@ export abstract class Block {
   }
 
   public changeProps(newProps: BlockProps) {
-    this.shouldUpdate = false;
-    const oldProps = { ...this.props };
+    const oldProps = cloneDeep(this.props);
+
+    if (isEqual(oldProps, newProps)) {
+      return;
+    }
 
     Object.assign(this.props, newProps);
-
-    if (this.shouldUpdate) {
-      this.eventBus().emit(Block.EVENTS.FLOW_CDU, oldProps, this.props);
-    }
+    this.eventBus().emit(Block.EVENTS.FLOW_CDU, oldProps, this.props);
   }
 
-  public changeChildren(newChildren: Record<string, Block>) {
+  public changeChildren(
+    newChildren: Record<string, Block>,
+    shouldUpdate: boolean = true,
+  ) {
     this.shouldUpdate = false;
     const oldChildren = { ...this.children };
 
     Object.assign(this.children, newChildren);
 
-    if (this.shouldUpdate) {
+    if (this.shouldUpdate && shouldUpdate) {
       this.eventBus().emit(Block.EVENTS.FLOW_CDU, oldChildren, this.children);
+    }
+  }
+
+  public changeLists(
+    newLists: Record<string, Block[]>,
+    shouldUpdate: boolean = true,
+  ) {
+    Object.entries(newLists).forEach(([key, value]) => {
+      if (!isEqual(this.lists[key], value)) {
+        this.lists[key] = value;
+      }
+    });
+
+    if (shouldUpdate) {
+      this.privateComponentDidUpdate();
     }
   }
 
@@ -220,10 +233,8 @@ export abstract class Block {
         return typeof value === "function" ? value.bind(target) : value;
       },
       set: (target, prop, value) => {
-        if (target[prop as keyof T] !== value) {
-          target[prop as keyof T] = value;
-          this.shouldUpdate = true;
-        }
+        target[prop as keyof T] = value;
+        this.shouldUpdate = true;
 
         return true;
       },
@@ -240,18 +251,5 @@ export abstract class Block {
 
   public getLists() {
     return this.lists;
-  }
-
-  public show(display: CSSDisplayProperty = "block") {
-    if (this.element) {
-      this.element.style.display = display;
-    }
-  }
-
-  public hide() {
-    if (this.element) {
-      console.log(this.element);
-      this.element.style.display = "none";
-    }
   }
 }

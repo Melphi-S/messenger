@@ -15,22 +15,14 @@
   }
 
   &__main {
-    padding: 20px 0;
-    border-top: 1px solid vars.$border-color;
-    border-bottom: 1px solid vars.$border-color;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    align-content: start;
-    justify-items: left;
-    overflow-y: scroll;
+    overflow-y: hidden;
   }
 
   &__footer {
     display: grid;
     gap: 10px;
     align-items: center;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto;
     padding-top: 10px;
   }
 

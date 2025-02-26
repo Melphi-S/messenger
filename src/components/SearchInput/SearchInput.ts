@@ -8,7 +8,7 @@ export class SearchInput extends Input {
     });
   }
 
-  protected addEvents() {
+  public addEvents() {
     const { events } = this.getProps();
 
     if (events && typeof events === "object") {

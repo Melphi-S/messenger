@@ -1,0 +1,12 @@
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  &__name {
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    font-weight: 500;
+  }
+}

@@ -3,6 +3,8 @@
 
 .popup {
   position: fixed;
+  width: 100svw;
+  height: 100svh;
   inset: 0;
 
   @include mixins.flex-center;

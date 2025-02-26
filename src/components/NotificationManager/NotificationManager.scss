@@ -1,0 +1,10 @@
+.notification-manager {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 99999;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

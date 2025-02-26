@@ -1,49 +1,50 @@
-import { Block } from "../../core/Block.ts";
-import { ArrowButton } from "../ArrowButton";
-import { Avatar } from "../Avatar";
-import { currentUser } from "../../api/mockAPI.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./ProfilePageLayout.scss";
-import { Popup } from "../Popup";
+import { User } from "../../api/userAPI";
 import { AvatarEdit } from "../AvatarEditPopup";
-import { Input } from "../Input";
-import { Button } from "../Button";
+import { Popup } from "../Popup";
+import { ArrowButton } from "../ArrowButton";
+import Handlebars from "handlebars";
+import { router } from "../../main.ts";
 
-interface Props {
-  inputs: Input[];
-  buttons: Button[];
+interface Props extends BlockProps {
+  inputs: string;
+  currentUser: User;
 }
 
 export class ProfilePageLayout extends Block {
-  constructor({ inputs, buttons }: Props) {
-    super("main", {
+  constructor({ currentUser, ...props }: Props) {
+    super({
+      ...props,
+      currentUser,
+      avatarEvents: {
+        click: () => {
+          this.getChildren().popup.changeProps({ hidden: false });
+        },
+      },
+      popup: new Popup({
+        content: new AvatarEdit({ type: "profile" }),
+        hidden: true,
+      }),
       backButton: new ArrowButton({
         direction: "left",
         type: "button",
         events: {
-          click: () => history.back(),
+          click: () => router.go("/chats"),
         },
       }),
-      avatar: new Avatar({
-        size: "l",
-        edit: true,
-        imageSrc: currentUser.avatar,
-        events: {
-          click: () => {
-            this.getChildren().popup.changeProps({ hidden: false });
-          },
-        },
-      }),
-      popup: new Popup({
-        content: new AvatarEdit(),
-        hidden: true,
-      }),
-      inputs: inputs,
-      buttons: buttons,
     });
   }
 
   protected render() {
     super.render();
+
+    const inputs = Handlebars.compile(this.getProps().inputs)(this.getProps());
+
+    const buttons = Handlebars.compile(this.getProps().buttons)(
+      this.getProps(),
+    );
+
     // language=hbs
     return `
       <main class="page page_type_sidebar">
@@ -51,13 +52,13 @@ export class ProfilePageLayout extends Block {
             {{{ backButton }}}
         </div>
         <div class="profile-main">
-          {{{ avatar }}}
+          {{{ component "Avatar" size='l' edit=true imageSrc=currentUser.avatar events=avatarEvents}}}
           <div class="profile-wrapper">
             <div class="fields-container">
-              {{{ inputs }}}
+              ${inputs}
             </div>
             <div class="buttons-container">
-              {{{ buttons }}}
+              ${buttons}
             </div>
           </div>
         </div>

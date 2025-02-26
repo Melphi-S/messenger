@@ -49,10 +49,9 @@ export const validate = (value: string, rule: ValidationRuleKey) => {
   return "";
 };
 
-export const getByName = (element: HTMLElement | null, name: string) => {
-  if (!element) return null;
-
-  return element.querySelector(`[name=${name}]`);
+const hasErrorsInForm = (formElement: Element) => {
+  const allErrorContainers = [...formElement.querySelectorAll(".error-text")];
+  return allErrorContainers.some((container) => container.textContent);
 };
 
 export const validateInput = (
@@ -61,31 +60,70 @@ export const validateInput = (
   rule: ValidationRuleKey | null,
   validationCb?: (...args: unknown[]) => string,
 ) => {
-  const inputElement = getByName(form.getElement(), name);
-  const inputBlock = form
-    .getLists()
-    .inputs.find((input) => input.getProps().name === name);
+  const formElement = form.getElement();
 
+  if (!formElement) return;
+
+  const inputWrapper = formElement.querySelector(`[for=${name}]`);
+
+  if (!inputWrapper) return;
+
+  const inputElement = inputWrapper.querySelector("input");
+  const oneLineWrapper = inputWrapper.querySelector(".one-line");
+  const submitButton = formElement?.querySelector('button[type="submit"]');
+  const errorContainer = inputWrapper.querySelector(".error-text");
   let validationError: string = "";
 
-  if (inputElement && inputElement instanceof HTMLInputElement && inputBlock) {
+  if (inputElement && inputElement instanceof HTMLInputElement) {
     if (!validationCb && rule) {
       validationError = validate(inputElement.value, rule);
     } else if (validationCb) {
       validationError = validationCb();
     }
-    inputBlock.changeProps({
-      error: validationError,
-      value: inputElement.value,
-    });
+  }
+
+  if (validationError) {
+    if (!oneLineWrapper) {
+      inputElement?.classList.add("input_error");
+    } else {
+      oneLineWrapper.classList.add("one-line_error");
+    }
+    if (submitButton) {
+      (submitButton as HTMLButtonElement).disabled = true;
+      submitButton.classList.add("button_disabled");
+    }
+    if (errorContainer) {
+      errorContainer.textContent = validationError;
+    }
+  } else {
+    if (!oneLineWrapper) {
+      inputElement?.classList.remove("input_error");
+    } else {
+      oneLineWrapper.classList.remove("one-line_error");
+    }
+
+    if (errorContainer) {
+      errorContainer.textContent = "";
+    }
+
+    if (submitButton && !hasErrorsInForm(formElement)) {
+      (submitButton as HTMLButtonElement).disabled = false;
+      submitButton.classList.remove("button_disabled");
+    }
   }
 
   return validationError;
 };
 
-export const validatePasswordMatch = (form: HTMLElement | null) => {
-  const password = getByName(form, "password");
-  const repeatPassword = getByName(form, "repeat_password");
+export const validatePasswordMatch = (
+  form: HTMLElement | null,
+  firstInputName: string,
+  secondInputName: string,
+) => {
+  if (!form) return "";
+
+  const password = form.querySelector(`[name=${firstInputName}]`);
+  const repeatPassword = form.querySelector(`[name=${secondInputName}]`);
 
   if (
     password &&

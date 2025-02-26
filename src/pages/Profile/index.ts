@@ -1,1 +1,2 @@
-export { ProfilePage } from "./Profile.ts";
+import ProfilePage from "./Profile.ts";
+export { ProfilePage };

@@ -11,4 +11,10 @@ export default [
   {
     ignores: ["**/node_modules/**", "**/dist/**"],
   },
+  {
+    rules: {
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+    },
+  },
 ];
