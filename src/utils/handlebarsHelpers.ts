@@ -4,9 +4,9 @@ import { Block, BlockProps } from "../core/Block.ts";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { v4 as uuidv4 } from "uuid";
-import { MessageList } from "../components/Chat/MessageList/MessageList.ts";
 import ChatHeader from "../components/Chat/ChatHeader/ChatHeader.ts";
 import UserList from "../components/Chat/UserManagement/UserList/UserList.ts";
+import MessageList from "../components/Chat/MessageList/MessageList.ts";
 
 const componentsMap: Record<string, typeof Block> = {
   Avatar,

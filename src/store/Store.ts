@@ -14,6 +14,8 @@ const defaultState: AppStore = {
   currentChatMessages: [],
   chatList: null,
   chatsUsers: [],
+  activeChat: null,
+  // chatWS: null,
 };
 
 class Store extends EventBus {

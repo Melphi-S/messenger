@@ -3,7 +3,6 @@ import { Button } from "../Button";
 import { Input } from "../Input";
 import "./AddChatPopup.scss";
 import { validateInput } from "../../utils/validation.ts";
-import { chatAPIInstance } from "../../api/chatAPI/ChatAPI.ts";
 import { getFormData } from "../../utils/getFormData.ts";
 import { chatController } from "../../controllers/ChatController.ts";
 
@@ -36,7 +35,9 @@ export class AddChatPopup extends Block {
                 .input.getElement()
                 ?.querySelector("input") as HTMLInputElement;
               input.value = "";
-              document.querySelector(".popup")?.classList.add("popup_hidden");
+              document
+                .querySelectorAll(".popup")
+                ?.forEach((popup) => popup.classList.add("popup_hidden"));
             }
           },
         },

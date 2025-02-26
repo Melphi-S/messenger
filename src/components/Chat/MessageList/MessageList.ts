@@ -2,19 +2,31 @@ import { Message } from "../../../api/chatAPI";
 import { Block, BlockProps } from "../../../core/Block.ts";
 import { ChatMessage } from "../ChatMessage/ChatMessage.ts";
 import "./MessageList.scss";
+import { connectWithStore, store } from "../../../store/Store.ts";
 
-interface Props extends BlockProps {
-  currentChatMessages: Message[];
-  currentUserId: number;
-}
-
-export class MessageList extends Block {
-  constructor({ currentChatMessages, currentUserId }: Props) {
+class MessageList extends Block {
+  constructor() {
     super({
-      messages: currentChatMessages.map((message) => {
-        return new ChatMessage({ message, currentUserId });
-      }),
+      messages: [],
     });
+  }
+
+  componentDidUpdate(): boolean {
+    const currentChatMessages = store.get().currentChatMessages;
+    const currentUserId = store.get().currentUser?.id;
+
+    if (currentChatMessages && currentUserId) {
+      this.changeLists(
+        {
+          messages: currentChatMessages.map((message) => {
+            return new ChatMessage({ message, currentUserId });
+          }),
+        },
+        false,
+      );
+    }
+
+    return super.componentDidUpdate();
   }
 
   protected render() {
@@ -97,3 +109,7 @@ export class MessageList extends Block {
     });
   }
 }
+
+export default connectWithStore(MessageList, (store) => ({
+  currentChatMessages: store.currentChatMessages,
+}));

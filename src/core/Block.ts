@@ -198,13 +198,16 @@ export class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_CDU, oldProps, this.props);
   }
 
-  public changeChildren(newChildren: Record<string, Block>) {
+  public changeChildren(
+    newChildren: Record<string, Block>,
+    shouldUpdate: boolean = true,
+  ) {
     this.shouldUpdate = false;
     const oldChildren = { ...this.children };
 
     Object.assign(this.children, newChildren);
 
-    if (this.shouldUpdate) {
+    if (this.shouldUpdate && shouldUpdate) {
       this.eventBus().emit(Block.EVENTS.FLOW_CDU, oldChildren, this.children);
     }
   }

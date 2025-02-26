@@ -1,31 +1,16 @@
-import { Block, BlockProps } from "../../core/Block.ts";
-import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
-import { Button } from "../Button";
-import { router } from "../../main.ts";
-import { Popup } from "../Popup";
-import { AddChatPopup } from "../AddChatPopup";
-import { SearchInput } from "../SearchInput";
+import { Block } from "../../core/Block.ts";
+// import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
 import { chatController } from "../../controllers/ChatController.ts";
 import { connectWithStore, store } from "../../store/Store.ts";
 import { IChat } from "../../api/chatAPI";
 import { ChatPreview, ChatPreviewProps } from "../ChatPreview";
-import { Chat } from "../Chat";
 import { User } from "../../api/userAPI/user.model.ts";
-import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
-
-interface Props extends BlockProps {
-  chatWs: ChatWS | null;
-}
 
 class ChatList extends Block {
-  chatWS: ChatWS | null;
-
   constructor() {
     super({
       chatPreviews: [],
     });
-
-    this.chatWS = null;
   }
 
   componentDidMount() {
@@ -37,10 +22,11 @@ class ChatList extends Block {
           this.changeLists({ chatPreviews });
         }
 
-        const currentUser = store.get().currentUser;
-        if (currentUser) {
-          this.chatWS = new ChatWS(currentUser.id);
-        }
+        // const currentUser = store.get().currentUser;
+        // if (currentUser) {
+        //   const chatWS = new ChatWS(currentUser.id);
+        //   store.set("chatWS", chatWS);
+        // }
       });
     }
 
@@ -51,6 +37,7 @@ class ChatList extends Block {
     console.log("UPDATE");
     const chatPreviews = this.createChatsList(store.get().chatList);
     this.changeLists({ chatPreviews }, false);
+
     return true;
   }
 
@@ -59,13 +46,9 @@ class ChatList extends Block {
       (chat) =>
         new ChatPreview({
           chat: chat,
-          isActive: false,
+          isActive: store.get().activeChat?.id === chat.id,
           events: {
             click: async () => {
-              if (this.chatWS) {
-                await this.chatWS.disconnect();
-              }
-
               const prevActiveChat = this.getLists().chatPreviews.find(
                 (chat) => chat.getProps().isActive,
               );
@@ -83,18 +66,8 @@ class ChatList extends Block {
                 newActiveChat.changeProps({ isActive: true });
               }
 
-              await this.chatWS?.connect(chat.id);
-
-              const newChat = new Chat({
-                chatWS: this.chatWS,
-                chat,
-              });
-
-              this.changeChildren({
-                activeChat: newChat,
-              });
-
-              newChat.dispatchComponentDidMount();
+              store.clear("currentChatMessages", []);
+              store.set("activeChat", chat);
             },
           },
           currentUser: this.getProps().currentUser as User,

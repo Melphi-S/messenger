@@ -1,30 +1,22 @@
 import { Block, BlockProps } from "../../../core/Block.ts";
-import { User } from "../../../api/userAPI/user.model.ts";
 import { IChat } from "../../../api/chatAPI";
 import UserManagement from "../UserManagement/UserManagement.ts";
-import { Popup } from "../../Popup";
-import { AvatarEdit } from "../../AvatarEditPopup";
 import { connectWithStore, store } from "../../../store/Store.ts";
 import "./ChatHeader.scss";
 import { ChatPreviewProps } from "../../ChatPreview";
 
 interface Props extends BlockProps {
-  currentUser: User;
   chat: IChat;
+  avatarEvents: { [k: string]: () => void };
 }
 
 class ChatHeader extends Block {
-  constructor({ currentUser, chat }: Props) {
+  constructor({ chat, avatarEvents }: Props) {
     super({
-      currentUser,
       chat,
       userManagement: new UserManagement({ chatId: chat.id }),
       name: chat.title,
-      avatarEvents: {
-        click: () => {
-          this.getChildren().popup.changeProps({ hidden: false });
-        },
-      },
+      avatarEvents,
     });
   }
 
@@ -40,6 +32,8 @@ class ChatHeader extends Block {
     const avatar =
       chat?.avatar || (this.getProps() as ChatPreviewProps).chat.avatar || "";
 
+    console.log("RENDER HEADER", avatar);
+
     // language=hbs
     return `
       <div class="chat-header">
@@ -54,7 +48,6 @@ class ChatHeader extends Block {
 }
 
 export default connectWithStore(ChatHeader, (store) => ({
-  chatList: store.chatList,
-  currentUser: store.currentUser,
   chatsUsers: store.chatsUsers,
+  chatList: store.chatList,
 }));

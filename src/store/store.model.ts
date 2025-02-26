@@ -10,4 +10,6 @@ export interface AppStore extends BlockProps {
     chatId: number;
     users: User[];
   }[];
+  activeChat: IChat | null;
+  // chatWS: ChatWS | null;
 }

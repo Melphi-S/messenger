@@ -3,16 +3,16 @@ import "./Chat.scss";
 import { MessageInput } from "../MessageInput";
 import { ArrowButton } from "../ArrowButton";
 import { FileAttach } from "./FileAttach/FileAttach.ts";
-import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
 import { connectWithStore, store } from "../../store/Store.ts";
 import { User } from "../../api/userAPI/user.model.ts";
 import { Popup } from "../Popup";
 import { AvatarEdit } from "../AvatarEditPopup";
 import { IChat } from "../../api/chatAPI";
 import { chatController } from "../../controllers/ChatController.ts";
+import { websocket } from "../../api/chatAPI/ChatWS.ts";
+import ChatHeader from "./ChatHeader/ChatHeader.ts";
 
 interface Props extends BlockProps {
-  chatWS: ChatWS;
   currentUser: User;
   chat: IChat;
 }
@@ -50,12 +50,14 @@ class Chat extends Block {
             const messageInput =
               this.getChildren().messageInput.getElement() as HTMLInputElement;
 
-            chatWS.sendMessage(messageInput.value);
+            if (websocket) {
+              websocket.sendMessage(messageInput.value);
 
-            messageInput.value = "";
-            super
-              .getChildren()
-              .newMessageButton.changeProps({ disabled: true });
+              messageInput.value = "";
+              super
+                .getChildren()
+                .newMessageButton.changeProps({ disabled: true });
+            }
           },
         },
       }),
@@ -70,6 +72,14 @@ class Chat extends Block {
         content: new AvatarEdit({ type: "chat", chatId: chat.id }),
         hidden: true,
       }),
+      chatHeader: new ChatHeader({
+        chat: chat,
+        avatarEvents: {
+          click: () => {
+            this.getChildren().popup.changeProps({ hidden: false });
+          },
+        },
+      }),
     });
   }
 
@@ -78,6 +88,10 @@ class Chat extends Block {
 
     const currentChatId = (this.getProps() as Props).chat.id;
     const chatsUsers = store.get().chatsUsers;
+
+    websocket.disconnect().then(() => {
+      websocket.connect();
+    });
 
     if (!chatsUsers.some((chat) => chat.chatId === currentChatId)) {
       chatController.getChatUsers(currentChatId).then((usersList) => {
@@ -99,12 +113,9 @@ class Chat extends Block {
     // language=hbs
     return `
       <div class="chat">
-        {{{ component "ChatHeader" chat=chat }}}
-          {{#if currentChatMessages}}
-            {{{ component "MessageList" currentUserId=currentUser.id currentChatMessages=currentChatMessages chatWS=chatWS}}}
-            {{else}}
-            <div></div>
-          {{/if}}
+<!--        {{{ component "ChatHeader" chat=chat }}}-->
+        {{{ chatHeader }}}
+        {{{ component "MessageList" currentUserId=currentUser.id}}}
         <div class="chat__footer">
           {{{ fileAttach }}}
           {{{ messageInput }}}
@@ -118,5 +129,4 @@ class Chat extends Block {
 
 export default connectWithStore(Chat, (store) => ({
   currenUser: store.currentUser,
-  currentChatMessages: store.currentChatMessages,
 }));

@@ -5,17 +5,22 @@ import cloneDeep from "../../utils/cloneDeep.ts";
 
 export class ChatWS {
   static BASE_URL = import.meta.env.VITE_WS_BASE_URL;
-  private readonly userId: number;
   private chatTokens: Map<number, string>;
   private socket: WebSocket | null = null;
   private pingTimer: NodeJS.Timeout | null = null;
 
-  constructor(userId: number) {
-    this.userId = userId;
+  constructor() {
     this.chatTokens = new Map();
   }
 
-  public async connect(chatId: number): Promise<void> {
+  public async connect(): Promise<void> {
+    const chatId = store.get().activeChat?.id;
+    const userId = store.get().currentUser?.id;
+
+    if (!chatId || !userId) {
+      return;
+    }
+
     let token = this.chatTokens.get(chatId);
 
     if (!token) {
@@ -31,7 +36,7 @@ export class ChatWS {
     store.clear("currentChatMessages", []);
 
     this.socket = new WebSocket(
-      `${ChatWS.BASE_URL}/${this.userId}/${chatId}/${token}`,
+      `${ChatWS.BASE_URL}/${userId}/${chatId}/${token}`,
     );
 
     this.pingTimer = setInterval(() => {
@@ -96,3 +101,5 @@ export class ChatWS {
     );
   }
 }
+
+export const websocket = new ChatWS();

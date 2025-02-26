@@ -2,18 +2,13 @@ import { Block } from "../../core/Block.ts";
 import "./Chats.scss";
 import { Button } from "../../components/Button";
 import { SearchInput } from "../../components/SearchInput";
-import { ChatPreview, ChatPreviewProps } from "../../components/ChatPreview";
 import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
-import { User } from "../../api/userAPI/user.model.ts";
 import { router } from "../../main.ts";
-import { IChat } from "../../api/chatAPI";
-import { connectWithStore, store } from "../../store/Store.ts";
 import { chatController } from "../../controllers/ChatController.ts";
-import { Chat } from "../../components/Chat";
-import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
 import { Popup } from "../../components/Popup";
 import { AddChatPopup } from "../../components/AddChatPopup/AddChatPopup.ts";
 import ChatList from "../../components/ChatList/ChatList.ts";
+import ActiveChat from "../../components/ActiveChat/ActiveChat.ts";
 
 class ChatsPage extends Block {
   constructor() {
@@ -61,83 +56,9 @@ class ChatsPage extends Block {
         },
       }),
       chatList: new ChatList({}),
+      activeChat: new ActiveChat({}),
     });
   }
-
-  componentDidMount() {
-    // if (!store.get().chatList) {
-    //   chatController.getChatsList().then((chatList) => {
-    //     if (chatList) {
-    //       const chatPreviews = this.createChatsList(chatList);
-    //       this.changeLists({ chatPreviews });
-    //     }
-    //
-    //     const currentUser = store.get().currentUser;
-    //     if (currentUser) {
-    //       this.chatWS = new ChatWS(currentUser.id);
-    //     }
-    //   });
-    // }
-
-    console.log(this.getChildren());
-
-    return super.componentDidMount();
-  }
-  //
-  // componentDidUpdate(): boolean {
-  //   console.log("UPDATE");
-  //   const chatPreviews = this.createChatsList(store.get().chatList);
-  //   this.changeLists({ chatPreviews }, false);
-  //   return true;
-  // }
-  //
-  // private createChatsList(chatsList: IChat[]) {
-  //   return chatsList.map(
-  //     (chat) =>
-  //       new ChatPreview({
-  //         chat: chat,
-  //         isActive: false,
-  //         events: {
-  //           click: async () => {
-  //             if (this.chatWS) {
-  //               await this.chatWS.disconnect();
-  //             }
-  //
-  //             const prevActiveChat = this.getLists().chatPreviews.find(
-  //               (chat) => chat.getProps().isActive,
-  //             );
-  //
-  //             if (prevActiveChat) {
-  //               prevActiveChat.changeProps({ isActive: false });
-  //             }
-  //
-  //             const newActiveChat = this.getLists().chatPreviews.find(
-  //               (listChat) =>
-  //                 (listChat.getProps() as ChatPreviewProps).chat.id === chat.id,
-  //             );
-  //
-  //             if (newActiveChat) {
-  //               newActiveChat.changeProps({ isActive: true });
-  //             }
-  //
-  //             await this.chatWS?.connect(chat.id);
-  //
-  //             const newChat = new Chat({
-  //               chatWS: this.chatWS,
-  //               chat,
-  //             });
-  //
-  //             this.changeChildren({
-  //               activeChat: newChat,
-  //             });
-  //
-  //             newChat.dispatchComponentDidMount();
-  //           },
-  //         },
-  //         currentUser: this.getProps().currentUser as User,
-  //       }),
-  //   );
-  // }
 
   protected render() {
     super.render();
@@ -151,18 +72,9 @@ class ChatsPage extends Block {
             {{{ createChatButton }}}
             {{{ searchInput}}}
           </div>
-<!--          <div class="chats-sidebar__list">-->
-<!--              {{{ chatPreviews }}}-->
-<!--          </div>-->
           {{{ chatList }}}
         </div>
-        {{#if activeChat}}
-          {{{ activeChat }}}
-        {{else}}
-          <p class="chats-main_select-message">
-            Select a chat
-          </p>
-        {{/if}}
+        {{{ activeChat }}}
         {{{ popup }}}
       </main>
     `;
