@@ -106,7 +106,6 @@ class Chat extends Block {
     // language=hbs
     return `
       <div class="chat">
-<!--        {{{ component "ChatHeader" chat=chat }}}-->
         {{{ chatHeader }}}
         {{{ component "MessageList" currentUserId=currentUser.id unreadMessages=unreadMessages}}}
         <form class="chat__footer">

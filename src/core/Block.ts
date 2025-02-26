@@ -118,7 +118,6 @@ export class Block {
     Object.values(this.children).forEach((child) => {
       const stub = fragment.content.querySelector(`[data-id="${child.id}"]`);
       if (stub) {
-        // child.changeProps(this.props);
         stub.replaceWith(child.getContent());
       }
     });

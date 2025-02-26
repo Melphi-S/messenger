@@ -3,13 +3,18 @@ import { store } from "../store/Store.ts";
 import { mapResponseToUser } from "../api/userAPI/user.model.ts";
 import { SignInDTO } from "../api/authAPI/auth.model.ts";
 import { router } from "../main.ts";
+import { notificationManager } from "../components/NotificationManager";
 
 class AuthController {
   async signup(data: SignUpDTO) {
     try {
       return await authAPIInstance.signup(data);
     } catch (err) {
-      console.log(err);
+      if (err instanceof Error) {
+        notificationManager.notify(err.message, "error", 5000);
+      } else {
+        notificationManager.notify("Error during registration", "error", 5000);
+      }
     }
   }
 
@@ -17,7 +22,11 @@ class AuthController {
     try {
       return await authAPIInstance.signin(data);
     } catch (err) {
-      console.log(err);
+      if (err instanceof Error) {
+        notificationManager.notify(err.message, "error", 5000);
+      } else {
+        notificationManager.notify("Error during authorization", "error", 5000);
+      }
     }
   }
 
@@ -28,7 +37,17 @@ class AuthController {
       router.setAuth(true);
       return true;
     } catch (err) {
-      throw err;
+      if (err instanceof Error) {
+        if (err.message !== "Cookie is not valid") {
+          notificationManager.notify(err.message, "error", 5000);
+        }
+      } else {
+        notificationManager.notify(
+          "Error during fetching user data",
+          "error",
+          5000,
+        );
+      }
     }
   }
 
@@ -36,7 +55,11 @@ class AuthController {
     try {
       return authAPIInstance.logout();
     } catch (err) {
-      console.log(err);
+      if (err instanceof Error) {
+        notificationManager.notify(err.message, "error", 5000);
+      } else {
+        notificationManager.notify("Error during logout", "error", 5000);
+      }
     }
   }
 }

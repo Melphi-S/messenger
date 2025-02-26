@@ -1,5 +1,6 @@
 import { Route } from "./Route.ts";
 import { Block } from "./Block.ts";
+import { notificationManager } from "../components/NotificationManager/NotificationManager.ts";
 
 export class Router {
   private routes: { route: Route; auth: boolean }[] = [];
@@ -25,6 +26,12 @@ export class Router {
   }
 
   public start() {
+    const notification = document.getElementById("notification");
+
+    if (notification) {
+      notification.append(notificationManager.getContent());
+    }
+
     window.onpopstate = ((event: PopStateEvent) => {
       const target = event.currentTarget as Window;
       target.location && this.onRoute(target.location.pathname);

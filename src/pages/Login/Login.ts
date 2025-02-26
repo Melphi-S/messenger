@@ -17,7 +17,7 @@ class LoginPage extends AuthLayout {
                 `,
       // language=hbs
       buttons: `
-          {{{ component "Button" text="Sign in" type="submit" view="primary" events=handleSubmitEvents }}}
+          {{{ component "Button" text="Sign in" type="submit" view="primary" events=handleSubmitEvents isDisabled=true}}}
           {{{ component "Button" text="Create account" type="button" view="secondary" events=handleGoSignupEvents }}}
       `,
       handleLoginEvents: {
