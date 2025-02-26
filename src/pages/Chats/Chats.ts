@@ -13,10 +13,9 @@ import { Chat } from "../../components/Chat";
 import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
 import { Popup } from "../../components/Popup";
 import { AddChatPopup } from "../../components/AddChatPopup/AddChatPopup.ts";
+import ChatList from "../../components/ChatList/ChatList.ts";
 
 class ChatsPage extends Block {
-  chatWS: ChatWS | null;
-
   constructor() {
     super({
       profileButton: new Button({
@@ -61,84 +60,84 @@ class ChatsPage extends Block {
           },
         },
       }),
-      chatPreviews: [],
+      chatList: new ChatList({}),
     });
-
-    this.chatWS = null;
   }
 
   componentDidMount() {
-    if (!store.get().chatList) {
-      chatController.getChatsList().then((chatList) => {
-        if (chatList) {
-          const chatPreviews = this.createChatsList(chatList);
-          this.changeLists({ chatPreviews });
-        }
+    // if (!store.get().chatList) {
+    //   chatController.getChatsList().then((chatList) => {
+    //     if (chatList) {
+    //       const chatPreviews = this.createChatsList(chatList);
+    //       this.changeLists({ chatPreviews });
+    //     }
+    //
+    //     const currentUser = store.get().currentUser;
+    //     if (currentUser) {
+    //       this.chatWS = new ChatWS(currentUser.id);
+    //     }
+    //   });
+    // }
 
-        const currentUser = store.get().currentUser;
-        if (currentUser) {
-          this.chatWS = new ChatWS(currentUser.id);
-        }
-      });
-    }
+    console.log(this.getChildren());
 
     return super.componentDidMount();
   }
-
-  componentDidUpdate(): boolean {
-    console.log("UPDATE");
-    const chatPreviews = this.createChatsList(store.get().chatList);
-    this.changeLists({ chatPreviews }, false);
-    return true;
-  }
-
-  private createChatsList(chatsList: IChat[]) {
-    return chatsList.map(
-      (chat) =>
-        new ChatPreview({
-          chat: chat,
-          isActive: false,
-          events: {
-            click: async () => {
-              if (this.chatWS) {
-                await this.chatWS.disconnect();
-              }
-
-              const prevActiveChat = this.getLists().chatPreviews.find(
-                (chat) => chat.getProps().isActive,
-              );
-
-              if (prevActiveChat) {
-                prevActiveChat.changeProps({ isActive: false });
-              }
-
-              const newActiveChat = this.getLists().chatPreviews.find(
-                (listChat) =>
-                  (listChat.getProps() as ChatPreviewProps).chat.id === chat.id,
-              );
-
-              if (newActiveChat) {
-                newActiveChat.changeProps({ isActive: true });
-              }
-
-              await this.chatWS?.connect(chat.id);
-
-              const newChat = new Chat({
-                chatWS: this.chatWS,
-                chat,
-              });
-
-              this.changeChildren({
-                activeChat: newChat,
-              });
-
-              newChat.dispatchComponentDidMount();
-            },
-          },
-          currentUser: this.getProps().currentUser as User,
-        }),
-    );
-  }
+  //
+  // componentDidUpdate(): boolean {
+  //   console.log("UPDATE");
+  //   const chatPreviews = this.createChatsList(store.get().chatList);
+  //   this.changeLists({ chatPreviews }, false);
+  //   return true;
+  // }
+  //
+  // private createChatsList(chatsList: IChat[]) {
+  //   return chatsList.map(
+  //     (chat) =>
+  //       new ChatPreview({
+  //         chat: chat,
+  //         isActive: false,
+  //         events: {
+  //           click: async () => {
+  //             if (this.chatWS) {
+  //               await this.chatWS.disconnect();
+  //             }
+  //
+  //             const prevActiveChat = this.getLists().chatPreviews.find(
+  //               (chat) => chat.getProps().isActive,
+  //             );
+  //
+  //             if (prevActiveChat) {
+  //               prevActiveChat.changeProps({ isActive: false });
+  //             }
+  //
+  //             const newActiveChat = this.getLists().chatPreviews.find(
+  //               (listChat) =>
+  //                 (listChat.getProps() as ChatPreviewProps).chat.id === chat.id,
+  //             );
+  //
+  //             if (newActiveChat) {
+  //               newActiveChat.changeProps({ isActive: true });
+  //             }
+  //
+  //             await this.chatWS?.connect(chat.id);
+  //
+  //             const newChat = new Chat({
+  //               chatWS: this.chatWS,
+  //               chat,
+  //             });
+  //
+  //             this.changeChildren({
+  //               activeChat: newChat,
+  //             });
+  //
+  //             newChat.dispatchComponentDidMount();
+  //           },
+  //         },
+  //         currentUser: this.getProps().currentUser as User,
+  //       }),
+  //   );
+  // }
 
   protected render() {
     super.render();
@@ -152,9 +151,10 @@ class ChatsPage extends Block {
             {{{ createChatButton }}}
             {{{ searchInput}}}
           </div>
-          <div class="chats-sidebar__list">
-              {{{ chatPreviews }}}
-          </div>
+<!--          <div class="chats-sidebar__list">-->
+<!--              {{{ chatPreviews }}}-->
+<!--          </div>-->
+          {{{ chatList }}}
         </div>
         {{#if activeChat}}
           {{{ activeChat }}}
@@ -169,9 +169,4 @@ class ChatsPage extends Block {
   }
 }
 
-export default connectWithStore(
-  withAuthCheck(ChatsPage, "private"),
-  (store) => ({
-    chatList: store.chatList,
-  }),
-);
+export default withAuthCheck(ChatsPage, "private");

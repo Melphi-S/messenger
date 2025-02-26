@@ -74,6 +74,9 @@ export class Block {
 
   private _componentDidMount() {
     this.componentDidMount();
+    Object.values(this.children).forEach((child) => {
+      child.dispatchComponentDidMount();
+    });
   }
 
   componentDidMount() {
