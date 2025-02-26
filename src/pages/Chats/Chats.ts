@@ -48,6 +48,7 @@ class ChatsPage extends Block {
         events: {
           input: debounce(async (e) => {
             if (
+              e instanceof Event &&
               e.target !== undefined &&
               e.target instanceof HTMLInputElement
             ) {

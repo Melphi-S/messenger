@@ -83,9 +83,11 @@ export const validateInput = (
   }
 
   if (validationError) {
-    !oneLineWrapper
-      ? inputElement?.classList.add("input_error")
-      : oneLineWrapper.classList.add("one-line_error");
+    if (!oneLineWrapper) {
+      inputElement?.classList.add("input_error");
+    } else {
+      oneLineWrapper.classList.add("one-line_error");
+    }
     if (submitButton) {
       (submitButton as HTMLButtonElement).disabled = true;
       submitButton.classList.add("button_disabled");
@@ -94,9 +96,11 @@ export const validateInput = (
       errorContainer.textContent = validationError;
     }
   } else {
-    !oneLineWrapper
-      ? inputElement?.classList.remove("input_error")
-      : oneLineWrapper.classList.remove("one-line_error");
+    if (!oneLineWrapper) {
+      inputElement?.classList.remove("input_error");
+    } else {
+      oneLineWrapper.classList.remove("one-line_error");
+    }
 
     if (errorContainer) {
       errorContainer.textContent = "";
@@ -109,18 +113,6 @@ export const validateInput = (
   }
 
   return validationError;
-};
-
-export const clearInputs = (form: Block) => {
-  const formElement = form.getElement();
-
-  if (!formElement) return;
-
-  const inputs = [...formElement.querySelectorAll("input")];
-
-  inputs.forEach((input) => {
-    input.value = "";
-  });
 };
 
 export const validatePasswordMatch = (

@@ -1,3 +1,5 @@
+// значением ключа объекта может быть любой тип
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PlainObject<T = any> = {
   [k in string]: T;
 };
@@ -27,7 +29,12 @@ function isEqual(lhs: PlainObject, rhs: PlainObject) {
   for (const [key, value] of Object.entries(lhs)) {
     const rightValue = rhs[key];
     if (isArrayOrObject(value) && isArrayOrObject(rightValue)) {
-      if (isEqual(value, rightValue)) {
+      if (
+        isEqual(
+          value as PlainObject<unknown>,
+          rightValue as PlainObject<unknown>,
+        )
+      ) {
         continue;
       }
       return false;

@@ -50,7 +50,7 @@ export const connectWithStore = (
 ) => {
   return class extends Component {
     constructor(props: BlockProps) {
-      let state = JSON.parse(JSON.stringify(store.get()));
+      const state = JSON.parse(JSON.stringify(store.get()));
       super({ ...props, ...state });
 
       store.on(StoreEvents.UPDATED, (state) => {

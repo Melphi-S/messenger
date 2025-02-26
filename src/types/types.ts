@@ -10,31 +10,8 @@ export enum Pages {
   ERROR = "/error",
 }
 
-export type CSSDisplayProperty =
-  | "block"
-  | "inline"
-  | "inline-block"
-  | "flex"
-  | "inline-flex"
-  | "grid"
-  | "inline-grid"
-  | "flow-root"
-  | "none"
-  | "table"
-  | "table-row"
-  | "table-cell"
-  | "table-column"
-  | "table-column-group"
-  | "table-header-group"
-  | "table-footer-group"
-  | "table-row-group"
-  | "table-caption"
-  | "contents"
-  | "list-item"
-  | "inherit"
-  | "initial"
-  | "unset";
-
+// значением ключа объекта может быть любой тип
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Indexed<T = any> = {
   [key in string]: T;
 };
