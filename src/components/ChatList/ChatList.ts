@@ -14,19 +14,12 @@ class ChatList extends Block {
   }
 
   componentDidMount() {
-    console.log("MOUNT");
     if (!store.get().chatList) {
       chatController.getChatsList().then((chatList) => {
         if (chatList) {
           const chatPreviews = this.createChatsList(chatList);
           this.changeLists({ chatPreviews });
         }
-
-        // const currentUser = store.get().currentUser;
-        // if (currentUser) {
-        //   const chatWS = new ChatWS(currentUser.id);
-        //   store.set("chatWS", chatWS);
-        // }
       });
     }
 
@@ -34,7 +27,6 @@ class ChatList extends Block {
   }
 
   componentDidUpdate(): boolean {
-    console.log("UPDATE");
     const chatPreviews = this.createChatsList(store.get().chatList);
     this.changeLists({ chatPreviews }, false);
 
@@ -84,6 +76,19 @@ class ChatList extends Block {
         {{{ chatPreviews }}}
       </div>
     `;
+  }
+
+  protected _render() {
+    super._render();
+
+    const container = <HTMLElement>this.element;
+    if (!container) return;
+
+    const activeChat = container.querySelector(".preview-message_active");
+
+    if (activeChat) {
+      activeChat.scrollIntoView();
+    }
   }
 }
 

@@ -80,12 +80,11 @@ class Chat extends Block {
           },
         },
       }),
+      unreadMessages: chat.unreadCount,
     });
   }
 
   componentDidMount() {
-    console.log("MOUNT CHAT");
-
     const currentChatId = (this.getProps() as Props).chat.id;
     const chatsUsers = store.get().chatsUsers;
 
@@ -115,7 +114,7 @@ class Chat extends Block {
       <div class="chat">
 <!--        {{{ component "ChatHeader" chat=chat }}}-->
         {{{ chatHeader }}}
-        {{{ component "MessageList" currentUserId=currentUser.id}}}
+        {{{ component "MessageList" currentUserId=currentUser.id unreadMessages=unreadMessages}}}
         <div class="chat__footer">
           {{{ fileAttach }}}
           {{{ messageInput }}}

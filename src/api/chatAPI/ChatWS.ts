@@ -15,7 +15,12 @@ export class ChatWS {
 
   public async connect(): Promise<void> {
     const chatId = store.get().activeChat?.id;
+    let unreadMessages = store
+      .get()
+      .chatList?.find((chat) => chat.id === chatId)?.unreadCount as number;
     const userId = store.get().currentUser?.id;
+
+    console.log(unreadMessages);
 
     if (!chatId || !userId) {
       return;
@@ -47,8 +52,14 @@ export class ChatWS {
       );
     }, 30000);
 
-    this.socket.addEventListener("open", () => {
-      this.getMessages();
+    this.socket.addEventListener("open", async () => {
+      let from = 0;
+      while (unreadMessages >= 0) {
+        await this.getMessages(from);
+        from += 20;
+        unreadMessages -= 20;
+      }
+      from = 0;
     });
 
     this.socket.addEventListener("message", (e) => {
@@ -65,7 +76,7 @@ export class ChatWS {
     }
   }
 
-  public getMessages(from: number = 0) {
+  public async getMessages(from: number = 0) {
     this.socket?.send(
       JSON.stringify({
         content: from,

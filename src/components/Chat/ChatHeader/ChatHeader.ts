@@ -32,8 +32,6 @@ class ChatHeader extends Block {
     const avatar =
       chat?.avatar || (this.getProps() as ChatPreviewProps).chat.avatar || "";
 
-    console.log("RENDER HEADER", avatar);
-
     // language=hbs
     return `
       <div class="chat-header">

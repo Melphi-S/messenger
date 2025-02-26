@@ -10,8 +10,6 @@ class ActiveChat extends Block {
   }
 
   componentDidUpdate(): boolean {
-    console.log("UPDATE");
-
     const activeChat = store.get().activeChat;
 
     if (activeChat) {
