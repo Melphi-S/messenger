@@ -7,7 +7,7 @@ import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 import { User } from "../../api/userAPI/user.model.ts";
 import { router } from "../../main.ts";
 import { IChat } from "../../api/chatAPI";
-import { store } from "../../store/Store.ts";
+import { connectWithStore, store } from "../../store/Store.ts";
 import { chatController } from "../../controllers/ChatController.ts";
 import { Chat } from "../../components/Chat";
 import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
@@ -51,9 +51,12 @@ class ChatsPage extends Block {
         type: "text",
         value: "",
         events: {
-          input: (e) => {
-            if (e.target && e.target instanceof HTMLInputElement) {
-              console.log(e.target.value);
+          input: async (e) => {
+            if (
+              e.target !== undefined &&
+              e.target instanceof HTMLInputElement
+            ) {
+              await chatController.getChatsList(e.target.value);
             }
           },
         },
@@ -68,7 +71,8 @@ class ChatsPage extends Block {
     if (!store.get().chatList) {
       chatController.getChatsList().then((chatList) => {
         if (chatList) {
-          this.createChatsList(chatList);
+          const chatPreviews = this.createChatsList(chatList);
+          this.changeLists({ chatPreviews });
         }
 
         const currentUser = store.get().currentUser;
@@ -81,8 +85,15 @@ class ChatsPage extends Block {
     return super.componentDidMount();
   }
 
+  componentDidUpdate(): boolean {
+    console.log("UPDATE");
+    const chatPreviews = this.createChatsList(store.get().chatList);
+    this.changeLists({ chatPreviews }, false);
+    return true;
+  }
+
   private createChatsList(chatsList: IChat[]) {
-    const chatPreviews = chatsList.map(
+    return chatsList.map(
       (chat) =>
         new ChatPreview({
           chat: chat,
@@ -127,8 +138,6 @@ class ChatsPage extends Block {
           currentUser: this.getProps().currentUser as User,
         }),
     );
-
-    this.changeLists({ chatPreviews });
   }
 
   protected render() {
@@ -160,4 +169,9 @@ class ChatsPage extends Block {
   }
 }
 
-export default withAuthCheck(ChatsPage, "private");
+export default connectWithStore(
+  withAuthCheck(ChatsPage, "private"),
+  (store) => ({
+    chatList: store.chatList,
+  }),
+);

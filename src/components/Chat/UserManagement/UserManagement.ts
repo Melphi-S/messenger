@@ -21,15 +21,11 @@ class UserManagement extends Block {
   protected render() {
     super.render();
 
-    console.log("RENDER USER MANAGEMENT");
-
     const chatId = (this.getProps() as Props).chatId;
 
     const chatUsers = store
       .get()
       .chatsUsers.find((chat) => chat.chatId === chatId)?.users;
-
-    console.log(chatUsers);
 
     if (!chatUsers) {
       return `<div></div>`;

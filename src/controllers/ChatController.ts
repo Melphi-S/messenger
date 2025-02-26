@@ -4,9 +4,17 @@ import { mapResponseToUser, User } from "../api/userAPI/user.model.ts";
 import { store } from "../store/Store.ts";
 
 class ChatController {
-  async getChatsList() {
+  async getChatsList(
+    title: string = "",
+    offset: number = 0,
+    limit: number = 100,
+  ) {
     try {
-      const chatsResponse = await chatAPIInstance.getChatsList();
+      const chatsResponse = await chatAPIInstance.getChatsList(
+        title,
+        offset,
+        limit,
+      );
       const chats = chatsResponse.map((chat) => mapResponseToIChat(chat));
       store.set("chatList", chats);
       return chats;

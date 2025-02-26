@@ -31,6 +31,11 @@ export class AddChatPopup extends Block {
             if (body && body.title) {
               await chatController.createChat(body.title);
               await chatController.getChatsList();
+
+              const input = this.getChildren()
+                .input.getElement()
+                ?.querySelector("input") as HTMLInputElement;
+              input.value = "";
               document.querySelector(".popup")?.classList.add("popup_hidden");
             }
           },

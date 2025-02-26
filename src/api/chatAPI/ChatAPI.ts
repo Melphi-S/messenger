@@ -15,8 +15,14 @@ class ChatAPI {
     ChatAPI.instance = this;
   }
 
-  async getChatsList(): Promise<ChatResponse[]> {
-    const response = await chatHTTPTransport.get("");
+  async getChatsList(
+    title: string,
+    offset: number,
+    limit: number,
+  ): Promise<ChatResponse[]> {
+    const response = await chatHTTPTransport.get("", {
+      data: { title, offset, limit },
+    });
 
     if (!response.ok) {
       const errorMessage = JSON.parse(response.response);

@@ -17,53 +17,6 @@ export class MessageList extends Block {
     });
   }
 
-  componentDidMount(): boolean {
-    const container = <HTMLElement>this.element;
-    if (!container) return true;
-
-    const images = container.querySelectorAll("img");
-    let loadedCount = 0;
-
-    container.style.opacity = "0";
-
-    if (images.length === 0) {
-      setTimeout(() => {
-        container.scrollTop = container.scrollHeight;
-        container.style.opacity = "1";
-      });
-      return true;
-    }
-
-    setTimeout(() => {
-      images.forEach((img) => {
-        if (img.complete) {
-          loadedCount++;
-          if (loadedCount === images.length) {
-            container.scrollTop = container.scrollHeight;
-            container.style.opacity = "1";
-          }
-        } else {
-          img.onload = () => {
-            loadedCount++;
-            if (loadedCount === images.length) {
-              container.scrollTop = container.scrollHeight;
-              container.style.opacity = "1";
-            }
-          };
-          img.onerror = () => {
-            loadedCount++;
-            if (loadedCount === images.length) {
-              container.scrollTop = container.scrollHeight;
-              container.style.opacity = "1";
-            }
-          };
-        }
-      });
-    });
-
-    return super.componentDidMount();
-  }
-
   protected render() {
     super.render();
 
@@ -96,61 +49,51 @@ export class MessageList extends Block {
   //     }, 0);
   //   }
   // }
-  //
-  // protected _render() {
-  //   super._render();
-  //
-  //   const container = <HTMLElement>this.getElement();
-  //
-  //   if (container) {
-  //     container.addEventListener("scroll", () => this.handleScroll());
-  //   }
-  // }
 
-  // protected _render() {
-  //   super._render();
-  //
-  //   const container = <HTMLElement>this.element;
-  //   if (!container) return;
-  //
-  //   const images = container.querySelectorAll("img");
-  //   let loadedCount = 0;
-  //
-  //   container.style.opacity = "0";
-  //
-  //   if (images.length === 0) {
-  //     setTimeout(() => {
-  //       container.scrollTop = container.scrollHeight;
-  //       container.style.opacity = "1";
-  //     });
-  //     return;
-  //   }
-  //
-  //   setTimeout(() => {
-  //     images.forEach((img) => {
-  //       if (img.complete) {
-  //         loadedCount++;
-  //         if (loadedCount === images.length) {
-  //           container.scrollTop = container.scrollHeight;
-  //           container.style.opacity = "1";
-  //         }
-  //       } else {
-  //         img.onload = () => {
-  //           loadedCount++;
-  //           if (loadedCount === images.length) {
-  //             container.scrollTop = container.scrollHeight;
-  //             container.style.opacity = "1";
-  //           }
-  //         };
-  //         img.onerror = () => {
-  //           loadedCount++; // Игнорируем ошибки загрузки
-  //           if (loadedCount === images.length) {
-  //             container.scrollTop = container.scrollHeight;
-  //             container.style.opacity = "1";
-  //           }
-  //         };
-  //       }
-  //     });
-  //   });
-  // }
+  protected _render() {
+    super._render();
+
+    const container = <HTMLElement>this.element;
+    if (!container) return;
+
+    const images = container.querySelectorAll("img");
+    let loadedCount = 0;
+
+    container.style.opacity = "0";
+
+    if (images.length === 0) {
+      setTimeout(() => {
+        container.scrollTop = container.scrollHeight;
+        container.style.opacity = "1";
+      });
+      return;
+    }
+
+    setTimeout(() => {
+      images.forEach((img) => {
+        if (img.complete) {
+          loadedCount++;
+          if (loadedCount === images.length) {
+            container.scrollTop = container.scrollHeight;
+            container.style.opacity = "1";
+          }
+        } else {
+          img.onload = () => {
+            loadedCount++;
+            if (loadedCount === images.length) {
+              container.scrollTop = container.scrollHeight;
+              container.style.opacity = "1";
+            }
+          };
+          img.onerror = () => {
+            loadedCount++; // Игнорируем ошибки загрузки
+            if (loadedCount === images.length) {
+              container.scrollTop = container.scrollHeight;
+              container.style.opacity = "1";
+            }
+          };
+        }
+      });
+    });
+  }
 }

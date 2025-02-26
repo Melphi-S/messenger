@@ -28,6 +28,8 @@
     font-weight: 500;
     color: vars.$text-color-pale;
     margin-top: 12px;
+    max-height: 700px;
+    overflow-y: scroll;
   }
 }
 

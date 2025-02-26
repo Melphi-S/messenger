@@ -74,6 +74,8 @@ class Chat extends Block {
   }
 
   componentDidMount() {
+    console.log("MOUNT CHAT");
+
     const currentChatId = (this.getProps() as Props).chat.id;
     const chatsUsers = store.get().chatsUsers;
 
