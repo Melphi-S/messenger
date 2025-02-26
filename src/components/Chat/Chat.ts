@@ -33,9 +33,9 @@ class Chat extends Block {
             if (e.target && e.target instanceof HTMLInputElement) {
               const newMessageButton = super.getChildren().newMessageButton;
               if (e.target.value) {
-                newMessageButton.changeProps({ disabled: false });
+                newMessageButton.changeProps({ isDisabled: false });
               } else {
-                newMessageButton.changeProps({ disabled: true });
+                newMessageButton.changeProps({ isDisabled: true });
               }
             }
           },
@@ -43,10 +43,11 @@ class Chat extends Block {
       }),
       newMessageButton: new ArrowButton({
         direction: "right",
-        disabled: true,
-        type: "button",
+        isDisabled: true,
+        type: "submit",
         events: {
-          click: () => {
+          click: (e) => {
+            e.preventDefault();
             const messageInput =
               this.getChildren().messageInput.getElement() as HTMLInputElement;
 
@@ -56,7 +57,7 @@ class Chat extends Block {
               messageInput.value = "";
               super
                 .getChildren()
-                .newMessageButton.changeProps({ disabled: true });
+                .newMessageButton.changeProps({ isDisabled: true });
             }
           },
         },
@@ -115,11 +116,11 @@ class Chat extends Block {
 <!--        {{{ component "ChatHeader" chat=chat }}}-->
         {{{ chatHeader }}}
         {{{ component "MessageList" currentUserId=currentUser.id unreadMessages=unreadMessages}}}
-        <div class="chat__footer">
+        <form class="chat__footer">
           {{{ fileAttach }}}
           {{{ messageInput }}}
           {{{ newMessageButton }}}
-        </div>
+        </form>
         {{{ popup }}}
       <div>
     `;

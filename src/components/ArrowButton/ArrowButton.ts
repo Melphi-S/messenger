@@ -4,7 +4,7 @@ import "./ArrowButton.scss";
 interface Props {
   direction: "right" | "left";
   type: HTMLButtonElement["type"];
-  disabled?: boolean;
+  isDisabled?: boolean;
 
   events?: {
     click?: (event: Event) => void;
@@ -22,7 +22,7 @@ export class ArrowButton extends Block {
     super.render();
     // language=hbs
     return `
-      <button class="arrow-button arrow-button_direction_{{ direction }} {{#if disabled}}arrow-button_disabled{{/if}}" type="button"/>
+      <button {{#if isDisabled}}disabled{{/if}} class="arrow-button arrow-button_direction_{{ direction }} {{#if isDisabled}}arrow-button_disabled{{/if}}" type="{{type}}"/>
     `;
   }
 }
