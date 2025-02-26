@@ -1,7 +1,7 @@
 import { Block, BlockProps } from "../../core/Block.ts";
 import "./ChatPreview.scss";
 import { IChat } from "../../api/chatAPI";
-import { User } from "../../api/userAPI/user.model.ts";
+import { User } from "../../api/userAPI";
 import { dateToChatView } from "../../utils/parseDate.ts";
 import { connectWithStore, store } from "../../store/Store.ts";
 

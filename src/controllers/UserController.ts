@@ -4,7 +4,7 @@ import {
   mapResponseToUser,
 } from "../api/userAPI/user.model.ts";
 import { store } from "../store/Store.ts";
-import { userAPIInstance } from "../api/userAPI/UserAPI.ts";
+import { userAPIInstance } from "../api/userAPI";
 import { notificationManager } from "../components/NotificationManager";
 
 class UserController {

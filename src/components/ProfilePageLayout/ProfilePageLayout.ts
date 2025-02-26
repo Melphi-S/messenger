@@ -1,6 +1,6 @@
 import { Block, BlockProps } from "../../core/Block.ts";
 import "./ProfilePageLayout.scss";
-import { User } from "../../api/userAPI/user.model.ts";
+import { User } from "../../api/userAPI";
 import { AvatarEdit } from "../AvatarEditPopup";
 import { Popup } from "../Popup";
 import { ArrowButton } from "../ArrowButton";

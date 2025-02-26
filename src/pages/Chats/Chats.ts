@@ -6,7 +6,7 @@ import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 import { router } from "../../main.ts";
 import { chatController } from "../../controllers/ChatController.ts";
 import { Popup } from "../../components/Popup";
-import { AddChatPopup } from "../../components/AddChatPopup/AddChatPopup.ts";
+import { AddChatPopup } from "../../components/AddChatPopup";
 import ChatList from "../../components/ChatList/ChatList.ts";
 import ActiveChat from "../../components/ActiveChat/ActiveChat.ts";
 import { debounce } from "../../utils/debounce.ts";

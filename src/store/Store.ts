@@ -18,7 +18,7 @@ const defaultState: AppStore = {
 };
 
 class Store extends EventBus {
-  private state: AppStore = cloneDeep(defaultState);
+  private state: AppStore = cloneDeep(defaultState) as AppStore;
 
   public get() {
     return this.state;
@@ -37,7 +37,7 @@ class Store extends EventBus {
   }
 
   public clearStore() {
-    this.state = cloneDeep(defaultState);
+    this.state = cloneDeep(defaultState) as AppStore;
     console.log(this.state);
   }
 }

@@ -2,7 +2,7 @@ import { ProfilePageLayout } from "../../components/ProfilePageLayout";
 import { validateInput } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
 import { BlockProps } from "../../core/Block.ts";
-import { ChangeProfileDTO, User } from "../../api/userAPI/user.model.ts";
+import { ChangeProfileDTO, User } from "../../api/userAPI";
 import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 import { userController } from "../../controllers/UserController.ts";
 import { router } from "../../main.ts";

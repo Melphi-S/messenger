@@ -1,5 +1,5 @@
 import { Block } from "../../../../../core/Block.ts";
-import { User } from "../../../../../api/userAPI/user.model.ts";
+import { User } from "../../../../../api/userAPI";
 import { Button } from "../../../../Button";
 import "./UserItem.scss";
 import { chatController } from "../../../../../controllers/ChatController.ts";

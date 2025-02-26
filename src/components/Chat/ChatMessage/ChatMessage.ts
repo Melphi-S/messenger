@@ -1,5 +1,4 @@
 import { Block } from "../../../core/Block.ts";
-
 import "./ChatMessage.scss";
 import { dateToChatView } from "../../../utils/parseDate.ts";
 import { Message } from "../../../api/chatAPI";

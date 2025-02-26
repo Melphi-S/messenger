@@ -1,10 +1,9 @@
 import { Block } from "../../core/Block.ts";
-// import { ChatWS } from "../../api/chatAPI/ChatWS.ts";
 import { chatController } from "../../controllers/ChatController.ts";
 import { connectWithStore, store } from "../../store/Store.ts";
 import { IChat } from "../../api/chatAPI";
 import { ChatPreview, ChatPreviewProps } from "../ChatPreview";
-import { User } from "../../api/userAPI/user.model.ts";
+import { User } from "../../api/userAPI";
 
 class ChatList extends Block {
   constructor() {
@@ -27,8 +26,12 @@ class ChatList extends Block {
   }
 
   componentDidUpdate(): boolean {
-    const chatPreviews = this.createChatsList(store.get().chatList);
-    this.changeLists({ chatPreviews }, false);
+    const chatList = store.get().chatList;
+
+    if (chatList) {
+      const chatPreviews = this.createChatsList(chatList);
+      this.changeLists({ chatPreviews }, false);
+    }
 
     return true;
   }

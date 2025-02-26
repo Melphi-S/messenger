@@ -5,7 +5,7 @@ import {
 } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
 import { BlockProps } from "../../core/Block.ts";
-import { ChangePasswordDTO, User } from "../../api/userAPI/user.model.ts";
+import { ChangePasswordDTO, User } from "../../api/userAPI";
 import { userController } from "../../controllers/UserController.ts";
 import { router } from "../../main.ts";
 import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";

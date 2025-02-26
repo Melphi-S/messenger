@@ -1,6 +1,6 @@
 import { HTTPTransport } from "../../core/HTTPTransport.ts";
 import { SignInDTO, SignUpDTO } from "./auth.model.ts";
-import { UserResponse } from "../userAPI/user.model.ts";
+import { UserResponse } from "../userAPI";
 
 const authHTTPTransport = new HTTPTransport("/auth");
 

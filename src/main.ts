@@ -11,6 +11,7 @@ import { NotFoundPage } from "./pages/NotFound";
 import { ErrorPage } from "./pages/Error";
 import { Router } from "./core/Router.ts";
 import "./utils/handlebarsHelpers.ts";
+import { notificationManager } from "./components/NotificationManager";
 
 const pagesList: Record<Pages, { route: typeof Block; auth: boolean }> = {
   [Pages.ROOT]: { route: LoginPage, auth: false },
@@ -29,6 +30,12 @@ export const router = new Router("app");
 Object.entries(pagesList).forEach(([key, value]) => {
   router.use(key, value.route, value.auth);
 });
+
+const notification = document.getElementById("notification");
+
+if (notification) {
+  notification.append(notificationManager.getContent());
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   router.start();

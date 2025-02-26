@@ -1,6 +1,6 @@
 import { HTTPTransport } from "../../core/HTTPTransport.ts";
 import { ChatResponse, ChatTokenResponse } from "./chat.model.ts";
-import { User, UserResponse } from "../userAPI/user.model.ts";
+import { UserResponse } from "../userAPI";
 
 const chatHTTPTransport = new HTTPTransport("/chats");
 

@@ -1,8 +1,4 @@
-import {
-  mapResponseToUser,
-  User,
-  UserResponse,
-} from "../userAPI/user.model.ts";
+import { mapResponseToUser, User, UserResponse } from "../userAPI";
 
 export interface ChatResponse {
   id: number;

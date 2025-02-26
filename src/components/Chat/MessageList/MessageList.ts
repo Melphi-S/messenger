@@ -1,11 +1,10 @@
-import { Block } from "../../../core/Block.ts";
+import { Block, BlockProps } from "../../../core/Block.ts";
 import { ChatMessage } from "../ChatMessage/ChatMessage.ts";
 import "./MessageList.scss";
 import { connectWithStore, store } from "../../../store/Store.ts";
 import { IChat } from "../../../api/chatAPI";
-import { websocket } from "../../../api/chatAPI/ChatWS.ts";
 
-interface Props {
+interface Props extends BlockProps {
   unreadMessages: number;
 }
 

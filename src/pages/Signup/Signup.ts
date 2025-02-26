@@ -1,11 +1,9 @@
 import { AuthLayout } from "../../components/AuthLayout";
-import { Input } from "../../components/Input";
+
 import {
   validateInput,
   validatePasswordMatch,
-  ValidationRuleKey,
 } from "../../utils/validation.ts";
-import { Button } from "../../components/Button";
 import { getFormData } from "../../utils/getFormData.ts";
 import { router } from "../../main.ts";
 import { authController } from "../../controllers/AuthController.ts";

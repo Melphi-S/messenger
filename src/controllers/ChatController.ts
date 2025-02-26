@@ -1,6 +1,6 @@
-import { chatAPIInstance } from "../api/chatAPI/ChatAPI.ts";
+import { chatAPIInstance } from "../api/chatAPI";
 import { mapResponseToIChat } from "../api/chatAPI";
-import { mapResponseToUser, User } from "../api/userAPI/user.model.ts";
+import { mapResponseToUser, User } from "../api/userAPI";
 import { store } from "../store/Store.ts";
 import { notificationManager } from "../components/NotificationManager";
 
@@ -36,7 +36,7 @@ class ChatController {
     try {
       const data = new FormData();
       data.append("avatar", file);
-      data.append("chatId", chatId);
+      data.append("chatId", chatId.toString());
       const chatResponse = await chatAPIInstance.changeChatAvatar(data);
 
       return mapResponseToIChat(chatResponse);

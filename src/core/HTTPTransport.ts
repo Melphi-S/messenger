@@ -8,7 +8,7 @@ enum Methods {
 
 interface Options {
   method?: Methods;
-  data?: Record<string, unknown>;
+  data?: Record<string, unknown> | FormData;
   headers?: Record<string, string>;
   timeout?: number;
 }
@@ -63,7 +63,7 @@ export class HTTPTransport {
 
       xhr.open(
         method,
-        method === Methods.GET && !!data
+        method === Methods.GET && !!data && !(data instanceof FormData)
           ? `${url}${queryStringify(data)}`
           : url,
       );

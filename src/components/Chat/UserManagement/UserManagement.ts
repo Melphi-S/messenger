@@ -1,7 +1,7 @@
 import { Block, BlockProps } from "../../../core/Block.ts";
 import "./UserManagement.scss";
 import { connectWithStore, store } from "../../../store/Store.ts";
-import { User } from "../../../api/userAPI/user.model.ts";
+import { User } from "../../../api/userAPI";
 
 interface Props extends BlockProps {
   chatId: number;

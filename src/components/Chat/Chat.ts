@@ -4,12 +4,12 @@ import { MessageInput } from "../MessageInput";
 import { ArrowButton } from "../ArrowButton";
 import { FileAttach } from "./FileAttach/FileAttach.ts";
 import { connectWithStore, store } from "../../store/Store.ts";
-import { User } from "../../api/userAPI/user.model.ts";
+import { User } from "../../api/userAPI";
 import { Popup } from "../Popup";
 import { AvatarEdit } from "../AvatarEditPopup";
 import { IChat } from "../../api/chatAPI";
 import { chatController } from "../../controllers/ChatController.ts";
-import { websocket } from "../../api/chatAPI/ChatWS.ts";
+import { websocket } from "../../api/chatAPI";
 import ChatHeader from "./ChatHeader/ChatHeader.ts";
 
 interface Props extends BlockProps {
@@ -64,11 +64,6 @@ class Chat extends Block {
       }),
       name: "",
       fileAttach: new FileAttach(),
-      avatarEvents: {
-        click: () => {
-          this.getChildren().popup.changeProps({ hidden: false });
-        },
-      },
       popup: new Popup({
         content: new AvatarEdit({ type: "chat", chatId: chat.id }),
         hidden: true,
@@ -109,7 +104,6 @@ class Chat extends Block {
         {{{ chatHeader }}}
         {{{ component "MessageList" currentUserId=currentUser.id unreadMessages=unreadMessages}}}
         <form class="chat__footer">
-          {{{ fileAttach }}}
           {{{ messageInput }}}
           {{{ newMessageButton }}}
         </form>

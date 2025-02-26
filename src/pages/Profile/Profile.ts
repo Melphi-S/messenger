@@ -1,5 +1,5 @@
 import { ProfilePageLayout } from "../../components/ProfilePageLayout";
-import { User } from "../../api/userAPI/user.model.ts";
+import { User } from "../../api/userAPI";
 import { BlockProps } from "../../core/Block.ts";
 import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 import { router } from "../../main.ts";

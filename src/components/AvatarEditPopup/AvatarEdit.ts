@@ -4,7 +4,6 @@ import "./AvatarEdit.scss";
 import { userController } from "../../controllers/UserController.ts";
 import { chatController } from "../../controllers/ChatController.ts";
 import { store } from "../../store/Store.ts";
-import cloneDeep from "../../utils/cloneDeep.ts";
 
 interface Props {
   type: "profile" | "chat";

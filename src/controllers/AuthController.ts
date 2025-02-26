@@ -1,6 +1,6 @@
 import { authAPIInstance, SignUpDTO } from "../api/authAPI";
 import { store } from "../store/Store.ts";
-import { mapResponseToUser } from "../api/userAPI/user.model.ts";
+import { mapResponseToUser } from "../api/userAPI";
 import { SignInDTO } from "../api/authAPI/auth.model.ts";
 import { router } from "../main.ts";
 import { notificationManager } from "../components/NotificationManager";
