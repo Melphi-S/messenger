@@ -5,7 +5,7 @@ import { Block, BlockProps } from "../core/Block.ts";
 import isEqual from "../utils/isEqual.ts";
 import cloneDeep from "../utils/cloneDeep.ts";
 
-export enum StoreEvents {
+enum StoreEvents {
   UPDATED = "updated",
 }
 
