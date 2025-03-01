@@ -17,8 +17,8 @@
 }
 
 .page {
-  width: 100svw;
-  min-height: 100svh;
+  width: 100%;
+  min-height: 100%;
   color: vars.$text-color-main;
 
   @include mixins.flex-center;
@@ -27,6 +27,14 @@
   display: grid;
   grid-template-columns: auto 1fr;
 }
+}
+
+#app {
+  width: 100svw;
+  height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 ::-webkit-scrollbar {
@@ -41,4 +49,24 @@
 ::-webkit-scrollbar-thumb {
   background-color: transparent;
   border-radius: 5px;
+}
+
+.spinner {
+  display: block;
+  width: 70px;
+  height: 70px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  border-right-color: vars.$primary-color;
+  border-top-color: vars.$primary-color;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

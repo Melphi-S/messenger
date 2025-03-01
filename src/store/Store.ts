@@ -15,6 +15,7 @@ const defaultState: AppStore = {
   chatList: null,
   chatsUsers: [],
   activeChat: null,
+  isLoading: true,
 };
 
 class Store extends EventBus {

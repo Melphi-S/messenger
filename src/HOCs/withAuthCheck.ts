@@ -24,6 +24,9 @@ export const withAuthCheck = (
             if (view === "private") {
               router.go("/login");
             }
+          })
+          .finally(() => {
+            store.set("isLoading", false);
           });
       }
 
@@ -32,8 +35,10 @@ export const withAuthCheck = (
     }
 
     protected render() {
-      if (!store.get().currentUser && view === "private") {
-        return `<div>LOADER</div>`;
+      if (store.get().isLoading) {
+        return `
+          <div class="spinner"></div>
+        `;
       }
 
       return super.render();
@@ -42,5 +47,6 @@ export const withAuthCheck = (
 
   return connectWithStore(WithAuth, (store) => ({
     currentUser: store.currentUser,
+    isLoading: store.isLoading,
   }));
 };
