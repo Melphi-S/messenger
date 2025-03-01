@@ -1,5 +1,5 @@
 import { AuthLayout } from "../../components/AuthLayout";
-import { validateInput } from "../../utils/validation.ts";
+import { validateInput, ValidationRuleKey } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
 import { router } from "../../main.ts";
 import { authController } from "../../controllers/AuthController.ts";
@@ -17,7 +17,7 @@ class LoginPage extends AuthLayout {
                 `,
       // language=hbs
       buttons: `
-          {{{ component "Button" text="Sign in" type="submit" view="primary" events=handleSubmitEvents isDisabled=true}}}
+          {{{ component "Button" text="Sign in" type="submit" view="primary" events=handleSubmitEvents }}}
           {{{ component "Button" text="Create account" type="button" view="secondary" events=handleGoSignupEvents }}}
       `,
       handleLoginEvents: {
@@ -29,13 +29,29 @@ class LoginPage extends AuthLayout {
       handleSubmitEvents: {
         click: async (e: Event) => {
           e.preventDefault();
-          const body = getFormData(this);
 
-          const login = await authController.signin(body as SignUpDTO);
+          const inputsToValidate: [string, ValidationRuleKey][] = [
+            ["login", "login"],
+            ["password", "password"],
+          ];
 
-          if (login) {
-            await authController.getCurrentUser();
-            router.go("/chats");
+          let hasError = false;
+
+          for (const [name, rule] of inputsToValidate) {
+            if (validateInput(this, name, rule)) {
+              hasError = true;
+            }
+          }
+
+          if (!hasError) {
+            const body = getFormData(this);
+
+            const login = await authController.signin(body as SignUpDTO);
+
+            if (login) {
+              await authController.getCurrentUser();
+              router.go("/chats");
+            }
           }
         },
       },

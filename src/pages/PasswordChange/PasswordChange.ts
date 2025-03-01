@@ -2,6 +2,7 @@ import { ProfilePageLayout } from "../../components/ProfilePageLayout";
 import {
   validateInput,
   validatePasswordMatch,
+  ValidationRuleKey,
 } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
 import { BlockProps } from "../../core/Block.ts";
@@ -46,14 +47,40 @@ class PasswordChangePage extends ProfilePageLayout {
       },
       handleButtonEvents: {
         click: async () => {
-          const body = getFormData(this, ["repeat_password", "avatar"]);
+          const inputsToValidate: [string, ValidationRuleKey][] = [
+            ["oldPassword", "password"],
+            ["newPassword", "password"],
+            ["repeat_password", "password"],
+          ];
 
-          if (body) {
-            const res = await userController.changePassword(
-              body as ChangePasswordDTO,
-            );
-            if (res) {
-              router.go("/profile");
+          let hasError = false;
+
+          for (const [name, rule] of inputsToValidate) {
+            const error =
+              name !== "repeat_password"
+                ? validateInput(this, name, rule)
+                : validateInput(this, "repeat_password", null, () =>
+                    validatePasswordMatch(
+                      this.getElement(),
+                      "newPassword",
+                      "repeat_password",
+                    ),
+                  );
+            if (error) {
+              hasError = true;
+            }
+          }
+
+          if (!hasError) {
+            const body = getFormData(this, ["repeat_password", "avatar"]);
+
+            if (body) {
+              const res = await userController.changePassword(
+                body as ChangePasswordDTO,
+              );
+              if (res) {
+                router.go("/profile");
+              }
             }
           }
         },

@@ -3,6 +3,7 @@ import { AuthLayout } from "../../components/AuthLayout";
 import {
   validateInput,
   validatePasswordMatch,
+  ValidationRuleKey,
 } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
 import { router } from "../../main.ts";
@@ -60,13 +61,44 @@ class SignupPage extends AuthLayout {
       handleSubmitEvents: {
         click: async (e: Event) => {
           e.preventDefault();
-          const body = getFormData(this);
 
-          const login = await authController.signup(body as SignUpDTO);
+          const inputsToValidate: [string, ValidationRuleKey][] = [
+            ["email", "email"],
+            ["login", "login"],
+            ["first_name", "name"],
+            ["second_name", "name"],
+            ["phone", "phone"],
+            ["password", "password"],
+            ["repeat_password", "password"],
+          ];
 
-          if (login) {
-            await authController.getCurrentUser();
-            router.go("/chats");
+          let hasError = false;
+
+          for (const [name, rule] of inputsToValidate) {
+            const error =
+              name !== "repeat_password"
+                ? validateInput(this, name, rule)
+                : validateInput(this, "repeat_password", null, () =>
+                    validatePasswordMatch(
+                      this.getElement(),
+                      "password",
+                      "repeat_password",
+                    ),
+                  );
+            if (error) {
+              hasError = true;
+            }
+          }
+
+          if (!hasError) {
+            const body = getFormData(this);
+
+            const login = await authController.signup(body as SignUpDTO);
+
+            if (login) {
+              await authController.getCurrentUser();
+              router.go("/chats");
+            }
           }
         },
       },

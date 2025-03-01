@@ -1,5 +1,5 @@
 import { ProfilePageLayout } from "../../components/ProfilePageLayout";
-import { validateInput } from "../../utils/validation.ts";
+import { validateInput, ValidationRuleKey } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
 import { BlockProps } from "../../core/Block.ts";
 import { ChangeProfileDTO, User } from "../../api/userAPI";
@@ -48,11 +48,30 @@ class ProfileChangePage extends ProfilePageLayout {
       },
       handleButtonEvents: {
         click: async () => {
-          const body = getFormData(this);
+          const inputsToValidate: [string, ValidationRuleKey][] = [
+            ["email", "email"],
+            ["login", "login"],
+            ["first_name", "name"],
+            ["second_name", "name"],
+            ["display_name", "name"],
+            ["phone", "phone"],
+          ];
 
-          if (body) {
-            await userController.changeProfileData(body as ChangeProfileDTO);
-            router.go("/profile");
+          let hasError = false;
+
+          for (const [name, rule] of inputsToValidate) {
+            if (validateInput(this, name, rule)) {
+              hasError = true;
+            }
+          }
+
+          if (!hasError) {
+            const body = getFormData(this);
+
+            if (body) {
+              await userController.changeProfileData(body as ChangeProfileDTO);
+              router.go("/profile");
+            }
           }
         },
       },
