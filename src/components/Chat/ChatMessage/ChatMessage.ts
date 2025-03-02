@@ -1,28 +1,28 @@
 import { Block } from "../../../core/Block.ts";
-import { Message } from "../../../api/models/message.model.ts";
 import "./ChatMessage.scss";
-import { currentUser } from "../../../api/mockAPI.ts";
 import { dateToChatView } from "../../../utils/parseDate.ts";
+import { Message } from "../../../api/chatAPI";
 
 interface Props {
   message: Message;
+  currentUserId: number;
 }
 
 export class ChatMessage extends Block {
-  constructor({ message }: Props) {
-    super("div", {
-      text: message.type === "text",
-      body: message.body,
-      author: message.authorId === currentUser.id ? "mine" : "his",
-      date: dateToChatView(message.date),
-      read:
-        message.authorId === currentUser.id &&
-        message.seenBy.some((id) => id !== currentUser.id),
+  constructor({ message, currentUserId }: Props) {
+    super({
+      text: true,
+      body: message.content,
+      author: message.userId === currentUserId ? "mine" : "his",
+      date: dateToChatView(message.time),
+      currentUserId: currentUserId,
+      message: message,
     });
   }
 
   protected render() {
     super.render();
+
     // language=hbs
     return `
       {{#if text}}

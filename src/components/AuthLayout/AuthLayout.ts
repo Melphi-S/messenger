@@ -1,23 +1,29 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./AuthLayout.scss";
-import { Input } from "../Input";
-import { Button } from "../Button";
+import Handlebars from "handlebars";
 
-interface Props {
+interface Props extends BlockProps {
   title: string;
-  inputs: Input[];
-  buttons: Button[];
+  inputs: string;
+  buttons: string;
 }
 
 export class AuthLayout extends Block {
   constructor(props: Props) {
-    super("main", {
+    super({
       ...props,
     });
   }
 
   protected render() {
     super.render();
+
+    const inputs = Handlebars.compile(this.getProps().inputs)(this.getProps());
+
+    const buttons = Handlebars.compile(this.getProps().buttons)(
+      this.getProps(),
+    );
+
     // language=hbs
     return `
       <main class="page">
@@ -25,11 +31,11 @@ export class AuthLayout extends Block {
           <div>
             <h1 class="form-header">{{{ title }}}</h1>
             <div class="inputs-wrapper">
-              {{{ inputs }}}
+              ${inputs}
             </div>
           </div>
             <div class="auth-button-container">
-              {{{ buttons }}}
+              ${buttons}
             </div>
         </form>
       </main>

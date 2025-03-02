@@ -1,1 +1,3 @@
-export { SignupPage } from "./Signup.ts";
+import SignupPage from "./Signup.ts";
+
+export { SignupPage };

@@ -1,0 +1,21 @@
+@use "../../../styles/variables" as vars;
+
+.notification {
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1.0rem;
+  line-height: 1.0rem;
+  font-weight: 500;
+
+  &_type_error {
+    background-color: vars.$text-color-error;
+  }
+
+  &_type_success {
+    background-color: vars.$success-color;
+  }
+
+  &_type_info {
+    background-color: vars.$text-color-pale;
+  }
+}

@@ -1,46 +1,48 @@
-import { Block } from "../../../core/Block.ts";
+import { Block, BlockProps } from "../../../core/Block.ts";
 import "./UserManagement.scss";
-import { Hint } from "../../Hint";
-import { HintButton } from "../../HintButton";
-import app from "../../../App.ts";
+import { connectWithStore, store } from "../../../store/Store.ts";
+import { User } from "../../../api/userAPI";
 
-export class UserManagement extends Block {
-  constructor() {
-    super("div", {
-      hint: new Hint({
-        position: "bottom",
-        content: [
-          new HintButton({
-            type: "add",
-            text: "Add user",
-            events: {
-              click: () => app.navigate("/error"),
-            },
-          }),
-          new HintButton({
-            type: "delete",
-            text: "Delete user",
-            events: {
-              click: () => app.navigate("/error"),
-            },
-          }),
-        ],
-      }),
+interface Props extends BlockProps {
+  chatId: number;
+  chatUsers: {
+    chatId: number;
+    users: User[];
+  }[];
+}
+
+class UserManagement extends Block {
+  constructor({ chatId }: Props) {
+    super({
+      chatId,
     });
   }
 
   protected render() {
     super.render();
+
+    const chatId = (this.getProps() as Props).chatId;
+
+    const chatUsers = store
+      .get()
+      .chatsUsers.find((chat) => chat.chatId === chatId)?.users;
+
+    if (!chatUsers) {
+      return `<div></div>`;
+    }
+
+    const usersCount = chatUsers.length;
+
     // language=hbs
     return `
       <div class="user-management">
-        <svg width="3" height="16" viewBox="0 0 3 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="1.5" cy="2" r="1.5" fill="#1E1E1E"/>
-          <circle cx="1.5" cy="8" r="1.5" fill="#1E1E1E"/>
-          <circle cx="1.5" cy="14" r="1.5" fill="#1E1E1E"/>
-        </svg>
-        {{{ hint }}}
+        <span>${usersCount} ${usersCount > 1 ? "users" : "user"}</span>
+        {{{ component "UserList" chatId=chatId }}}
       </div>
     `;
   }
 }
+
+export default connectWithStore(UserManagement, (store) => ({
+  chatsUsers: store.chatsUsers,
+}));

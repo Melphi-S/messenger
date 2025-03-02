@@ -1,125 +1,82 @@
 import { ProfilePageLayout } from "../../components/ProfilePageLayout";
-import { Button } from "../../components/Button";
-import { Input } from "../../components/Input";
-import { currentUser } from "../../api/mockAPI.ts";
 import { validateInput, ValidationRuleKey } from "../../utils/validation.ts";
 import { getFormData } from "../../utils/getFormData.ts";
-import app from "../../App.ts";
+import { BlockProps } from "../../core/Block.ts";
+import { ChangeProfileDTO, User } from "../../api/userAPI";
+import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
+import { userController } from "../../controllers/UserController.ts";
+import { router } from "../../main.ts";
 
-export class ProfileChangePage extends ProfilePageLayout {
-  constructor() {
+interface Props extends BlockProps {
+  currentUser: User;
+}
+
+class ProfileChangePage extends ProfilePageLayout {
+  constructor({ currentUser }: Props) {
     super({
-      inputs: [
-        new Input({
-          label: "Email",
-          type: "text",
-          name: "email",
-          value: currentUser.email,
-          disabled: false,
-          placeholder: "Enter email",
-          oneLine: true,
-          events: {
-            blur: () => validateInput(this, "email", "email"),
-          },
-        }),
-        new Input({
-          label: "Login",
-          type: "text",
-          name: "login",
-          value: currentUser.login || "",
-          disabled: false,
-          placeholder: "Enter login",
-          oneLine: true,
-          events: {
-            blur: () => validateInput(this, "login", "login"),
-          },
-        }),
-        new Input({
-          label: "First name",
-          type: "text",
-          name: "first_name",
-          value: currentUser.firstName,
-          disabled: false,
-          placeholder: "Enter first name",
-          oneLine: true,
-          events: {
-            blur: () => validateInput(this, "first_name", "name"),
-          },
-        }),
-        new Input({
-          label: "Second name",
-          type: "text",
-          name: "second_name",
-          value: currentUser.secondName,
-          disabled: false,
-          placeholder: "Enter second name",
-          oneLine: true,
-          events: {
-            blur: () => validateInput(this, "second_name", "name"),
-          },
-        }),
-        new Input({
-          label: "Nickname",
-          type: "text",
-          name: "display_name",
-          value: currentUser.displayName,
-          disabled: false,
-          placeholder: "Enter second name",
-          oneLine: true,
-          events: {
-            blur: () => validateInput(this, "display_name", "name"),
-          },
-        }),
-        new Input({
-          label: "Phone",
-          type: "text",
-          name: "phone",
-          value: currentUser.phone,
-          disabled: false,
-          placeholder: "Enter phone",
-          oneLine: true,
-          events: {
-            blur: () => validateInput(this, "phone", "phone"),
-          },
-        }),
-      ],
-      buttons: [
-        new Button({
-          text: "Save",
-          type: "submit",
-          view: "primary",
-          events: {
-            click: (e) => {
-              e.preventDefault();
-              const inputsToValidate: [string, ValidationRuleKey][] = [
-                ["email", "email"],
-                ["login", "login"],
-                ["first_name", "name"],
-                ["second_name", "name"],
-                ["display_name", "name"],
-                ["phone", "phone"],
-              ];
+      currentUser,
+      // language=hbs
+      inputs: `
+          {{{ component "Input" label="Email" type="text" name="email" value=currentUser.email placeholder="Enter email" disabled=false oneLine=true events=handleEmailEvents}}}
+          {{{ component "Input" label="Login" type="text" name="login" value=currentUser.login placeholder="Enter login" disabled=false oneLine=true events=handleLoginEvents}}}
+          {{{ component "Input" label="First name" type="text" name="first_name" value=currentUser.firstName placeholder="Enter first name" disabled=false oneLine=true events=handleFirstNameEvents }}}
+          {{{ component "Input" label="Second name" type="text" name="second_name" value=currentUser.secondName placeholder="Enter second name" disabled=false oneLine=true events=handleSecondNameEvents}}}
+          {{{ component "Input" label="Nickame" type="text" name="display_name" value=currentUser.displayName placeholder="Enter nickname" disabled=false oneLine=true events=handleNicknameEvents }}}
+          {{{ component "Input" label="Phone" type="text" name="phone" value=currentUser.phone placeholder="Enter phone" disabled=false oneLine=true events=handlePhoneEvents }}}
+      `,
+      // language=hbs
+      buttons: `
+          {{{ component "Button" text="Save" type="submit" view="primary" events=handleButtonEvents }}}
+      `,
+      handleEmailEvents: {
+        blur: () => validateInput(this, "email", "email"),
+      },
+      handleLoginEvents: {
+        blur: () => validateInput(this, "login", "login"),
+      },
+      handleFirstNameEvents: {
+        blur: () => validateInput(this, "first_name", "name"),
+      },
+      handleSecondNameEvents: {
+        blur: () => validateInput(this, "second_name", "name"),
+      },
+      handleNicknameEvents: {
+        blur: () => validateInput(this, "display_name", "name"),
+      },
+      handlePhoneEvents: {
+        blur: () => validateInput(this, "phone", "phone"),
+      },
+      handleButtonEvents: {
+        click: async () => {
+          const inputsToValidate: [string, ValidationRuleKey][] = [
+            ["email", "email"],
+            ["login", "login"],
+            ["first_name", "name"],
+            ["second_name", "name"],
+            ["display_name", "name"],
+            ["phone", "phone"],
+          ];
 
-              let hasError = false;
+          let hasError = false;
 
-              for (const [name, rule] of inputsToValidate) {
-                if (validateInput(this, name, rule)) {
-                  hasError = true;
-                }
-              }
+          for (const [name, rule] of inputsToValidate) {
+            if (validateInput(this, name, rule)) {
+              hasError = true;
+            }
+          }
 
-              if (!hasError) {
-                const body = getFormData(this);
+          if (!hasError) {
+            const body = getFormData(this);
 
-                //TODO Change to real API request
-                console.log(body);
-
-                app.navigate("/profile");
-              }
-            },
-          },
-        }),
-      ],
+            if (body) {
+              await userController.changeProfileData(body as ChangeProfileDTO);
+              router.go("/profile");
+            }
+          }
+        },
+      },
     });
   }
 }
+
+export default withAuthCheck(ProfileChangePage, "private");

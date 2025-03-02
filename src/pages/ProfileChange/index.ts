@@ -1,1 +1,3 @@
-export { ProfileChangePage } from "./ProfileChange.ts";
+import ProfileChangePage from "./ProfileChange.ts";
+
+export default ProfileChangePage;

@@ -1,0 +1,38 @@
+@use "../../../../styles/variables" as vars;
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 200px;
+  visibility: hidden;
+  position: absolute;
+  box-shadow: 0 0 6px 0 #00000024;
+  border-radius: 6px;
+  padding: 15px;
+  background-color: vars.$background-color;
+  right: 0;
+  bottom: -25px;
+  transform: translateY(100%);
+  z-index: 1000;
+  cursor: auto;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -25px;
+    height: 25px;
+    width: 100%;
+  }
+
+  &__wrapper {
+    max-height: 300px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+  }
+}

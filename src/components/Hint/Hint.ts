@@ -8,7 +8,7 @@ interface Props {
 
 export class Hint extends Block {
   constructor({ content, position }: Props) {
-    super("div", {
+    super({
       content: content,
       position: position,
     });

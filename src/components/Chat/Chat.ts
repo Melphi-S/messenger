@@ -1,25 +1,28 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./Chat.scss";
-import { Chat as ChatModel } from "../../api/models/chat.model.ts";
-import { ChatMessage } from "./ChatMessage/ChatMessage.ts";
 import { MessageInput } from "../MessageInput";
 import { ArrowButton } from "../ArrowButton";
-import { Avatar } from "../Avatar";
-import { currentUser, MOCK_USERS } from "../../api/mockAPI.ts";
 import { FileAttach } from "./FileAttach/FileAttach.ts";
-import { UserManagement } from "./UserManagement/UserManagement.ts";
+import { connectWithStore, store } from "../../store/Store.ts";
+import { User } from "../../api/userAPI";
+import { Popup } from "../Popup";
+import { AvatarEdit } from "../AvatarEditPopup";
+import { IChat } from "../../api/chatAPI";
+import { chatController } from "../../controllers/ChatController.ts";
+import { websocket } from "../../api/chatAPI";
+import ChatHeader from "./ChatHeader/ChatHeader.ts";
 
-interface Props {
-  chat: ChatModel;
+interface Props extends BlockProps {
+  currentUser: User;
+  chat: IChat;
 }
 
-export class Chat extends Block {
-  constructor({ chat }: Props) {
-    super("div", {
-      id: chat.id,
-      messages: chat.messages.map((message) => {
-        return new ChatMessage({ message });
-      }),
+class Chat extends Block {
+  constructor({ chatWS, currentUser, chat }: Props) {
+    super({
+      currentUser,
+      chatWS,
+      chat,
       messageInput: new MessageInput({
         name: "message",
         placeholder: "Your message",
@@ -30,9 +33,9 @@ export class Chat extends Block {
             if (e.target && e.target instanceof HTMLInputElement) {
               const newMessageButton = super.getChildren().newMessageButton;
               if (e.target.value) {
-                newMessageButton.changeProps({ disabled: false });
+                newMessageButton.changeProps({ isDisabled: false });
               } else {
-                newMessageButton.changeProps({ disabled: true });
+                newMessageButton.changeProps({ isDisabled: true });
               }
             }
           },
@@ -40,114 +43,76 @@ export class Chat extends Block {
       }),
       newMessageButton: new ArrowButton({
         direction: "right",
-        disabled: true,
-        type: "button",
+        isDisabled: true,
+        type: "submit",
         events: {
-          click: () => {
+          click: (e) => {
+            e.preventDefault();
             const messageInput =
               this.getChildren().messageInput.getElement() as HTMLInputElement;
 
-            //TODO Change to real API request
-            console.log(messageInput.value);
+            if (websocket) {
+              websocket.sendMessage(messageInput.value);
 
-            messageInput.value = "";
-            super
-              .getChildren()
-              .newMessageButton.changeProps({ disabled: true });
+              messageInput.value = "";
+              super
+                .getChildren()
+                .newMessageButton.changeProps({ isDisabled: true });
+            }
           },
         },
       }),
-      image: new Avatar({
-        size: "m",
-        imageSrc:
-          chat.image ||
-          MOCK_USERS.find(
-            (user) =>
-              user.id === chat.participants.find((id) => id !== currentUser.id),
-          )?.avatar ||
-          "",
-        edit: false,
-      }),
-      name:
-        chat.name ||
-        MOCK_USERS.find(
-          (user) =>
-            user.id === chat.participants.find((id) => id !== currentUser.id),
-        )?.displayName ||
-        "",
+      name: "",
       fileAttach: new FileAttach(),
-      userManagement: new UserManagement(),
+      popup: new Popup({
+        content: new AvatarEdit({ type: "chat", chatId: chat.id }),
+        hidden: true,
+      }),
+      chatHeader: new ChatHeader({
+        chat: chat,
+        avatarEvents: {
+          click: () => {
+            this.getChildren().popup.changeProps({ hidden: false });
+          },
+        },
+      }),
+      unreadMessages: chat.unreadCount,
     });
+  }
+
+  componentDidMount() {
+    const currentChatId = (this.getProps() as Props).chat.id;
+    const chatsUsers = store.get().chatsUsers;
+
+    websocket.disconnect().then(() => {
+      websocket.connect();
+    });
+
+    if (!chatsUsers.some((chat) => chat.chatId === currentChatId)) {
+      chatController.getChatUsers(currentChatId);
+    }
+
+    return super.componentDidMount();
   }
 
   protected render() {
     super.render();
+
     // language=hbs
     return `
       <div class="chat">
-        <div class="chat__header">
-          <div class="chat__participant-wrapper">
-            {{{ image }}}
-            <span class="chat__participant-name">{{{name}}}</span>
-          </div>
-          {{{ userManagement }}}
-        </div>
-        <div class="chat__main scrollbar">
-            {{{ messages }}}
-        </div>
-        <div class="chat__footer">
-          {{{ fileAttach }}}
+        {{{ chatHeader }}}
+        {{{ component "MessageList" currentUserId=currentUser.id unreadMessages=unreadMessages}}}
+        <form class="chat__footer">
           {{{ messageInput }}}
           {{{ newMessageButton }}}
-        </div>
+        </form>
+        {{{ popup }}}
       <div>
     `;
   }
-
-  protected _render() {
-    super._render();
-
-    const container = <HTMLElement>this.element?.querySelector(".chat__main");
-    if (!container) return;
-
-    const images = container.querySelectorAll("img");
-    let loadedCount = 0;
-
-    container.style.opacity = "0";
-
-    if (images.length === 0) {
-      setTimeout(() => {
-        container.scrollTop = container.scrollHeight;
-        container.style.opacity = "1";
-      });
-      return;
-    }
-
-    setTimeout(() => {
-      images.forEach((img) => {
-        if (img.complete) {
-          loadedCount++;
-          if (loadedCount === images.length) {
-            container.scrollTop = container.scrollHeight;
-            container.style.opacity = "1";
-          }
-        } else {
-          img.onload = () => {
-            loadedCount++;
-            if (loadedCount === images.length) {
-              container.scrollTop = container.scrollHeight;
-              container.style.opacity = "1";
-            }
-          };
-          img.onerror = () => {
-            loadedCount++; // Игнорируем ошибки загрузки
-            if (loadedCount === images.length) {
-              container.scrollTop = container.scrollHeight;
-              container.style.opacity = "1";
-            }
-          };
-        }
-      });
-    });
-  }
 }
+
+export default connectWithStore(Chat, (store) => ({
+  currenUser: store.currentUser,
+}));

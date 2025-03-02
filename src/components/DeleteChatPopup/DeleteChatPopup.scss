@@ -1,0 +1,13 @@
+.delete-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+  align-items: center;
+
+  &__buttons-container {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    align-items: center;
+  }
+}

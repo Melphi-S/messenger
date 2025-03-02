@@ -1,155 +1,114 @@
 import { AuthLayout } from "../../components/AuthLayout";
-import { Input } from "../../components/Input";
+
 import {
   validateInput,
   validatePasswordMatch,
   ValidationRuleKey,
 } from "../../utils/validation.ts";
-import { Button } from "../../components/Button";
-import app from "../../App.ts";
 import { getFormData } from "../../utils/getFormData.ts";
+import { router } from "../../main.ts";
+import { authController } from "../../controllers/AuthController.ts";
+import { SignUpDTO } from "../../api/authAPI";
+import { withAuthCheck } from "../../HOCs/withAuthCheck.ts";
 
-export class SignupPage extends AuthLayout {
+class SignupPage extends AuthLayout {
   constructor() {
     super({
       title: "Sign up",
-      inputs: [
-        new Input({
-          label: "Email",
-          type: "text",
-          name: "email",
-          value: "",
-          disabled: false,
-          placeholder: "Enter email",
-          events: {
-            blur: () => validateInput(this, "email", "email"),
-          },
-        }),
-        new Input({
-          label: "Login",
-          type: "text",
-          name: "login",
-          value: "",
-          disabled: false,
-          placeholder: "Enter login",
-          events: {
-            blur: () => validateInput(this, "login", "login"),
-          },
-        }),
-        new Input({
-          label: "First name",
-          type: "text",
-          name: "first_name",
-          value: "",
-          disabled: false,
-          placeholder: "Enter first name",
-          events: {
-            blur: () => validateInput(this, "first_name", "name"),
-          },
-        }),
-        new Input({
-          label: "Second name",
-          type: "text",
-          name: "second_name",
-          value: "",
-          disabled: false,
-          placeholder: "Enter second name",
-          events: {
-            blur: () => validateInput(this, "second_name", "name"),
-          },
-        }),
-        new Input({
-          label: "Phone",
-          type: "text",
-          name: "phone",
-          value: "",
-          disabled: false,
-          placeholder: "Enter phone",
-          events: {
-            blur: () => validateInput(this, "phone", "phone"),
-          },
-        }),
-        new Input({
-          label: "Password",
-          type: "password",
-          name: "password",
-          value: "",
-          disabled: false,
-          placeholder: "Enter password",
-          events: {
-            blur: () => validateInput(this, "password", "password"),
-          },
-        }),
-        new Input({
-          label: "Repeat password",
-          type: "password",
-          name: "repeat_password",
-          value: "",
-          disabled: false,
-          placeholder: "Enter password again",
-          events: {
-            blur: () =>
-              validateInput(this, "repeat_password", null, () =>
-                validatePasswordMatch(this.getElement()),
-              ),
-          },
-        }),
-      ],
-      buttons: [
-        new Button({
-          view: "primary",
-          type: "submit",
-          text: "Sign up",
-          events: {
-            click: (e) => {
-              e.preventDefault();
-              const inputsToValidate: [string, ValidationRuleKey][] = [
-                ["email", "email"],
-                ["login", "login"],
-                ["first_name", "name"],
-                ["second_name", "name"],
-                ["phone", "phone"],
-                ["password", "password"],
-                ["repeat_password", "password"],
-              ];
+      // language=hbs
+      inputs: `
+        {{{ component "Input" label="Email" type="text" name="email" value=currentUser.email placeholder="Enter email" events=handleEmailEvents}}}
+        {{{ component "Input" label="Login" type="text" name="login" value=currentUser.login placeholder="Enter login" events=handleLoginEvents}}}
+        {{{ component "Input" label="First name" type="text" name="first_name" value=currentUser.firstName placeholder="Enter first name" events=handleFirstNameEvents }}}
+        {{{ component "Input" label="Second name" type="text" name="second_name" value=currentUser.secondName placeholder="Enter second name" events=handleSecondNameEvents}}}
+        {{{ component "Input" label="Phone" type="text" name="phone" value=currentUser.phone placeholder="Enter phone" events=handlePhoneEvents }}}
+        {{{ component "Input" label="Password" type="password" name="password" value="" placeholder="Enter password" events=handlePasswordEvents}}}
+        {{{ component "Input" label="Repeat password" type="password" name="repeat_password" value="" placeholder="Repeat password" events=handleRepeatPasswordEvents}}}
+                `,
+      // language=hbs
+      buttons: `
+          {{{ component "Button" text="Sign up" type="submit" view="primary" events=handleSubmitEvents }}}
+          {{{ component "Button" text="Sign in" type="button" view="secondary" events=handleGoSigninEvents }}}
+      `,
+      handleEmailEvents: {
+        blur: () => validateInput(this, "email", "email"),
+      },
+      handleLoginEvents: {
+        blur: () => validateInput(this, "login", "login"),
+      },
+      handleFirstNameEvents: {
+        blur: () => validateInput(this, "first_name", "name"),
+      },
+      handleSecondNameEvents: {
+        blur: () => validateInput(this, "second_name", "name"),
+      },
+      handlePhoneEvents: {
+        blur: () => validateInput(this, "phone", "phone"),
+      },
+      handlePasswordEvents: {
+        blur: () => validateInput(this, "password", "password"),
+      },
+      handleRepeatPasswordEvents: {
+        blur: () =>
+          validateInput(this, "repeat_password", null, () =>
+            validatePasswordMatch(
+              this.getElement(),
+              "password",
+              "repeat_password",
+            ),
+          ),
+      },
+      handleSubmitEvents: {
+        click: async (e: Event) => {
+          e.preventDefault();
 
-              let hasError = false;
+          const inputsToValidate: [string, ValidationRuleKey][] = [
+            ["email", "email"],
+            ["login", "login"],
+            ["first_name", "name"],
+            ["second_name", "name"],
+            ["phone", "phone"],
+            ["password", "password"],
+            ["repeat_password", "password"],
+          ];
 
-              for (const [name, rule] of inputsToValidate) {
-                const error =
-                  name !== "repeat_password"
-                    ? validateInput(this, name, rule)
-                    : validateInput(this, "repeat_password", null, () =>
-                        validatePasswordMatch(this.getElement()),
-                      );
-                if (error) {
-                  hasError = true;
-                }
-              }
+          let hasError = false;
 
-              if (!hasError) {
-                const body = getFormData(this, ["repeat_password"]);
+          for (const [name, rule] of inputsToValidate) {
+            const error =
+              name !== "repeat_password"
+                ? validateInput(this, name, rule)
+                : validateInput(this, "repeat_password", null, () =>
+                    validatePasswordMatch(
+                      this.getElement(),
+                      "password",
+                      "repeat_password",
+                    ),
+                  );
+            if (error) {
+              hasError = true;
+            }
+          }
 
-                //TODO Change to real API request
-                console.log(body);
+          if (!hasError) {
+            const body = getFormData(this);
 
-                app.navigate("/chats");
-              }
-            },
-          },
-        }),
-        new Button({
-          view: "secondary",
-          type: "button",
-          text: "Sign in",
-          events: {
-            click: (e) => {
-              e.preventDefault();
-              app.navigate("/login");
-            },
-          },
-        }),
-      ],
+            const login = await authController.signup(body as SignUpDTO);
+
+            if (login) {
+              await authController.getCurrentUser();
+              router.go("/chats");
+            }
+          }
+        },
+      },
+      handleGoSigninEvents: {
+        click: async () => {
+          router.go("/login");
+        },
+      },
     });
   }
 }
+
+export default withAuthCheck(SignupPage, "public");

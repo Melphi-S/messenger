@@ -1,63 +1,65 @@
-import { Block } from "../../core/Block.ts";
+import { Block, BlockProps } from "../../core/Block.ts";
 import "./ChatPreview.scss";
-import { Avatar } from "../Avatar";
-import { Chat } from "../../api/models/chat.model.ts";
-import { currentUser, MOCK_USERS } from "../../api/mockAPI.ts";
+import { IChat } from "../../api/chatAPI";
+import { User } from "../../api/userAPI";
 import { dateToChatView } from "../../utils/parseDate.ts";
+import { connectWithStore, store } from "../../store/Store.ts";
 
-interface Props {
-  chat: Chat;
+export interface ChatPreviewProps extends BlockProps {
+  chat: IChat;
   events: {
     click: (event: Event) => void;
   };
   isActive?: boolean;
+  currentUser?: User | null;
 }
 
-export class ChatPreview extends Block {
-  constructor({ chat, events, isActive }: Props) {
-    super("div", {
+class ChatPreview extends Block {
+  constructor({ chat, events, isActive, currentUser }: ChatPreviewProps) {
+    super({
       events,
-      title:
-        chat.name ||
-        MOCK_USERS.find(
-          (user) =>
-            user.id === chat.participants.find((id) => id !== currentUser.id),
-        )?.displayName ||
-        "New chat",
-      avatar: new Avatar({
-        size: "s",
-        edit: false,
-        imageSrc:
-          chat.image ||
-          MOCK_USERS.find(
-            (user) =>
-              user.id === chat.participants.find((id) => id !== currentUser.id),
-          )?.avatar ||
-          "",
-      }),
-      lastMessage:
-        chat.messages.at(-1)?.type === "text"
-          ? chat.messages.at(-1)?.body
-          : "Image",
-      curUserMessage: chat.messages.at(-1)?.authorId === currentUser.id,
-      date: dateToChatView(chat.messages.at(-1)?.date) || "...",
-      unreadMessages: chat.messages.filter(
-        (message) => !message.seenBy.includes(currentUser.id),
-      ).length,
+      currentUser,
+      chat,
       id: chat.id,
+      title: chat.title,
       isActive: isActive,
+      curUserMessage: chat.lastMessage?.user.login === currentUser?.login,
+      lastMessage: chat.lastMessage?.content,
+      lastMessageAuthor:
+        chat.lastMessage?.user.login === currentUser?.login
+          ? "You"
+          : chat.lastMessage?.user.displayName ||
+            chat.lastMessage?.user.firstName ||
+            "",
+      date: chat.lastMessage?.time
+        ? dateToChatView(chat.lastMessage?.time)
+        : "",
+      unreadMessages: chat.unreadCount,
+      avatar: chat.avatar,
     });
   }
 
   protected render() {
     super.render();
+
+    const chat = store
+      .get()
+      .chatList?.find(
+        (c) => c.id === (this.getProps() as ChatPreviewProps).chat.id,
+      );
+
+    const avatar =
+      chat?.avatar || (this.getProps() as ChatPreviewProps).chat.avatar || "";
+
     // language=hbs
     return `
       <div class="preview-message {{#if isActive}}preview-message_active{{/if}}" id="{{{id}}}">
-        {{{ avatar }}}
+        {{{ component "Avatar" size='s' edit=false imageSrc='${avatar}' events=avatarEvents }}}
         <div class="preview-message__mainContainer">
           <p class="preview-message__title">{{{ title }}}</p>
-          <p class="preview-message__message"> <span class="preview-message__authorSpan">{{#if curUserMessage}}Вы: {{/if}}</span>{{{ lastMessage }}}</p>
+        {{#if lastMessage }}
+          <p class="preview-message__message"> <span class="preview-message__authorSpan"> {{{ lastMessageAuthor }}}: </span>{{{ lastMessage }}}</p>
+        {{/if}}
         </div>
         <div class="preview-message__rightContainer">
           <span class="preview-message__date">{{{ date }}}</span>
@@ -67,3 +69,7 @@ export class ChatPreview extends Block {
     `;
   }
 }
+
+export default connectWithStore(ChatPreview, (store) => ({
+  chatList: store.chatList,
+}));
