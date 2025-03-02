@@ -4,6 +4,9 @@ import UserManagement from "../UserManagement/UserManagement.ts";
 import { connectWithStore, store } from "../../../store/Store.ts";
 import "./ChatHeader.scss";
 import { ChatPreviewProps } from "../../ChatPreview";
+import { Button } from "../../Button";
+import { Popup } from "../../Popup";
+import { DeleteChatPopup } from "../../DeleteChatPopup";
 
 interface Props extends BlockProps {
   chat: IChat;
@@ -17,6 +20,20 @@ class ChatHeader extends Block {
       userManagement: new UserManagement({ chatId: chat.id }),
       name: chat.title,
       avatarEvents,
+      deleteButton: new Button({
+        type: "button",
+        text: "X",
+        view: "danger",
+        events: {
+          click: async () => {
+            this.getChildren().popup.changeProps({ hidden: false });
+          },
+        },
+      }),
+      popup: new Popup({
+        content: new DeleteChatPopup({ chatId: chat.id }),
+        hidden: true,
+      }),
     });
   }
 
@@ -38,8 +55,10 @@ class ChatHeader extends Block {
         <div class="chat-header__info-wrapper">
           {{{ component "Avatar" size='m' edit=true imageSrc='${avatar}' events=avatarEvents}}}
           <span class="chat-header__chat-name">{{{name}}}</span>
+          {{{ deleteButton }}}
         </div>
         {{{ userManagement }}}
+        {{{ popup }}}
       </div>
     `;
   }

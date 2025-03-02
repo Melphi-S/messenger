@@ -172,6 +172,26 @@ class ChatController {
       }
     }
   }
+
+  async deleteChat(chatId: number) {
+    try {
+      const newChat = await chatAPIInstance.deleteChat(chatId);
+      store.set("activeChat", null);
+      notificationManager.notify(
+        "The chat has been successfully deleted",
+        "success",
+        3000,
+      );
+
+      return newChat;
+    } catch (err) {
+      if (err instanceof Error) {
+        notificationManager.notify(err.message, "error", 5000);
+      } else {
+        notificationManager.notify("Error during deleting chat", "error", 5000);
+      }
+    }
+  }
 }
 
 export const chatController = new ChatController();

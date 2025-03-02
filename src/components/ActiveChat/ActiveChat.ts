@@ -29,14 +29,20 @@ class ActiveChat extends Block {
   protected render() {
     super.render();
 
+    const activeChat = store.get().activeChat;
+
+    if (!activeChat) {
+      return `
+        <p class="chats-main_select-message">
+          Select a chat
+        </p>
+      `;
+    }
+
     // language=hbs
     return `
       {{#if activeChat}}
         {{{ activeChat }}}
-      {{else}}
-        <p class="chats-main_select-message">
-          Select a chat
-        </p>
       {{/if}}
     `;
   }

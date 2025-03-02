@@ -19,7 +19,6 @@ export class UserItem extends Block {
         view: "danger",
         events: {
           click: async () => {
-            console.log("clock");
             await chatController.deleteUser(chatId, user.id);
           },
         },

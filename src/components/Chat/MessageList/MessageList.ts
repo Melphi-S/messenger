@@ -59,7 +59,6 @@ class MessageList extends Block {
     const targetMessage = messages.at(-1 - unreadMessages);
 
     if (this.unreadMessages) {
-      console.log("CHANGE CHAT LIST");
       const chatId = store.get().activeChat?.id as number;
       const chatList = store.get().chatList as IChat[];
       store.set(

@@ -2,6 +2,7 @@ import { chatAPIInstance } from "./ChatAPI.ts";
 import { store } from "../../store/Store.ts";
 import { mapResponseToMessage, Message } from "./chat.model.ts";
 import cloneDeep from "../../utils/cloneDeep.ts";
+import { notificationManager } from "../../components/NotificationManager";
 
 export class ChatWS {
   static BASE_URL = import.meta.env.VITE_WS_BASE_URL;
@@ -20,8 +21,6 @@ export class ChatWS {
       .chatList?.find((chat) => chat.id === chatId)?.unreadCount as number;
     const userId = store.get().currentUser?.id;
 
-    console.log(unreadMessages);
-
     if (!chatId || !userId) {
       return;
     }
@@ -34,7 +33,15 @@ export class ChatWS {
         token = response.token;
         this.chatTokens.set(chatId, token);
       } catch (err) {
-        console.log(err);
+        if (err instanceof Error) {
+          notificationManager.notify(err.message, "error", 5000);
+        } else {
+          notificationManager.notify(
+            "Error during getting chat token",
+            "error",
+            5000,
+          );
+        }
       }
     }
 

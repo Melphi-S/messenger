@@ -14,7 +14,6 @@ class NotificationManager extends Block {
     type: "error" | "success" | "info",
     duration: number = 3000,
   ) {
-    console.log("NOTIFY");
     const notificationId = String(Date.now());
     const newNotification = new Notification({
       message,
@@ -31,8 +30,6 @@ class NotificationManager extends Block {
   }
 
   private removeNotification(id: string) {
-    console.log(id);
-    console.log(this.getLists().notifications);
     const notifications = this.getLists().notifications.filter(
       (notification) => notification.getProps().notificationId !== id,
     );

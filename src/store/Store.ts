@@ -39,7 +39,6 @@ class Store extends EventBus {
 
   public clearStore() {
     this.state = cloneDeep(defaultState) as AppStore;
-    console.log(this.state);
   }
 }
 

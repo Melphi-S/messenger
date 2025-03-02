@@ -50,7 +50,7 @@ export class AddChatPopup extends Block {
 
     // language=hbs
     return `
-      <form class="add-user-form">
+      <form class="add-chat-form">
         {{{ input }}}
         {{{ submitButton }}}
       </form>

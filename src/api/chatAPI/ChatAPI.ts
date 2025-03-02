@@ -108,6 +108,20 @@ class ChatAPI {
 
     return "ok";
   }
+
+  async deleteChat(chatId: number) {
+    const response = await chatHTTPTransport.delete(``, {
+      data: { chatId },
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      const errorMessage = JSON.parse(response.response);
+      throw new Error(errorMessage.reason);
+    }
+
+    return "ok";
+  }
 }
 
 export const chatAPIInstance = new ChatAPI();
