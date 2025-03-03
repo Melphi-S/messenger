@@ -21,6 +21,14 @@
     "test": "mocha",
     "prepare": "husky"
   },
+  "lint-staged": {
+    "*.{ts}": [
+      "npm run eslint:fix"
+    ],
+    "*.{scss}": [
+      "npm stylelint:fix"
+    ]
+  },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@types/chai": "^5.0.1",
@@ -33,6 +41,7 @@
     "globals": "^15.14.0",
     "husky": "^9.1.7",
     "jsdom": "^26.0.0",
+    "lint-staged": "^15.4.3",
     "mocha": "^11.1.0",
     "sass-embedded": "^1.83.1",
     "sinon": "^19.0.2",
