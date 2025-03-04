@@ -2,7 +2,7 @@
 
 ## Текущий прогресс
 
-Добавлен роутинг, подключен API
+Созданы тесты для классов Block, Router, HTTPTransport
 
 ## Ссылки
 - [Макет в фигма](https://www.figma.com/design/jF5fFFzgGOxQeB4CmKWTiE/Chat_external_link)

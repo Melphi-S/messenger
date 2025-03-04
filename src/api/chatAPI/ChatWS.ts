@@ -3,9 +3,9 @@ import { store } from "../../store/Store.ts";
 import { mapResponseToMessage, Message } from "./chat.model.ts";
 import cloneDeep from "../../utils/cloneDeep.ts";
 import { notificationManager } from "../../components/NotificationManager";
+import { WS_BASE_URL } from "../baseUrl.ts";
 
 export class ChatWS {
-  static BASE_URL = import.meta.env.VITE_WS_BASE_URL;
   private chatTokens: Map<number, string>;
   private socket: WebSocket | null = null;
   private pingTimer: NodeJS.Timeout | null = null;
@@ -47,9 +47,7 @@ export class ChatWS {
 
     store.clear("currentChatMessages", []);
 
-    this.socket = new WebSocket(
-      `${ChatWS.BASE_URL}/${userId}/${chatId}/${token}`,
-    );
+    this.socket = new WebSocket(`${WS_BASE_URL}/${userId}/${chatId}/${token}`);
 
     this.pingTimer = setInterval(() => {
       this.socket?.send(
