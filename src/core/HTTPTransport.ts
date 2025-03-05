@@ -1,3 +1,5 @@
+import { BASE_URL } from "../api/baseUrl.ts";
+
 enum Methods {
   GET = "GET",
   POST = "POST",
@@ -38,16 +40,14 @@ function queryStringify(data: Record<string, unknown>) {
 }
 
 export class HTTPTransport {
-  static BASE_URL = import.meta.env.VITE_BASE_URL;
   protected endpoint: string;
   public get = this.createMethod(Methods.GET);
-  public patch = this.createMethod(Methods.PATCH);
   public put = this.createMethod(Methods.PUT);
   public post = this.createMethod(Methods.POST);
   public delete = this.createMethod(Methods.DELETE);
 
   constructor(endpoint: string) {
-    this.endpoint = HTTPTransport.BASE_URL + endpoint;
+    this.endpoint = BASE_URL + endpoint;
   }
 
   private createMethod(method: Methods): HTTPMethod {
